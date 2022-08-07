@@ -1,5 +1,5 @@
 # clanElectrons
-Electron stopping power including Sternheimer density-effect corrections
+Electronic stopping power (Bethe formula) for electrons including Sternheimer density-effect corrections
 (both "exact" and by parameters). Aimed for comparison with ICRU-90.
 
 The library can be loaded into R using the install_github command which is in the devtools package:
