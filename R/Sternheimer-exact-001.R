@@ -1,3 +1,38 @@
+#' @title Sternheimer.set.to.conductor
+#' @description  Ascertain that material is treated as conductor in Sternheimer delta computations
+#'
+#'
+#'  dat <- Sternheimer.set.to.conductor(dat)
+#'
+#' The binding energy of the outer subshell is set to zero
+#' @export
+Sternheimer.set.to.conductor <- function(dat){
+# Set outer binding energy to zero
+Evec <- dat$Evec.org
+nlev <- length(Evec)
+dat$Evec[nlev] <- 0
+dat$fvec <- dat$fvec.org
+dat$type <- "conductor"
+dat
+}
+
+#' @title Sternheimer.set.to.insulation
+#' @description  Ascertain that material is treated as insulator in Sternheimer delta computations
+#'
+#'  dat <- Sternheimer.set.to.insulation(dat)
+#'
+#' The binding energy of the outer subshell is NOT set to zero
+#' @export
+Sternheimer.set.to.insulator <- function(dat){
+  # Set binding energies to original values
+  dat$Evec <- dat$Evec.org
+  dat$fvec <- dat$fvec.org
+  dat$type <- "insulator"
+  dat
+}
+
+
+
 #' @title Sternheimer.f.root.mu.st <-
 #' @description  Helper function (mu.st) for exact Sternheimer density correction
 #'
@@ -64,7 +99,7 @@ ans
 ###############################################################
 
 
-#' @title Sternheimer.exact
+#' @title Sternheimer.delta.exact
 #' @description  Computation of exact Sternheimer density correction.
 #'
 #' By exact, we just mean that this is not the simple
@@ -77,8 +112,10 @@ ans
 #' @param dat$Z = atomic number
 #' @param dat$A = atomic mass
 #' @param dat$rho.density = density in g/cm3
-#' @param dat$fvec = sub-shell occupancy level
-#' @param dat$Evec = sub-shell binding energy
+#' @param dat$fvec = sub-shell occupancy level (used in computation)
+#' @param dat$Evec = sub-shell binding energy (used in computation)
+#' @param dat$fvec.org = sub-shell occupancy level (NOT used in computation)
+#' @param dat$Evec.org = sub-shell binding energy (NOT used in computation)
 #' @param dat$I = mean excitation energy in eV
 #' @param dat$plot.wanted = TRUE or FALSE,
 #' @details Notes:
@@ -106,12 +143,12 @@ ans
 #'     ATOMIC DATA AND NUCLEAR DATA TABLES 30,26 l-27 1 ( 1984)
 #' (3) G4DensityEffectCalculator.cc by Matthew Strait <straitm@umn.edu> 2019
 #' @export
-Sternheimer.exact <- function(dat=NULL){
+Sternheimer.delta.exact <- function(dat=NULL){
 # Created: Aug 7, 2022
 # Revised: Aug 7, 2022
 # Name   : Claus E. Andersen
 #
-# Computation of exact Sternheimer density correction.
+# Computation of exact Sternheimer density correction (delta).
 #
 # By exact, we just mean that this is not the simple
 # parameter fitting solution. The ICRU-90 terminology
@@ -291,15 +328,15 @@ dat$delta <- delta
 if(dat$plot.wanted){clanLattice::print.trellis.plots(list(plt.mu.st,plt.L),1)}
 
 dat
-} #Sternheimer.exact.function
+} #Sternheimer.delta.exact.function
 
 
 #############################################################################
 
 
-#' @title demo.Sternheimer.exact
+#' @title demo.Sternheimer.delta.exact
 #' @export
-demo.Sternheimer.exact <- function(){
+demo.Sternheimer.delta.exact <- function(){
 # Biniding energies can be found in
 # Carlson (1975) Book: Photoelectron and Auger Spectroscopy
 # p. 338. Table A1.A
@@ -313,10 +350,10 @@ nlev = 6,
 Z    = 13,
 A    = 26.98154,
 rho.density =  2.265,
-fvec = c(2/13, 2/13 ,2/13, 2/13, 2/13, 3/13),
-#Evec =c(  1564.0 , 121. , 77.0 , 77.0 , 10.62 , 5.986),
-Evec =c(  1564.0 , 121. , 77.0 , 77.0 , 10.62 ,      0), # Conductor
+fvec.org = c(2/13, 2/13 ,2/13, 2/13, 2/13, 3/13),
+Evec.org = c( 1564.0 , 121.0, 77.0, 77.0, 10.62, 5.986),
 I = 166.0)
+dat.Al <- Sternheimer.set.to.conductor(dat.Al)
 
 dat.C <- list(
 plot.wanted = FALSE,
@@ -325,10 +362,10 @@ nlev = 3,
 Z    = 6,
 A    = 12.011,
 rho.density =  2.265,
-fvec = c(2/6,2/6,2/6),
-#Evec = c(288.00, 16.59, 11.26),
-Evec = c(288.00, 16.59, 0), # Conductor
+fvec.org = c(2/6,2/6,2/6),
+Evec.org = c(288.00, 16.59, 11.26),
 I = 78)
+dat.C <- Sternheimer.set.to.conductor(dat.C)
 
 
 dat.Be <- list(
@@ -338,22 +375,23 @@ nlev = 2,
 Z    = 4,
 A    = 9.01218,
 rho.density =  1.848,
-fvec = c(0.5,0.5),
-Evec = c(115.0, 9.322),
+fvec.org = c(0.5,0.5),
+Evec.org = c(115.0, 9.322),
 I = 63.7)
+dat.Be <- Sternheimer.set.to.insulator(dat.Be)
 
 dat <- dat.Al
 dat$MeV <- 10
-dat <- Sternheimer.exact(dat=dat)
+dat <- Sternheimer.delta.exact(dat=dat)
 dat
-} # demo.Sternheimer.exact
+} # demo.Sternheimer.delta.exact
 
 ########################################################################################
 
-#' @title demo.Sternheimer.delta.plot
+#' @title demo.Sternheimer.delta.exact.plot
 #' Delta vs. energy for two different models (Al: En=0 or not)
 #' @export
-demo.Sternheimer.delta.plot <- function(){
+demo.Sternheimer.delta.exact.plot <- function(){
 # Created: July 29, 2022
 # Revised: July 31, 2022
 # Name:    Claus E. Andersen
@@ -367,23 +405,12 @@ nlev = 6,
 Z    = 13,
 A    = 26.98154,
 rho.density =  2.265,
-fvec = c(2/13, 2/13 ,2/13, 2/13, 2/13, 3/13),
-Evec =c(  1564.0 , 121. , 77.0 , 77.0 , 10.62 , 5.986),
-#Evec =c(  1564.0 , 121. , 77.0 , 77.0 , 10.62 ,      0), # Conductor
+fvec.org = c(2/13, 2/13 ,2/13, 2/13, 2/13, 3/13),
+Evec.org = c( 1564.0 , 121.0, 77.0, 77.0, 10.62, 5.986),
 I = 166.0)
 
-dat.Al.model2 <- list(
-plot.wanted = FALSE,
-MeV = 1000,
-nlev = 6,
-Z    = 13,
-A    = 26.98154,
-rho.density =  2.265,
-fvec = c(2/13, 2/13 ,2/13, 2/13, 2/13, 3/13),
-#Evec =c(  1564.0 , 121. , 77.0 , 77.0 , 10.62 , 5.986),
-Evec =c(  1564.0 , 121. , 77.0 , 77.0 , 10.62 ,      0), # Conductor
-I = 166.0)
-
+dat.Al.model1 <- Sternheimer.set.to.conductor(dat.Al.model1)
+dat.Al.model2 <- Sternheimer.set.to.insulator(dat.Al.model1)
 
 xx <- seq(-0.6,3,length=50)
 ee <- 10^xx
@@ -394,32 +421,32 @@ yy2 <- 0 * xx
 dat <- dat.Al.model1
 for(ii in 1:length(ee)){
   dat$MeV <- ee[ii]
-  dat.out <- Sternheimer.exact(dat=dat)
+  dat.out <- Sternheimer.delta.exact(dat=dat)
   yy1[ii] <- dat.out$delta
 }
 
 dat <- dat.Al.model2
 for(ii in 1:length(ee)){
   dat$MeV <- ee[ii]
-  dat.out <- Sternheimer.exact(dat=dat)
+  dat.out <- Sternheimer.delta.exact(dat=dat)
   yy2[ii] <- dat.out$delta
 }
 
 
-df1 <- data.frame(MeV=ee, material = "Al (non-conductor model)", delta=yy1)
-df2 <- data.frame(MeV=ee, material = "Al (conductor model)",      delta=yy2)
+df1 <- data.frame(MeV=ee, material = "Al (conductor model)", delta=yy1)
+df2 <- data.frame(MeV=ee, material = "Al (insulator model)", delta=yy2)
 df <- rbind(df1,df2)
 
-plt <- lattice::xyplot(delta ~ log10(MeV)|material,
+plt <- lattice::xyplot(delta ~ log10(MeV) | material,
 par.strip.text=list(cex=1.5),
 main="Density correction (delta) from exact Sternheimer procedure\n Red points are from ICRU-37. Aluminium (Z=13).",
 panel=function(x,y,...){
-panel.xyplot(x,y,...)
+lattice::panel.xyplot(x,y,...)
 xx <- c(0.1,0.4,1,4,10,40,100,400,1000)
 yy <- c(0.01513, 0.1190,0.3339,1.183,2.384,4.669,6.363,9.091,10.92)
-panel.points(log10(xx),yy,col="red",pch=16,cex=0.6)
+lattice::panel.points(log10(xx),yy,col="red",pch=16,cex=0.6)
 },
 data=df)
 
 print(plt)
-}
+} # demo.Sternheimer.delta.exact.plot
