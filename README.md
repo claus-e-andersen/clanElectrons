@@ -8,6 +8,14 @@ You specify Z, A, I, density and other material parameters and the package has f
 of electronic stopping power (both respricted and unrestricted) for electrons. The "exact" computation
 of the density effect using Sternheimer theory requires knowledge of binding energies for electrons in the
 material in question.
+## Mass electronic stopping power with given delta:
+
+  electronic.MSP.Bethe(MeV=1.00, I = 81, Z = 6, A = 12.011, rho = 2.265, delta.fixed=0.7593)   
+  
+  Result = 1.606032 
+  
+  ICRU-90 = 1.606
+
 
 ## Sternheimer delta exact computation details:
 
