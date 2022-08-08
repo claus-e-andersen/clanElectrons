@@ -13,7 +13,9 @@ material in question.
 
 We first supply material parameters:
 
-  dat.Al.model1 <- list(
+
+    dat.Al.model1 <- list(
+  
     plot.wanted = FALSE,
     
     MeV = 1000, # Kinetic energy
@@ -31,7 +33,8 @@ We first supply material parameters:
     Evec.org = c(1564.0 , 121.0, 77.0, 77.0, 10.62, 5.986), # Binding energy for each subshell in eV
     
     I = 166.0 # Mean exicitation energy in eV
-  )
+    
+    )
 
 Then we set the material to a conductor:
    
