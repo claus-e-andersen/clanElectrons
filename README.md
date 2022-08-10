@@ -100,7 +100,7 @@ install.packages(dplyr)
 library(dplyr)
 install_github("claus-e-andersen/clanLattice")
 library(clanLattice)
-
+```
 
 To get a list of functions in the library, just call one of these (after loading the package):
 ```
