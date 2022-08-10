@@ -3,10 +3,10 @@ Electronic stopping power (Bethe formula) for electrons including Sternheimer de
 (both "exact" and by parameters). Aimed for applications within radiotherapy dosimetry and comparisons with ICRU-37 
 and ICRU-90 publications.
 
-# Main references:
+## Main references:
 - ICRU-90: Key data for ionizing-radiation dosimetry: Measurement standards and applications (2014/2016).
-- DENSITY EFFECT FOR THE IONIZATION LOSS OF CHARGED PARTICLES IN VARIOUS SUBSTANCES by R. M. STERNHEIMER (Brookhaven), M. J. BERGER (NBS) and S. M. SELTZER (NBS). ATOMIC DATA AND NUCLEAR DATA TABLES 30,26 l-27 1 ( 1984)
-- G4DensityEffectCalculator.cc by Matthew Strait <straitm@umn.edu> 2019
+- DENSITY EFFECT FOR THE IONIZATION LOSS OF CHARGED PARTICLES IN VARIOUS SUBSTANCES by R. M. STERNHEIMER (Brookhaven), M. J. BERGER (NBS) and S. M. SELTZER (NBS). ATOMIC DATA AND NUCLEAR DATA TABLES 30,26 l-27 1 ( 1984).
+- G4DensityEffectCalculator.cc for Geant4 by Matthew Strait <straitm@umn.edu> 2019. 
 
 ## Applications:
 You specify Z, A, I, density and other material parameters and the package has functions for computation
