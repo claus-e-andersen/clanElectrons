@@ -11,7 +11,7 @@ material in question.
 
 ## Example: Stopping power computation for water and comparison with ICRU-90
 
-# First we provide the data for water (liquid):
+First we provide the data for water (liquid):
 
 dat.H2O <- list(
 
@@ -37,15 +37,15 @@ dat.H2O <- list(
   
 )
 
-# Always set compounds to insulators
+Always set compounds to insulators
 
 dat.H2O <- Sternheimer.set.to.insulator(dat.H2O)
 
 dat <- dat.H2O
 
-############################
-# 800 keV
-############################
+- ############################
+- # 800 keV
+- ############################
 
 MeV <- 0.8 # Electron kinetic energy
 
