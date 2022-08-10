@@ -3,6 +3,11 @@ Electronic stopping power (Bethe formula) for electrons including Sternheimer de
 (both "exact" and by parameters). Aimed for applications within radiotherapy dosimetry and comparisons with ICRU-37 
 and ICRU-90 publications.
 
+# Main references:
+- ICRU-90: Key data for ionizing-radiation dosimetry: Measurement standards and applications (2014/2016).
+- DENSITY EFFECT FOR THE IONIZATION LOSS OF CHARGED PARTICLES IN VARIOUS SUBSTANCES by R. M. STERNHEIMER (Brookhaven), M. J. BERGER (NBS) and S. M. SELTZER (NBS). ATOMIC DATA AND NUCLEAR DATA TABLES 30,26 l-27 1 ( 1984)
+- G4DensityEffectCalculator.cc by Matthew Strait <straitm@umn.edu> 2019
+
 ## Applications:
 You specify Z, A, I, density and other material parameters and the package has functions for computation
 of electronic stopping power (both respricted and unrestricted) for electrons. The "exact" computation
@@ -18,7 +23,7 @@ dat.H2O <- list(
   A    = 18.0158,  # Atomic mass
   I    = 78,       # Mean excitation energy in eV
   #
-  exact.rho =  0.998, # Density in g/cm3 needed for the exact density-correction
+  exact.rho =  0.998, # Density in g/cm3 only needed for the exact density-effect correction.
   exact.fvec = c(2/10, 2/10, 2/10, 4/10), # Occupation fractions for the subshells in H2 and O.
   exact.Evec = c(13.6, 538.0, 28.48, 13.62), # Binding energies of subshells from Carlson (1975), see ICRU-90.
   exact.plot = FALSE, # Supplementary plots related to the root finding in the exact density correction
