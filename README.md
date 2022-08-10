@@ -25,7 +25,7 @@ dat.H2O <- list(
   
   exact.fvec = c(2/10, 2/10, 2/10, 4/10), # Occupation fractions for the subshells in H2 and O.
   
-  exact.Evec = c(13.6, 538.0, 28.48, 13.62), # Buínding energies of subshells
+  exact.Evec = c(13.6, 538.0, 28.48, 13.62), # Binding energies of subshells from Carlson (1975), see ICRU-90.
   
   exact.plot = FALSE, # Supplementary plots related to the root finding in the exact density correction
   
@@ -36,6 +36,10 @@ dat.H2O <- list(
   param.delta.X0 = 0.097
   
 )
+
+Notes:
+
+exact referes to the detailed "exact" Sternheimer computation whereas param referes to the 1984 model fits by Sternheimer. In the example below we only use the exact method. We here include the param stuff for completeness. 
 
 Always set compounds to insulators
 
@@ -72,9 +76,7 @@ delta.R=dat$exact.delta,
 delta.ICRU90=0.1005)
 
 
-  Excellent agreement with between the clanElectrons computations
-
-  and ICRU-90 values for water. 
+## Excellent agreement between the clanElectrons computations and ICRU-90 values for water. 
 
   MSP.R0 = mass electronic stopping power with delta = 0 (no correction of density effect).
 
