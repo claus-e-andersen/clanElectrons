@@ -8,60 +8,97 @@ You specify Z, A, I, density and other material parameters and the package has f
 of electronic stopping power (both respricted and unrestricted) for electrons. The "exact" computation
 of the density effect using Sternheimer theory requires knowledge of binding energies for electrons in the
 material in question.
-## Mass electronic stopping power with given delta:
 
-  electronic.MSP.Bethe(MeV=1.00, I = 81, Z = 6, A = 12.011, rho = 2.265, delta.fixed=0.7593)   
+## Example: Stopping power computation for water and comparison with ICRU-90
+
+# First we provide the data for water (liquid):
+
+dat.H2O <- list(
+
+  Z    = 10,       # Atomic number
   
-  Result = 1.606032 
+  A    = 18.0158,  # Atomic mass
   
-  ICRU-90 = 1.606
-
-
-## Sternheimer delta exact computation details:
-
-We first supply material parameters:
-
-
-    dat.Al.model1 <- list(
+  I    = 78,       # Mean excitation energy in eV
   
-    plot.wanted = FALSE,
-    
-    MeV = 1000, # Kinetic energy
-    
-    nlev = 6,   # Number of subshells
-    
-    Z    = 13,  # Atomic number
-    
-    A    = 26.98154,      # Atomic mass
-    
-    rho.density =  2.265, # Density in g/cm3
-    
-    fvec.org = c(2/13, 2/13 ,2/13, 2/13, 2/13, 3/13), # Subshell occupancy level
-    
-    Evec.org = c(1564.0 , 121.0, 77.0, 77.0, 10.62, 5.986), # Binding energy for each subshell in eV
-    
-    I = 166.0 # Mean exicitation energy in eV
-    
-    )
-
-Then we set the material to a conductor:
-   
-   dat.Al.model1 <- Sternheimer.set.to.conductor(dat.Al.model1)
-
-or to an insulator:
-
-   dat.Al.model2 <- Sternheimer.set.to.insulator(dat.Al.model1)
-
-This involves manipulation of the binding energy of the outmost subshell (energy
-will be set to zero for a conductor). 
-
-Finally, compute the density correction factor (delta):
-
-  dat.out1 <- Sternheimer.delta.exact(dat.Al.model1)
+  exact.rho =  0.998, # Density in g/cm3 needed for the exact density-correction
   
-  dat.out2 <- Sternheimer.delta.exact(dat.Al.model2)
+  exact.fvec = c(2/10, 2/10, 2/10, 4/10), # Occupation fractions for the subshells in H2 and O.
+  
+  exact.Evec = c(13.6, 538.0, 28.48, 13.62), # Buínding energies of subshells
+  
+  exact.plot = FALSE, # Supplementary plots related to the root finding in the exact density correction
+  
+  param.note="Sternheimer et. al 1984, water (liquid) I = 75 and rho = 1.000 ", 
+  
+  param.C = -3.5017, param.X0 = 0.2400, param.X1 = 2.8004, param.a  = 0.09116, param.m  = 3.4773,
+  
+  param.delta.X0 = 0.097
+  
+)
 
-All parameters and output are kept in the dat.out lists.
+# Always set compounds to insulators
+
+dat.H2O <- Sternheimer.set.to.insulator(dat.H2O)
+
+dat <- dat.H2O
+
+############################
+# 800 keV
+############################
+
+MeV <- 0.8 # Electron kinetic energy
+
+dat <- Sternheimer.delta.exact(MeV, dat)
+
+xx0 <- electronic.MSP.Bethe(MeV, dat, delta = 0) # Compute MSP without density effect correction (delta = 0)
+
+xx <- electronic.MSP.Bethe(MeV, dat, delta = dat$exact.delta) # Compute MSP with exact Sternheimer density correction
+
+df1 <- data.frame(
+
+MeV = MeV, 
+
+I.eV = dat$I, 
+
+rho=dat$exact.rho, 
+
+MSP.R0 = xx0,
+
+MSP.R = xx, MSP.ICRU90=1.880,
+                  
+delta.R=dat$exact.delta, 
+
+delta.ICRU90=0.1005)
+
+
+# Excellent agreement with between the clanElectrons computations
+
+# and ICRU-90 values for water. 
+
+# MSP.R0 = mass electronic stopping power with delta = 0 (no correction of density effect).
+
+# MSP.R =  mass electronic stopping power computed with the clanElectrons software.
+
+# delta.R = the density-effect correction computed with the clanElectrons software.
+
+# Index ICRU90 = reference values from ICRU-90.
+
+
+#     MeV I.eV   rho   MSP.R0    MSP.R MSP.ICRU90    delta.R delta.ICRU90
+
+# 1 8e-01   78 0.998 1.890531 1.880437      1.880  0.1004488       0.1005
+
+# 2 1e+00   78 0.998 1.864880 1.844806      1.845  0.2086075       0.2086
+
+# 3 1e+01   78 0.998 2.216852 1.966726      1.967  2.9279906       2.9280
+
+# 4 1e+02   78 0.998 2.798672 2.202281      2.202  6.9977588       6.9980
+
+# 5 1e+03   78 0.998 3.387159 2.400502      2.401 11.5772526      11.5800
+
+
+
 
 ## Installation in R or Rstudio
 
