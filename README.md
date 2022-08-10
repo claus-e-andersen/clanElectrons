@@ -62,7 +62,6 @@ delta.ICRU90 = 0.1005)
 ```
 
 ## Excellent agreement between the clanElectrons computations and ICRU-90 values for water. 
-
 ```
      MeV I.eV   rho   MSP.R0    MSP.R MSP.ICRU90    delta.R delta.ICRU90
      0.80   78 0.998 1.890531 1.880437      1.880  0.1004488       0.1005
