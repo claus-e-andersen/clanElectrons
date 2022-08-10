@@ -48,12 +48,14 @@
 ############################################################################
 # Mass electronic stopping power
 ############################################################################
-electronic.MSP.Bethe <- function(MeV = 1, I = 81, Z = 6, A = 12.011, rho = 2.265,
-                                 Sternheimer.tab.id = "graphite-1",
-                                 C.model = "fixed",
-                                 delta.fixed = NA,
-                                 df.Sternheimer = NULL,
-                                 verbose = FALSE){
+electronic.MSP.Bethe <- function(MeV = 1, dat = NULL(), delta=NA){
+
+#                                 I = 81, Z = 6, A = 12.011, rho = 2.265,
+#                                 Sternheimer.tab.id = "graphite-1",
+#                                 C.model = "fixed",
+#                                 delta.fixed = NA,
+#                                 df.Sternheimer = NULL,
+#                                 verbose = FALSE){
 # Created: July 29, 2022
 # Revised: July 31, 2022
 # Name:    Claus E. Andersen
@@ -74,7 +76,12 @@ electronic.MSP.Bethe <- function(MeV = 1, I = 81, Z = 6, A = 12.011, rho = 2.265
 #   electronic.MSP.Bethe(MeV=c(0.01,0.1,1,10))
 #   electronic.MSP.Bethe(MeV=100,C.model="fixed")
 #   electronic.MSP.Bethe(MeV=100,C.model="plasma")
-T      <- MeV
+T <- MeV
+
+Z <- dat$Z
+A <- dat$A
+I <- dat$I
+
 re     <- 2.81794092e-15 # m, classical electron radius
 e      <- 1.60217733e-19 # J
 E0.MeV <- 0.51099895000
@@ -87,21 +94,21 @@ tau    <- T / E0.MeV
 beta <- (1 - (E0.MeV/(E0.MeV+T))^2 )^0.5
 
 # Density effect:
-delta <- delta.Sternheimer(MeV=MeV,I=I, Z=Z, A=A, rho=rho,
-                           Sternheimer.tab.id = Sternheimer.tab.id,
-                           C.model=C.model,
-                           df.Sternheimer=df.Sternheimer,
-                           verbose=verbose)
+#delta <- delta.Sternheimer(MeV=MeV,I=I, Z=Z, A=A, rho=rho,
+#                           Sternheimer.tab.id = Sternheimer.tab.id,
+#                           C.model=C.model,
+#                           df.Sternheimer=df.Sternheimer,
+#                           verbose=verbose)
 
-if(!is.na(delta.fixed)){
-  # Overwrite Sternheimer
-  if(verbose){
-    print("Message from electronic.MSP.Bethe")
-    print("A delta.fixed value has been supplied, and this will be used in the MSP computations.")
-    print(paste("delta =", delta.fixed))
-  }
-  delta <- delta.fixed
-}
+#if(!is.na(delta.fixed)){
+#  # Overwrite Sternheimer
+#  if(verbose){
+#    print("Message from electronic.MSP.Bethe")
+#    print("A delta.fixed value has been supplied, and this will be used in the MSP computations.")
+#    print(paste("delta =", delta.fixed))
+#  }
+#  delta <- delta.fixed
+#}
 
 Fminus <- (1-beta^2)*(1 + tau^2/8 - (2*tau+1)*log(2))
 
@@ -119,12 +126,13 @@ P1 * P2 /( 1E6 * e) * 10000 # MeV pr. g/cm2
 # Restricted Mass electronic stopping power
 ############################################################################
 restricted.electronic.MSP.Bethe <- function(MeV = 1, delta.keV = 10,
-                                            I = 81, Z = 6, A = 12.011, rho = 2.265,
-                                            Sternheimer.tab.id = "graphite-1",
-                                            C.model = "fixed",
-                                            delta.fixed = NA,
-                                            df.Sternheimer = NULL,
-                                            verbose=FALSE){
+                                            dat=NULL, delta=NA){
+#                                            I = 81, Z = 6, A = 12.011, rho = 2.265,
+#                                            Sternheimer.tab.id = "graphite-1",
+#                                            C.model = "fixed",
+#                                            delta.fixed = NA,
+#                                            df.Sternheimer = NULL,
+#                                           verbose=FALSE){
 # Created: July 29, 2022
 # Revised: July 31, 2022
 # Name:    Claus E. Andersen
@@ -153,6 +161,11 @@ restricted.electronic.MSP.Bethe <- function(MeV = 1, delta.keV = 10,
 delta.keV <- pmin(delta.keV, 0.5*MeV*1000)
 
 T      <- MeV
+
+Z      <- dat$Z
+A      <- dat$A
+I      <- dat$I
+
 re     <- 2.81794092e-15 # m, classical electron radius
 e      <- 1.60217733e-19 # J
 E0.MeV <- 0.51099895000
@@ -164,21 +177,21 @@ tau    <- T / E0.MeV
 eta    <- delta.keV / 1000 / T
 beta   <- (1 - (E0.MeV/(E0.MeV+T))^2 )^0.5
 
-# Density effect:
-delta <- delta.Sternheimer(MeV=MeV, I=I, Z=Z, A=A, rho=rho,
-                           Sternheimer.tab.id = Sternheimer.tab.id,
-                           C.model = C.model,
-                           df.Sternheimer = df.Sternheimer,
-                           verbose = verbose)
-if(!is.na(delta.fixed)){
-  # Overwrite Sternheimer
-  if(verbose){
-    print("Message from electronic.MSP.Bethe")
-    print("A delta.fixed value has been supplied, and this will be used in the MSP computations.")
-    print(paste("delta =", delta.fixed))
-  }
-  delta <- delta.fixed
-}
+## Density effect:
+#delta <- delta.Sternheimer(MeV=MeV, I=I, Z=Z, A=A, rho=rho,
+#                           Sternheimer.tab.id = Sternheimer.tab.id,
+#                           C.model = C.model,
+#                           df.Sternheimer = df.Sternheimer,
+#                           verbose = verbose)
+#if(!is.na(delta.fixed)){
+#  # Overwrite Sternheimer
+#  if(verbose){
+#    print("Message from electronic.MSP.Bethe")
+#    print("A delta.fixed value has been supplied, and this will be used in the MSP computations.")
+#    print(paste("delta =", delta.fixed))
+#  }
+#  delta <- delta.fixed
+#}
 
 # ICRU-90 eq. 4.12
 Hminus <-  -1 - beta^2 + log( 4*(1-eta)*eta) + (1-eta)^-1 + (1-beta^2)*(tau^2*eta^2/2 + (2*tau+1) * log(1-eta))
@@ -278,31 +291,24 @@ print(df)
 df
 }# end function
 
-#' delta.Sternheimer
-#' Not so easy as Sternheimer
+#' Sternheimer.delta.param
+#'
 #' @export
 #'
 ############################################################################
 # Sternheimer model for density effect
 ############################################################################
-delta.Sternheimer <- function(MeV = 1, I = 81, Z = 6, A = 12.011, rho = 2.265,
-                     Sternheimer.tab.id = "graphite-1",
-                     C.model = "fixed",
-                     df.Sternheimer = NULL,
-                     verbose=FALSE){
+Sternheimer.delta.param <- function(MeV = 1, dat = NA){
 # Created: July 29, 2022
-# Revised: July 31, 2022
+# Revised: August 9, 2022
 # Name:    Claus E. Andersen
 # Input:
 #   MeV = kinetic energy of electron in MeV (this can be a vector)
 #   I   = ionization energy in eV
 #   Z   = atomic number (e.g. 6 for graphite)
 #   A   = atomic mass (e.g. 12.011 for graphite)
-#   rho = density in g/cm3
-#   Sternheimer.tab.id = the identified needed to find your material in the database.
-#   C.model = "plasma" or "fixed" (the model used by the Sternheimer function).
-#   df.Sternheimer = supply Sternheimer data on the fly (if not included in database)
-# Output:
+#   param.C, paran.X0 etc. : Sternheimer model fit parameters
+#   # Output:
 #   The Sternheimer density effect correction (delta) needed in the Bethe formula.
 # Reference: Andero et al. (2017) p. 74
 
@@ -310,69 +316,13 @@ E0   <- 0.51099895000
 beta <- (1 - (E0/(E0+MeV))^2 )^0.5
 X  <- log10(beta / (1-beta^2)^0.5)
 
-
-# Plasma energy
-Ep <- NA
-
 # Sternheimer parameters
-C  <- NA
-X0 <- NA
-X1 <- NA
-a  <- NA
-m  <- NA
-delta.X0 <- NA
-
-
-if(is.null(df.Sternheimer)){
-# No Sternheimer coeccticients were supplied
-# We will use the data from the read.Sternheimer.data
-# function
-  df.Sternheimer <- read.Sternheimer.data(print.wanted=FALSE)
-  Sternheimer.tab.id.sel = Sternheimer.tab.id
-
-  df.Sternheimer %>%
-  filter(toupper(Sternheimer.tab.id) == toupper(Sternheimer.tab.id.sel) ) ->
-  df.Sternheimer
-
-
-  if(!nrow(df.Sternheimer)==1){
-    print("Problem with df.Sternheimer in function delta.Sternheimer:")
-    print(paste("Requested Sternheimer.tab.id.sel:",Sternheimer.tab.id))
-    print("There should be one row in the data frame. Not zero, and not 2 or more.")
-    print("If the material of interest is not already in the read.Sternheimer.data, then you can supply the")
-    print("coefficients directly using the format:")
-    print("df.Sternheimer = data.frame(Z=6, Sternheimer.tab.id = 'whatever',  note= 'whatever',")
-    print("                            C = -2.9925, X0 = -0.0351, X1 = 2.486, a  = 0.20240, m  = 3.0036, delta.X0 = 0.10)")
-    print("in the function call.")
-    print("")
-    print("Full table with available materials:")
-    print(read.Sternheimer.data())
-    print("")
-    print("Selected table for requested id:")
-    print(df.Sternheimer)
-    stop("I quit! ByeBye.")
-  }
-}# Sternheimer coefficient read
-
-
-C  <- df.Sternheimer$C
-X0 <- df.Sternheimer$X0
-X1 <- df.Sternheimer$X1
-a  <- df.Sternheimer$a
-m  <- df.Sternheimer$m
-delta.X0 <- df.Sternheimer$delta.X0
-
-
-
-# C may be a fixed value, or it may be computed from
-# rho and I. This can be important for understanding of
-# the sensirivity of the electronic stopping power and
-# I (as doscussed, for example, by Andreo).
-if(toupper(C.model)%in% toupper(c("PLASMA"))){
-  # Plasma model C
-  Ep <- 28.8159 * (rho * Z/A)^0.5 # eV
-  C  <- -2 * log(I/Ep)-1
-}
+C  <- dat$param.C
+X0 <- dat$param.X0
+X1 <- dat$param.X1
+a  <- dat$param.a
+m  <- dat$param.m
+delta.X0 <- dat$param.delta.X0
 
 # Sternheimer models for different energy regimes:
 delta0 <- 10^(2*(X-X0))*delta.X0
@@ -393,43 +343,13 @@ if(sum(ok)>0){
   delta[ok] <- delta2[ok]
 }
 
-
-if(verbose){
-  print("Message from function delta.Sternheimer:")
-  if(!is.null(df.Sternheimer)){
-    print("The following parameters were supplied in the function call:")
-    print(df.Sternheimer)
-  }
-  print(paste("  C model =",C.model))
-  print(paste("  Ep =",Ep))
-  print(paste("  C =",C))
-  print(paste("  delta =",delta))
-}
-
+dat$param.MeV <- MeV
+dat$param.delta <- delta
 
 # Return the density effect correction, delta.
-delta
-} # delta.Sternheimer
+dat
+} # Sternheimer.delta.param
 
-#' sensitivity.electronic.MSP.Bethe.dlog.dlogI
-#' Not so easy as Sternheimer
-#' @export
-#'
-############################################################################
-# Sternheimer model for density effect
-############################################################################
-sensitivity.electronic.MSP.Bethe.dlog.dlogI <- function(MeV=1, I=81, Z=6, A=12.011, rho=2.265,
-                                               C.model="fixed", df.Sternheimer = NULL){
-# Created: July 29, 2022
-# Revised: July 31, 2022
-# Name:    Claus E. Andersen
-# Reference: Andero et al. (2017) p. 74
-dI <- 0.1
-Y0 <- electronic.MSP.Bethe(MeV=MeV, I=I,    Z=Z, A=A, rho=rho, C.model=C.model, df.Sternheimer = df.Sternheimer)
-dY <- electronic.MSP.Bethe(MeV=MeV, I=I+dI, Z=Z, A=A, rho=rho, C.model=C.model, df.Sternheimer = df.Sternheimer) -
-      electronic.MSP.Bethe(MeV=MeV, I=I,    Z=Z, A=A, rho=rho, C.model=C.model, df.Sternheimer = df.Sternheimer)
-dY/Y0 / (dI/I)
-}
 
 #' demo.stopping.power.validation
 #' Not so easy as Sternheimer
@@ -444,62 +364,56 @@ demo.stopping.power.validation <- function(){
 # Name:    Claus E. Andersen
 print("This function should be run manually, line by line.")
 
-# All data relate to graphite Z = 6 A = 12.011 I = 81 and rho = 2.265
+dat.C <- list(
+    Z    = 6,
+    A    = 12.011,
+    I    = 81,
+    exact.rho =  2.265,
+    exact.fvec = c(2/6, 2/6, 2/6),
+    exact.Evec = c(288.00, 16.59, 11.26),
+    exact.plot = !FALSE,
+    param.note="Sternheimer et. al 1984, graphite w. I = 78 and rho = 2.265",
+    param.C = -2.8680, param.X0 = -0.0178, param.X1 = 2.3415, param.a  = 0.26142, param.m  = 2.8697,
+    param.delta.X0 = 0.12
+    )
+dat.C <- Sternheimer.set.to.conductor(dat.C)
+dat <- dat.C
 
-# Fixed C model
-delta.Sternheimer(0.01,C.model="fixed") # Result = 0.004645 ICRU-90 ref = 0.002634
-delta.Sternheimer(0.1, C.model="fixed") # Result = 0.050507 ICRU-90 ref = 0.04047
-delta.Sternheimer(1,   C.model="fixed") # Result = 0.780981 ICRU-90 ref = 0.7593
-delta.Sternheimer(10,  C.model="fixed") # Result = 3.37989  ICRU-90 ref = 3.381
+# Note that the param data are for I = 78  whereas the Bethe eq. is evaluated at I = 81
+# Sternheimer parameter model
+out1 <- Sternheimer.delta.param(0.01,dat) # Result = 0.005147 ICRU-90 ref = 0.002634
+out2 <- Sternheimer.delta.param(0.1,dat)  # Result = 0.055967 ICRU-90 ref = 0.04047
+out3 <- Sternheimer.delta.param(1.0,dat)  # Result = 0.820704 ICRU-90 ref = 0.7593
+out4 <- Sternheimer.delta.param(10,dat)   # Result = 3.460897 ICRU-90 ref = 3.381
 
-# Plasma C model
-delta.Sternheimer(0.01)# Result = 0.004645 ICRU-90 ref = 0.002634
-delta.Sternheimer(0.1) # Result = 0.050507 ICRU-90 ref = 0.04047
-delta.Sternheimer(1)   # Result = 0.829949 ICRU-90 ref = 0.7593
-delta.Sternheimer(10)  # Result = 3.428857 ICRU-90 ref = 3.381
+# Stern exact  model
+out11 <- Sternheimer.delta.exact(0.01,out1) # Result = NA       ICRU-90 ref = 0.002634
+out12 <- Sternheimer.delta.exact(0.1,out2)  # Result = NA       ICRU-90 ref = 0.04047
+out13 <- Sternheimer.delta.exact(0.42,out3)  # Result = 0.732938 ICRU-90 ref = 0.7593
+out13 <- Sternheimer.delta.exact(1.0,out3)  # Result = 0.732938 ICRU-90 ref = 0.7593
+out14 <- Sternheimer.delta.exact(10,out4)   # Result = 3.304996 ICRU-90 ref = 3.381
 
-# Fixed C model
-electronic.MSP.Bethe(MeV=0.010,C.model="fixed") # Result = 19.9838 ICRU-90 = 19.99
-electronic.MSP.Bethe(MeV=0.100,C.model="fixed") # Result = 3.65136 ICRU-90 = 3.654
-electronic.MSP.Bethe(MeV=1.00, C.model="fixed") # Result = 1.60415 ICRU-90 = 1.606
-electronic.MSP.Bethe(MeV=10.00,C.model="fixed") # Result = 1.72944 ICRU-90 = 1.729
+# Unrestricted mass electronic stopping power, delta = Sternheimer parameter model
+electronic.MSP.Bethe(MeV=0.010, out11, out11$param.delta) # Result = 19.983 ICRU-90 = 19.99
+electronic.MSP.Bethe(MeV=0.100, out12, out12$param.delta) # Result = 3.6500 ICRU-90 = 3.654
+electronic.MSP.Bethe(MeV=1.00,  out13, out13$param.delta) # Result = 1.6007 ICRU-90 = 1.606
+electronic.MSP.Bethe(MeV=10.00, out14, out14$param.delta) # Result = 1.7232 ICRU-90 = 1.729
 
-# Plasma C model
-electronic.MSP.Bethe(MeV=0.010) # Result = 19.9838 ICRU-90 = 19.99
-electronic.MSP.Bethe(MeV=0.100) # Result = 3.65136 ICRU-90 = 3.654
-electronic.MSP.Bethe(MeV=1.00)  # Result = 1.59991 ICRU-90 = 1.606
-electronic.MSP.Bethe(MeV=10.00) # Result = 1.72567 ICRU-90 = 1.729
+# Unrestricted mass electronic stopping power, delta = Sternheimer exact model
+electronic.MSP.Bethe(MeV=0.010, out11, out11$exact.delta) # Result = NA      ICRU-90 = 19.99
+electronic.MSP.Bethe(MeV=0.100, out12, out12$exact.delta) # Result = NA      ICRU-90 = 3.654
+electronic.MSP.Bethe(MeV=1.00,  out13, out13$exact.delta) # Result = 1.60832 ICRU-90 = 1.606
+electronic.MSP.Bethe(MeV=10.00, out14, out14$exact.delta) # Result = 1.7352  ICRU-90 = 1.729
 
-# Note that the fixed-C model gives slighter better results than the
-# plasma model for the mass electronic stopping power for graphite.
-# The plasma model, however, is much better at predicting the I
-# sensitivity for higher erergies that the fixed-C model.
-
-
-# Supply density correction from ICRU-90 using the delts.fixed argument:
-electronic.MSP.Bethe(MeV=0.010, delta.fixed=0.002634) # Result = 19.98794 ICRU-90 = 19.99
-electronic.MSP.Bethe(MeV=0.100, delta.fixed=0.04047)  # Result = 3.653922 ICRU-90 = 3.654
-electronic.MSP.Bethe(MeV=1.00,  delta.fixed=0.7593)   # Result = 1.606032 ICRU-90 = 1.606
-electronic.MSP.Bethe(MeV=10.00, delta.fixed=3.381)    # Result = 1.729355 ICRU-90 = 1.729
+# Supply density correction from ICRU-90 using the ICRU-90 value for delta:
+electronic.MSP.Bethe(MeV=0.010, out11, delta=0.002634) # Result = 19.99 ICRU-90 = 19.99
+electronic.MSP.Bethe(MeV=0.100, out12, delta=0.04047)  # Result = 3.654 ICRU-90 = 3.654
+electronic.MSP.Bethe(MeV=1.00,  out13, delta=0.7593)   # Result = 1.606 ICRU-90 = 1.606
+electronic.MSP.Bethe(MeV=10.00, out14, delta=3.381)    # Result = 1.729 ICRU-90 = 1.729
 # We now have full agreement with the ICRU-90 values. This implies that the
 # source of disagreement identified above arises solely from the density effect
 # computations.
 
-# Fixed C model
-sensitivity.electronic.MSP.Bethe.dlog.dlogI(MeV=0.010, C.model="fixed")
-sensitivity.electronic.MSP.Bethe.dlog.dlogI(MeV=0.100, C.model="fixed")
-sensitivity.electronic.MSP.Bethe.dlog.dlogI(MeV=1.00,  C.model="fixed")
-sensitivity.electronic.MSP.Bethe.dlog.dlogI(MeV=10.00, C.model="fixed")
-# Note that the fixed C model wrongly predicts that the
-# density effect to be highly sensitive to I for large energies.
-
-# Plasma C model
-sensitivity.electronic.MSP.Bethe.dlog.dlogI(MeV=0.010, C.model="plasma")
-sensitivity.electronic.MSP.Bethe.dlog.dlogI(MeV=0.100, C.model="plasma")
-sensitivity.electronic.MSP.Bethe.dlog.dlogI(MeV=1.00, C.model="plasma")
-sensitivity.electronic.MSP.Bethe.dlog.dlogI(MeV=10.00, C.model="plasma")
-# Note that the plasma model (correctly) predicts that the
-# density effect is not sensitive to I for large energies.
 } # stopping.power.validation.computations
 
 #' demo.stopping.power.plot

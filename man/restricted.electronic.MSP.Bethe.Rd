@@ -8,15 +8,8 @@ Not so easy as Sternheimer}
 restricted.electronic.MSP.Bethe(
   MeV = 1,
   delta.keV = 10,
-  I = 81,
-  Z = 6,
-  A = 12.011,
-  rho = 2.265,
-  Sternheimer.tab.id = "graphite-1",
-  C.model = "fixed",
-  delta.fixed = NA,
-  df.Sternheimer = NULL,
-  verbose = FALSE
+  dat = NULL,
+  delta = NA
 )
 }
 \description{

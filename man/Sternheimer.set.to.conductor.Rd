@@ -9,7 +9,6 @@ Sternheimer.set.to.conductor(dat)
 \description{
 Ascertain that material is treated as conductor in Sternheimer delta computations
 
-
  dat <- Sternheimer.set.to.conductor(dat)
 
 The binding energy of the outer subshell is set to zero

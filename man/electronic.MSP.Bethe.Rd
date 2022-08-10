@@ -5,18 +5,7 @@
 \title{electronic.MSP.Bethe
 Not so easy as Sternheimer}
 \usage{
-electronic.MSP.Bethe(
-  MeV = 1,
-  I = 81,
-  Z = 6,
-  A = 12.011,
-  rho = 2.265,
-  Sternheimer.tab.id = "graphite-1",
-  C.model = "fixed",
-  delta.fixed = NA,
-  df.Sternheimer = NULL,
-  verbose = FALSE
-)
+electronic.MSP.Bethe(MeV = 1, dat = NULL(), delta = NA)
 }
 \description{
 electronic.MSP.Bethe

@@ -1,18 +1,59 @@
+#' @title clanElectrons
+#' @description  Package for computation of electronic stopping power and density effect (Sternheimer)
+#' Dummy function to ease acces to the help index.
+#'
+#'  clanElectrons()
+#'
+#'  ?clanElectrons # gives you an index of functions in package
+#'
+#'  #' Status:
+#'
+#'  1. Bethe formula and Sternheimer.exact.delta agress perfectly with ICRU-90
+#'  for water, but NOT for graphite.
+#'
+#'  2. More work needed for the lower energies for insulators and conductors.
+#'  Clean up of examples are needed.
+#'
+#'  3. Consider if material data could be stored.
+#'
+#'  4. Perhaps we should make a set of functions:
+#'
+#'   demo.MSP.water
+#'
+#'   demo.MSP.graphite
+#'
+#'   demo.alanine
+#'
+#'   demo.MSP.Al
+#'
+#'   demo.MSP.Be
+#'
+#'   etc.
+#'
+#'
+#' @export
+clanElectrons <- function(){
+# Dummy function
+}
+
 #' @title Sternheimer.set.to.conductor
 #' @description  Ascertain that material is treated as conductor in Sternheimer delta computations
-#'
 #'
 #'  dat <- Sternheimer.set.to.conductor(dat)
 #'
 #' The binding energy of the outer subshell is set to zero
 #' @export
+
 Sternheimer.set.to.conductor <- function(dat){
 # Set outer binding energy to zero
-Evec <- dat$Evec.org
-nlev <- length(Evec)
+# Assume: dat$exact.fvec and dat$exact.Evec  are the originals
+# that should NOT be modified. The working versions
+# dat$fvec and dat$Evec will be modified copies.
+dat$Evec       <- dat$exact.Evec
+dat$fvec       <- dat$exact.fvec
+nlev           <- length(dat$Evec)
 dat$Evec[nlev] <- 0
-dat$fvec <- dat$fvec.org
-dat$type <- "conductor"
+dat$exact.type <- "conductor"
 dat
 }
 
@@ -25,9 +66,13 @@ dat
 #' @export
 Sternheimer.set.to.insulator <- function(dat){
   # Set binding energies to original values
-  dat$Evec <- dat$Evec.org
-  dat$fvec <- dat$fvec.org
-  dat$type <- "insulator"
+  # Set outer binding energy to zero
+  # Assume: dat$exact.fvec and dat$exact.Evec are the originals
+  # that should NOT be modified. The working versions
+  # dat$fvec and dat$Evec will be modified copies.
+  dat$Evec <- dat$exact.Evec
+  dat$fvec <- dat$exact.fvec
+  dat$exact.type <- "insulator"
   dat
 }
 
@@ -48,9 +93,9 @@ Sternheimer.f.root.mu.st <- function(mu.st,dat){
 # x = mu.st will fullfill: f.root.mu.st(x) = 0
 fvec <- dat$fvec
 Evec <- dat$Evec
-Ep <- dat$Ep
+Ep   <- dat$Ep
 nlev <- dat$nlev
-I <- dat$I
+I    <- dat$I
 ans <- 0
 fn <- fvec[nlev]
 for(i in 1:(nlev)){
@@ -143,7 +188,7 @@ ans
 #'     ATOMIC DATA AND NUCLEAR DATA TABLES 30,26 l-27 1 ( 1984)
 #' (3) G4DensityEffectCalculator.cc by Matthew Strait <straitm@umn.edu> 2019
 #' @export
-Sternheimer.delta.exact <- function(dat=NULL){
+Sternheimer.delta.exact <- function(MeV=1, dat=NULL){
 # Created: Aug 7, 2022
 # Revised: Aug 7, 2022
 # Name   : Claus E. Andersen
@@ -179,24 +224,12 @@ Sternheimer.delta.exact <- function(dat=NULL){
 #     ATOMIC DATA AND NUCLEAR DATA TABLES 30,26 l-27 1 ( 1984)
 # (3) G4DensityEffectCalculator.cc by Matthew Strait <straitm@umn.edu> 2019
 
-if(is.null(dat)){
- dat <- list(
-    plot.wanted = FALSE,
-    MeV = 1000, # Kinetic energy of the electron
-    nlev = 6,
-    Z    = 13,
-    A    = 26.98154,
-    rho.density =  2.265,
-    fvec = c(2/13, 2/13 ,2/13, 2/13, 2/13, 3/13),
-    #Evec =c(  1564.0 , 121. , 77.0 , 77.0 , 10.62 , 5.986),
-    Evec =c(  1564.0 , 121. , 77.0 , 77.0 , 10.62 ,      0), # Conductor
-    I = 166.0)
-  } # null dat
 
 E0       <- 0.51099895000
-dat$beta <- (1 - (E0/(E0+dat$MeV))^2)^0.5
-dat$Ep   <- 28.8159 * (dat$rho.density *dat$Z/dat$A)^0.5
-print(dat)
+dat$beta <- (1 - (E0/(E0+MeV))^2)^0.5
+dat$Ep   <- 28.8159 * (dat$exact.rho *dat$Z/dat$A)^0.5
+dat$nlev <- length(dat$fvec)
+dat$exact.MeV <- MeV
 
 
 ####################################################
@@ -237,12 +270,12 @@ df <- data.frame(mu.st=xx,val=yy)
 plt.mu.st <- lattice::xyplot(val ~ mu.st,
   data=df,
   panel=function(x,y,...){
-    panel.xyplot(x,y,...)
-    panel.abline(h=0,lty="dashed")
-    panel.abline(v=mu.st.root,lty="dashed")
+    lattice::panel.xyplot(x,y,...)
+    lattice::panel.abline(h=0,lty="dashed")
+    lattice::panel.abline(v=mu.st.root,lty="dashed")
   }
 )
-if(dat$plot.wanted)(print(plt.mu.st))
+if(dat$exact.plot)(print(plt.mu.st))
 }# both pos and neg
 
 dat$mu.st <- mu.st.root
@@ -284,13 +317,13 @@ df <- data.frame(L=xx,val=yy)
 plt.L <- lattice::xyplot(val ~ L,
 data=df,
 panel=function(x,y,...){
-  panel.xyplot(x,y,...)
-  panel.abline(h=0,lty="dashed")
-  panel.abline(v=L.root,lty="dashed")
+  lattice::panel.xyplot(x,y,...)
+  lattice::panel.abline(h=0,lty="dashed")
+  lattice::panel.abline(v=L.root,lty="dashed")
 }
 )
 
-if(dat$plot.wanted){print(plt.L)}
+if(dat$exact.plot){print(plt.L)}
 } # both pos and neg
 
 dat$L  <- L.root
@@ -323,9 +356,9 @@ for(i in 1:nlev){
 delta <- ans - L^2 * (1-beta^2)
 
 # Done
-dat$delta <- delta
+dat$exact.delta <- delta
 
-if(dat$plot.wanted){clanLattice::print.trellis.plots(list(plt.mu.st,plt.L),1)}
+if(dat$exact.plot){clanLattice::print.trellis.plots(list(plt.mu.st,plt.L),1)}
 
 dat
 } #Sternheimer.delta.exact.function
@@ -399,7 +432,7 @@ print("This function should be run manually, line by line.")
 
 
 dat.Al.model1 <- list(
-plot.wanted = FALSE,
+exact.plot = FALSE,
 MeV = 1000,
 nlev = 6,
 Z    = 13,
@@ -450,3 +483,152 @@ data=df)
 
 print(plt)
 } # demo.Sternheimer.delta.exact.plot
+
+
+
+demo.Sternheimer.water <- function(){
+# Created: August 9, 2022
+#  Revised: August 9, 2022
+# Name:    Claus E. Andersen
+
+# How to compute the density-correction for a compound
+# like water? Add the Z for all atoms involved.
+
+# Arrange the fvec and the Evec atom by atom.
+# Compute electron subshell occopancy factor as the number of electrons
+# divided by the total Z. So, for water we have Z.sum = 10 electrons.
+# First we consider the two hydrogen atoms, they have 13.6 eV binding energy
+# and we therefore set fvec[1] to 2/10 and Evec[1] to 13.6. Then we have the
+# 8 electrons in oxygen: fvec[2] = 2, fvec[3] = 2, and fvec[4] = 4, with
+# binding energies:  Evec[2] = 538.0, Evec[3] = 28.48, and Evec[4] = 13.62.
+# Compounds should be treated as an insulator.
+
+# In this example, we use the recommended values of I = 78 eV for water
+# and we also set the density to 0.998 g/cm3 which has some implications
+# for the density correction correction.
+
+dat.H2O <- list(
+  Z    = 10,
+  A    = 18.0158,
+  I    = 78,
+  exact.rho =  0.998,
+  exact.fvec = c(2/10, 2/10, 2/10, 4/10),
+  exact.Evec = c(13.6, 538.0, 28.48, 13.62),
+  exact.plot = FALSE,
+  param.note="Sternheimer et. al 1984, water (liquid) I = 75 and rho = 1.000 ",
+  param.C = -3.5017, param.X0 = 0.2400, param.X1 = 2.8004, param.a  = 0.09116, param.m  = 3.4773,
+  param.delta.X0 = 0.097
+)
+
+# Always set compounds to insulators
+dat.H2O <- Sternheimer.set.to.insulator(dat.H2O)
+dat <- dat.H2O
+
+############################
+# 800 keV
+############################
+MeV <- 0.8
+dat <- Sternheimer.delta.exact(MeV, dat)
+xx0 <- electronic.MSP.Bethe(MeV, dat, delta = 0) # No density effect correction
+xx <- electronic.MSP.Bethe(MeV, dat, delta = dat$exact.delta) # Exact Sternheimer density correction
+df1 <- data.frame(MeV = MeV, I.eV = dat$I, rho=dat$exact.rho,  MSP.R0 = xx0,
+                  MSP.R = xx, MSP.ICRU90=1.880,
+                  delta.R=dat$exact.delta, delta.ICRU90=0.1005)
+
+############################
+# 1 MeV
+############################
+MeV <- 1.0
+dat <- Sternheimer.delta.exact(MeV, dat)
+xx0 <- electronic.MSP.Bethe(MeV, dat, delta = 0) # No density effect correction
+xx  <- electronic.MSP.Bethe(MeV, dat, delta = dat$exact.delta) # Exact Sternheimer density correction
+df2 <- data.frame(MeV = MeV, I.eV = dat$I, rho=dat$exact.rho,  MSP.R0 = xx0,
+                  MSP.R = xx, MSP.ICRU90 = 1.845,
+                  delta.R = dat$exact.delta, delta.ICRU90 = 0.2086)
+
+############################
+# 10 MeV
+############################
+MeV <- 10.0
+dat <- Sternheimer.delta.exact(MeV, dat)
+xx0 <- electronic.MSP.Bethe(MeV, dat, delta = 0) # No density effect correction
+xx  <- electronic.MSP.Bethe(MeV, dat, delta = dat$exact.delta) # Exact Sternheimer density correction
+df3 <- data.frame(MeV = MeV, I.eV = dat$I, rho=dat$exact.rho,  MSP.R0 = xx0,
+                  MSP.R = xx, MSP.ICRU90 = 1.967,
+                  delta.R = dat$exact.delta, delta.ICRU90 = 2.928)
+
+############################
+# 100 MeV
+############################
+MeV <- 100.0
+dat <- Sternheimer.delta.exact(MeV, dat)
+xx0 <- electronic.MSP.Bethe(MeV, dat, delta = 0) # No density effect correction
+xx  <- electronic.MSP.Bethe(MeV, dat, delta = dat$exact.delta) # Exact Sternheimer density correction
+df4 <- data.frame(MeV = MeV, I.eV = dat$I, rho=dat$exact.rho,  MSP.R0 = xx0,
+                  MSP.R = xx, MSP.ICRU90 = 2.202,
+                  delta.R = dat$exact.delta, delta.ICRU90 = 6.998)
+
+
+############################
+# 1000 MeV
+############################
+MeV <- 1000.0
+dat <- Sternheimer.delta.exact(MeV, dat)
+xx0 <- electronic.MSP.Bethe(MeV, dat, delta = 0) # No density effect correction
+xx  <- electronic.MSP.Bethe(MeV, dat, delta = dat$exact.delta) # Exact Sternheimer density correction
+df5 <- data.frame(MeV = MeV, I.eV = dat$I, rho=dat$exact.rho,  MSP.R0 = xx0,
+                  MSP.R = xx, MSP.ICRU90 = 2.401,
+                  delta.R = dat$exact.delta, delta.ICRU90 = 11.58)
+
+# Combine all results:
+df <- rbind(df1,df2,df3,df4,df5)
+
+############################################################################
+# Main results
+############################################################################
+
+# Excellent agreement with between the clanElectrons computations
+# and ICRU-90 values for water. MSP.R0 is the mass electronic
+# stopping power without density effect correction (delta=0).
+#
+#     MeV I.eV   rho   MSP.R0    MSP.R MSP.ICRU90    delta.R delta.ICRU90
+# 1 8e-01   78 0.998 1.890531 1.880437      1.880  0.1004488       0.1005
+# 2 1e+00   78 0.998 1.864880 1.844806      1.845  0.2086075       0.2086
+# 3 1e+01   78 0.998 2.216852 1.966726      1.967  2.9279906       2.9280
+# 4 1e+02   78 0.998 2.798672 2.202281      2.202  6.9977588       6.9980
+# 5 1e+03   78 0.998 3.387159 2.400502      2.401 11.5772526      11.5800
+
+
+############################################################################
+# Alternative computations.
+############################################################################
+
+# Computation with density set to 1 (ICRU-90 values are for 78/0.998)
+#    MeV I.eV rho   MSP.R0    MSP.R MSP.ICRU90    delta.R delta.ICRU90
+#1 8e-01   78   1 1.890531 1.880374      1.880  0.1010731       0.1005
+#2 1e+00   78   1 1.864880 1.844726      1.845  0.2094346       0.2086
+#3 1e+01   78   1 2.216852 1.966590      1.967  2.9295878       2.9280
+#4 1e+02   78   1 2.798672 2.202113      2.202  6.9997265       6.9980
+#5 1e+03   78   1 3.387159 2.400331      2.401 11.5792542       11.580
+
+# Computation with I et to 75 (ICRU-90 values are for 78/0.998)
+#    MeV I.eV   rho   MSP.R0    MSP.R MSP.ICRU90    delta.R delta.ICRU90
+#1 8e-01   75 0.998 1.898414 1.885749      1.880  0.1260246       0.1005
+#2 1e+00   75 0.998 1.872428 1.849151      1.845  0.2418950       0.2086
+#3 1e+01   75 0.998 2.223553 1.968077      1.967  2.9906215       2.9280
+#4 1e+02   75 0.998 2.805357 2.202391      2.202  7.0749039       6.9980
+#5 1e+03   75 0.998 3.393844 2.400503      2.401 11.6556801       11.580
+
+# Computation with I et to 75 and rho =1 (ICRU-90 values are for 78/0.998)
+# These results should align with ICRU-37.
+#    MeV I.eV rho   MSP.R0    MSP.R MSP.ICRU90    delta.R delta.ICRU90
+#1 8e-01   75   1 1.898414 1.885681      1.880  0.1267066       0.1005
+#2 1e+00   75   1 1.872428 1.849067      1.845  0.2427676       0.2086
+#3 1e+01   75   1 2.223553 1.967940      1.967  2.9922215       2.9280
+#4 1e+02   75   1 2.805357 2.202223      2.202  7.0768740       6.9980
+#5 1e+03   75   1 3.393844 2.400333      2.401 11.6576817       11.580
+
+df
+}
+
+
