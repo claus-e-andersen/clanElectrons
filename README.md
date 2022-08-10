@@ -12,7 +12,7 @@ material in question.
 ## Example: Stopping power computation for water and comparison with ICRU-90
 
 First we provide the data for water (liquid):
-
+```
 dat.H2O <- list(
 
   Z    = 10,       # Atomic number
@@ -36,6 +36,7 @@ dat.H2O <- list(
   param.delta.X0 = 0.097
   
 )
+```
 
 Notes:
 
