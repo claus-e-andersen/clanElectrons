@@ -14,28 +14,19 @@ material in question.
 First we provide the data for water (liquid):
 ```
 dat.H2O <- list(
-
   Z    = 10,       # Atomic number
-  
   A    = 18.0158,  # Atomic mass
-  
   I    = 78,       # Mean excitation energy in eV
-  
+  #
   exact.rho =  0.998, # Density in g/cm3 needed for the exact density-correction
-  
   exact.fvec = c(2/10, 2/10, 2/10, 4/10), # Occupation fractions for the subshells in H2 and O.
-  
   exact.Evec = c(13.6, 538.0, 28.48, 13.62), # Binding energies of subshells from Carlson (1975), see ICRU-90.
-  
   exact.plot = FALSE, # Supplementary plots related to the root finding in the exact density correction
-  
+  #
   param.note="Sternheimer et. al 1984, water (liquid) I = 75 and rho = 1.000 ", 
-  
   param.C = -3.5017, param.X0 = 0.2400, param.X1 = 2.8004, param.a  = 0.09116, param.m  = 3.4773,
-  
   param.delta.X0 = 0.097
-  
-)
+  )
 ```
 
 Notes:
@@ -44,38 +35,26 @@ exact referes to the detailed "exact" Sternheimer computation whereas param refe
 
 Always set compounds to insulators
 
+```
 dat.H2O <- Sternheimer.set.to.insulator(dat.H2O)
-
 dat <- dat.H2O
 
-- ############################
-- # 800 keV
-- ############################
-
+############################
+# 800 keV
+############################
 MeV <- 0.8 # Electron kinetic energy
-
 dat <- Sternheimer.delta.exact(MeV, dat)
-
 xx0 <- electronic.MSP.Bethe(MeV, dat, delta = 0) # Compute MSP without density effect correction (delta = 0)
-
 xx <- electronic.MSP.Bethe(MeV, dat, delta = dat$exact.delta) # Compute MSP with exact Sternheimer density correction
 
-df1 <- data.frame(
-
-MeV = MeV, 
-
+df1 <- data.frame(MeV = MeV, 
 I.eV = dat$I, 
-
 rho=dat$exact.rho, 
-
 MSP.R0 = xx0,
-
-MSP.R = xx, MSP.ICRU90=1.880,
-                  
-delta.R=dat$exact.delta, 
-
-delta.ICRU90=0.1005)
-
+MSP.R = xx, MSP.ICRU90 = 1.880,
+delta.R = dat$exact.delta, 
+delta.ICRU90 = 0.1005)
+```
 
 ## Excellent agreement between the clanElectrons computations and ICRU-90 values for water. 
 
@@ -99,6 +78,7 @@ delta.ICRU90=0.1005)
 
 The library can be loaded into R using the install_github command which is in the devtools package:
 
+```
 install.packages("devtools")
 
 library(devtools)
@@ -107,10 +87,11 @@ install_github("claus-e-andersen/clanElectrons")
 
 library(clanElectrons)
 
-To get a list of functions in the library, just call:
+```
 
+To get a list of functions in the library, just call one of these (after loading the package):
+```
 help(package=clanElectrons)
-
-or
-
 library(help=clanElectrons)
+?clanElectrons
+```
