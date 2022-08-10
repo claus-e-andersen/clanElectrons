@@ -72,30 +72,30 @@ delta.R=dat$exact.delta,
 delta.ICRU90=0.1005)
 
 
-# Excellent agreement with between the clanElectrons computations
+  Excellent agreement with between the clanElectrons computations
 
-# and ICRU-90 values for water. 
+  and ICRU-90 values for water. 
 
-# MSP.R0 = mass electronic stopping power with delta = 0 (no correction of density effect).
+  MSP.R0 = mass electronic stopping power with delta = 0 (no correction of density effect).
 
-# MSP.R =  mass electronic stopping power computed with the clanElectrons software.
+  MSP.R =  mass electronic stopping power computed with the clanElectrons software.
 
-# delta.R = the density-effect correction computed with the clanElectrons software.
+  delta.R = the density-effect correction computed with the clanElectrons software.
 
-# Index ICRU90 = reference values from ICRU-90.
+  Index ICRU90 = reference values from ICRU-90.
 
 
-#     MeV I.eV   rho   MSP.R0    MSP.R MSP.ICRU90    delta.R delta.ICRU90
+     MeV I.eV   rho   MSP.R0    MSP.R MSP.ICRU90    delta.R delta.ICRU90
 
-# 1 8e-01   78 0.998 1.890531 1.880437      1.880  0.1004488       0.1005
+ 1 8e-01   78 0.998 1.890531 1.880437      1.880  0.1004488       0.1005
 
-# 2 1e+00   78 0.998 1.864880 1.844806      1.845  0.2086075       0.2086
+ 2 1e+00   78 0.998 1.864880 1.844806      1.845  0.2086075       0.2086
 
-# 3 1e+01   78 0.998 2.216852 1.966726      1.967  2.9279906       2.9280
+ 3 1e+01   78 0.998 2.216852 1.966726      1.967  2.9279906       2.9280
 
-# 4 1e+02   78 0.998 2.798672 2.202281      2.202  6.9977588       6.9980
+ 4 1e+02   78 0.998 2.798672 2.202281      2.202  6.9977588       6.9980
 
-# 5 1e+03   78 0.998 3.387159 2.400502      2.401 11.5772526      11.5800
+ 5 1e+03   78 0.998 3.387159 2.400502      2.401 11.5772526      11.5800
 
 
 
