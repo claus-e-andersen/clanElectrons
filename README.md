@@ -76,6 +76,9 @@ where
   - MSP.R =  mass electronic stopping power computed with the clanElectrons software.
   - delta.R = the density-effect correction computed with the clanElectrons software.
   - Index ICRU90 = reference values from ICRU-90.
+  
+See the function demo.Sternheimer.water() for further details.
+  
 ## Installation in R or Rstudio
 
 The library can be loaded into R using the install_github command which is in the devtools package:
