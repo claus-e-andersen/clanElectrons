@@ -83,11 +83,8 @@ The library can be loaded into R using the install_github command which is in th
 
 ```
 install.packages("devtools")
-
 library(devtools)
-
 install_github("claus-e-andersen/clanElectrons")
-
 library(clanElectrons)
 
 ```
