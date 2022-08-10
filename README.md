@@ -90,6 +90,14 @@ install_github("claus-e-andersen/clanElectrons")
 library(clanElectrons)
 
 ```
+You will also need to load the packages lattice, dplyr and clanLattice:
+```
+library(lattice)
+install.packages(dplyr)
+library(dplyr)
+install_github("claus-e-andersen/clanLattice")
+library(clanLattice)
+
 
 To get a list of functions in the library, just call one of these (after loading the package):
 ```
