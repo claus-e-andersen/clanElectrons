@@ -14,9 +14,9 @@ Dummy function to ease acces to the help index.
 
  ?clanElectrons # gives you an index of functions in package
 
- #' Status:
+ #' Status (August 10, 2022):
 
- 1. Bethe formula and Sternheimer.exact.delta agress perfectly with ICRU-90
+ 1. Bethe formula and Sternheimer.exact.delta agres perfectly with ICRU-90
  for water, but NOT for graphite.
 
  2. More work needed for the lower energies for insulators and conductors.
