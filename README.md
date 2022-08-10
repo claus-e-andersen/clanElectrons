@@ -1,22 +1,22 @@
 # clanElectrons (R package)
-Electronic stopping power (Bethe formula) for electrons including Sternheimer density-effect corrections
-(both "exact" and by parameters). Aimed for applications within radiotherapy dosimetry and comparisons with ICRU-37 
+Restricted and unrestricted mass electronic stopping power (Bethe formula) for electrons including Sternheimer density-effect corrections
+(both "exact" and by parameters). Aimed for research applications within radiotherapy dosimetry and comparisons with ICRU-37 
 and ICRU-90 publications.
 
 ## Main references:
 - ICRU-90: Key data for ionizing-radiation dosimetry: Measurement standards and applications (2014/2016).
-- DENSITY EFFECT FOR THE IONIZATION LOSS OF CHARGED PARTICLES IN VARIOUS SUBSTANCES by R. M. STERNHEIMER (Brookhaven), M. J. BERGER (NBS) and S. M. SELTZER (NBS). ATOMIC DATA AND NUCLEAR DATA TABLES 30,26 l-27 1 ( 1984).
+- R.M. Sternheimer (Brookhaven), M.J. Berger (NBS) and S.M. Seltzer (NBS): Density effect for the ionization loss of charged particles in various substances. Atomic Data and Nuclear Data Tables 30,26 l-27 1 (1984).
 - G4DensityEffectCalculator.cc for Geant4 by Matthew Strait (straitm-at-umn-dot-edu) 2019. 
 
 ## Applications:
 You specify Z, A, I, density and other material parameters and the package has functions for computation
-of electronic stopping power (both respricted and unrestricted) for electrons. The "exact" computation
-of the density effect using Sternheimer theory requires knowledge of binding energies for electrons in the
-material in question.
+of electronic stopping power (both restricted and unrestricted) for electrons. The "exact" computation
+of the density effect using Sternheimer theory requires knowledge of binding energies and occupation fractions for electrons in the
+subshells of the material in question.
 
 ## Example: Stopping power computation for water and comparison with ICRU-90
 
-First we provide the data for water (liquid):
+First, we provide the data for water (liquid) in a list called dat.H2O:
 ```
 dat.H2O <- list(
   Z    = 10,       # Atomic number
@@ -38,10 +38,13 @@ Notes:
 
 exact referes to the detailed "exact" Sternheimer computation whereas param referes to the simplified 1984 model fits by Sternheimer. In the example below, we only use the exact method. We here include the param stuff for completeness. 
 
-Always set compounds to insulators
+Secondly, we ascertain that the material (a compound) is treated as an insulator:
 
 ```
 dat.H2O <- Sternheimer.set.to.insulator(dat.H2O)
+```
+We finally do the computations using a
+```
 dat <- dat.H2O
 
 ############################
