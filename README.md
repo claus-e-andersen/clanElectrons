@@ -31,7 +31,7 @@ dat.H2O <- list(
 
 Notes:
 
-exact referes to the detailed "exact" Sternheimer computation whereas param referes to the 1984 model fits by Sternheimer. In the example below we only use the exact method. We here include the param stuff for completeness. 
+exact referes to the detailed "exact" Sternheimer computation whereas param referes to the simplified 1984 model fits by Sternheimer. In the example below, we only use the exact method. We here include the param stuff for completeness. 
 
 Always set compounds to insulators
 
