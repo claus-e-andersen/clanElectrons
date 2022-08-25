@@ -14,36 +14,27 @@ of electronic stopping power (both restricted and unrestricted) for electrons. T
 of the density effect using Sternheimer theory requires knowledge of binding energies and occupation fractions for electrons in the
 subshells of the material in question.
 
-## Example: Stopping power computation for water and comparison with ICRU-90
+## Example 1: Stopping power computation for water and comparison with ICRU-90
 
 First, we provide the data for water (liquid) in a list called dat.H2O:
 ```
 dat.H2O <- list(
-  Z    = 10,       # Atomic number
-  A    = 18.0158,  # Atomic mass
-  I    = 78,       # Mean excitation energy in eV
-  #
-  exact.rho =  0.998, # Density in g/cm3 only needed for the exact density-effect correction.
-  exact.fvec = c(2/10, 2/10, 2/10, 4/10), # Occupation fractions for the subshells in H2 and O.
-  exact.Evec = c(13.6, 538.0, 28.48, 13.62), # Binding energies of subshells from Carlson (1975), see ICRU-90.
-  exact.plot = FALSE, # Supplementary plots related to the root finding in the exact density correction
-  #
-  param.note="Sternheimer et. al 1984, water (liquid) I = 75 and rho = 1.000 ", 
-  param.C = -3.5017, param.X0 = 0.2400, param.X1 = 2.8004, param.a  = 0.09116, param.m  = 3.4773,
-  param.delta.X0 = 0.097
-  )
+  Z    = 10,
+  A    = 18.0158,
+  I    = 78,
+  exact.rho =  0.998,
+  nc   = 0,  # Number of conducting electrons pr. atom. Always treat compounds as insulators (i.e. nc =0)
+  fvec = c(2/10, 2/10, 2/10, 4/10), # First 2 x H, then O
+  Evec = c(13.6, 538.0, 28.48, 13.62),
+  exact.plot = FALSE)
 ```
 
 Notes:
 
 exact referes to the detailed "exact" Sternheimer computation whereas param referes to the simplified 1984 model fits by Sternheimer. In the example below, we only use the exact method. We here include the param stuff for completeness. 
 
-Secondly, we ascertain that the material (a compound) is treated as an insulator:
+Secondly, we assign the parameter list to dat and du the computations:
 
-```
-dat.H2O <- Sternheimer.set.to.insulator(dat.H2O)
-```
-We finally do the computations using a
 ```
 dat <- dat.H2O
 
@@ -81,6 +72,59 @@ where
   - Index ICRU90 = reference values from ICRU-90.
   
 See the function demo.Sternheimer.water() for further details.
+  
+## Example 2: Stopping power computation for graphite and comparison with ICRU-90
+
+First, we provide the data for graphite in a list called dat.graphite:
+```
+dat.graphite <- list(
+    Z    = 6,       # Atomic number
+    A    = 12.011,  # Atomic mass
+    I    = 81,      # Mean excitation energy in eV
+    exact.rho =  2.265,         # Density in g/cm3 only needed for the exact density-effect correction.
+    nc   = 1,                   # Number of conducting electrons pr. atom   
+    fvec = c(2/6, 2/6, 1/6),    # Occupation fractions for the subshells in C
+    Evec = c(288, 16.59,11.26), # Binding energies of subshells from Carlson (1975), see ICRU-90.
+    exact.plot = FALSE          # Supplementary plots related to the root finding in the exact density correction
+  )
+```
+Secondly, we assign the parameter list to dat and du the computations:
+
+```
+dat <- dat.graphite
+
+############################
+# 800 keV
+############################
+MeV <- 0.8 # Electron kinetic energy
+dat <- Sternheimer.delta.exact(MeV, dat)
+xx0 <- electronic.MSP.Bethe(MeV, dat, delta = 0)               # Compute MSP without density effect correction (delta = 0)
+xx  <- electronic.MSP.Bethe(MeV, dat, delta = dat$exact.delta) # Compute MSP with exact Sternheimer density correction
+
+  df1 <- data.frame(
+    MeV = MeV,
+    I.eV = dat$I,
+    rho=dat$exact.rho,
+    MSP.R0 = xx0,
+    MSP.R = xx,
+    MSP.ICRU90 = 1.640,
+    delta.R = dat$exact.delta,
+    delta.ICRU90 = 0.6075)
+```
+
+
+## Excellent agreement between clanElectrons and ICRU-90 values for graphite. 
+```
+MeV   I.eV   rho   MSP.R0    MSP.R MSP.ICRU90    delta.R delta.ICRU90
+  0.8   81 2.265 1.694586 1.639646      1.640  0.6074777       0.6075
+  1.0   81 2.265 1.671790 1.606030      1.606  0.7593199       0.7593
+  2.0   81 2.265 1.694645 1.585502      1.586  1.3640823       1.3640
+  10    81 2.265 1.989286 1.729347      1.729  3.3811044       3.3810
+ 100    81 2.265 2.512917 1.928154      1.928  7.6239905       7.6240
+1000    81 2.265 3.042536 2.105602      2.106 12.2158180      12.2200
+```
+where the symbols have the same meaning as in Example 1.
+
   
 ## Installation in R or Rstudio
 
