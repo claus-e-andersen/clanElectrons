@@ -130,7 +130,7 @@ MeV   I.eV   rho   MSP.R0    MSP.R MSP.ICRU90    delta.R delta.ICRU90
  100    81 2.265 2.512917 1.928154      1.928  7.6239905       7.6240
 1000    81 2.265 3.042536 2.105602      2.106 12.2158180      12.2200
 ```
-where the symbols have the same meaning as in Example 1.
+where the symbols have the same meaning as in Example 1. For further details, see demo.Sternheimer.graphite().
 
   
 ## Installation in R or Rstudio
