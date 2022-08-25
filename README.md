@@ -87,10 +87,14 @@ dat.graphite <- list(
     exact.rho =  2.265,         # Density in g/cm3, only needed for the exact density-effect correction.
     nc   = 1,                   # Number of conducting electrons pr. atom   
     fvec = c(2/6, 2/6, 1/6),    # Occupation fractions for the subshells in C
-    Evec = c(288, 16.59,11.26), # Binding energies of subshells from Carlson (1975), see ICRU-90.
+    Evec = c(288, 16.59,11.26), # Binding energies in eV of subshells from Carlson (1975), see ICRU-90.
     exact.plot = FALSE          # Supplementary plots related to the root finding in the exact density correction
   )
 ```
+These parameters are identical to what was used by Stefan Pojtinger and Ludwig Büermann from 
+Physikalisch-Technische Bundesanstalt (PTB) in their paper "Characterization of new primary air kerma standards for dosimetry in Co-60, Cs-137 and Ir-192 gamma ray sources", Journal of Instrumentation, Volume 16, October 2021 (http://dx.doi.org/10.1088/1748-0221/16/10/P10014). Note that one electron per atom is modelled to be a "conducting, free electron" with zero binding energy whereas the remaining five electrons per atom are in three oscillators with given binding energies.  
+
+
 Secondly, we assign the parameter list to dat and du the computations:
 
 ```
