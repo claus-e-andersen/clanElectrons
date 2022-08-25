@@ -403,48 +403,94 @@ dat
 demo.Sternheimer.delta.exact.plot <- function(){
 # Created: July 29, 2022
 # Revised: July 31, 2022
+# Revised: August 25, 2022
 # Name:    Claus E. Andersen
 print("This function should be run manually, line by line.")
 
 
-dat.Al.model1 <- list(
+dat.Al.model0 <- list(
 exact.plot = FALSE,
-MeV = 1000,
-nlev = 6,
 Z    = 13,
 A    = 26.98154,
-rho.density =  2.265,
-fvec.org = c(2/13, 2/13 ,2/13, 2/13, 2/13, 3/13),
-Evec.org = c( 1564.0 , 121.0, 77.0, 77.0, 10.62, 5.986),
+exact.rho =  2.699,
+nc = 0,
+fvec = c(2/13, 2/13 ,2/13, 2/13, 2/13, 3/13),
+Evec = c( 1564.0 , 121.0, 77.0, 77.0, 10.62, 5.986),
 I = 166.0)
 
-dat.Al.model1 <- Sternheimer.set.to.conductor(dat.Al.model1)
-dat.Al.model2 <- Sternheimer.set.to.insulator(dat.Al.model1)
+dat.Al.model1 <- list(
+  exact.plot = FALSE,
+  Z    = 13,
+  A    = 26.98154,
+  exact.rho =  2.699,
+  nc = 1,
+  fvec = c(2/13, 2/13 ,2/13, 2/13, 2/13, 2/13),
+  Evec = c( 1564.0 , 121.0, 77.0, 77.0, 10.62, 5.986),
+  I = 166.0)
+
+dat.Al.model2 <- list(
+  exact.plot = FALSE,
+  Z    = 13,
+  A    = 26.98154,
+  exact.rho =  2.699,
+  nc = 2,
+  fvec = c(2/13, 2/13 ,2/13, 2/13, 2/13, 1/13),
+  Evec = c( 1564.0 , 121.0, 77.0, 77.0, 10.62, 5.986),
+  I = 166.0)
+
+
+dat.Al.model3 <- list(
+  exact.plot = FALSE,
+  Z    = 13,
+  A    = 26.98154,
+  exact.rho =  2.699,
+  nc = 3,
+  fvec = c(2/13, 2/13 ,2/13, 2/13, 2/13, 0/13),
+  Evec = c( 1564.0 , 121.0, 77.0, 77.0, 10.62, 5.986),
+  I = 166.0)
+
 
 xx <- seq(-0.6,3,length=50)
 ee <- 10^xx
+yy0 <- 0 * xx
 yy1 <- 0 * xx
 yy2 <- 0 * xx
+yy3 <- 0 * xx
 
+dat <- dat.Al.model0
+for(ii in 1:length(ee)){
+  MeV <- ee[ii]
+  dat.out <- Sternheimer.delta.exact(MeV,dat)
+  yy0[ii] <- dat.out$exact.delta
+}
 
 dat <- dat.Al.model1
 for(ii in 1:length(ee)){
-  dat$MeV <- ee[ii]
-  dat.out <- Sternheimer.delta.exact(dat=dat)
-  yy1[ii] <- dat.out$delta
+  MeV <- ee[ii]
+  dat.out <- Sternheimer.delta.exact(MeV,dat)
+  yy1[ii] <- dat.out$exact.delta
 }
 
 dat <- dat.Al.model2
 for(ii in 1:length(ee)){
-  dat$MeV <- ee[ii]
-  dat.out <- Sternheimer.delta.exact(dat=dat)
-  yy2[ii] <- dat.out$delta
+  MeV <- ee[ii]
+  dat.out <- Sternheimer.delta.exact(MeV,dat=dat)
+  yy2[ii] <- dat.out$exact.delta
+}
+
+dat <- dat.Al.model3
+for(ii in 1:length(ee)){
+  MeV <- ee[ii]
+  dat.out <- Sternheimer.delta.exact(MeV,dat=dat)
+  yy3[ii] <- dat.out$exact.delta
 }
 
 
-df1 <- data.frame(MeV=ee, material = "Al (conductor model)", delta=yy1)
-df2 <- data.frame(MeV=ee, material = "Al (insulator model)", delta=yy2)
-df <- rbind(df1,df2)
+df0 <- data.frame(MeV=ee, material = "Al (insulator model)", delta=yy0)
+df1 <- data.frame(MeV=ee, material = "Al (conductor model, nc = 1)", delta=yy1)
+df2 <- data.frame(MeV=ee, material = "Al (conductor model, nc = 2)", delta=yy2)
+df3 <- data.frame(MeV=ee, material = "Al (conductor model, nc = 3)", delta=yy3)
+df <- rbind(df0,df1,df2,df3)
 
 plt <- lattice::xyplot(delta ~ log10(MeV) | material,
 par.strip.text=list(cex=1.5),
@@ -458,13 +504,31 @@ lattice::panel.points(log10(xx),yy,col="red",pch=16,cex=0.6)
 data=df)
 
 print(plt)
+
+plt2 <- lattice::xyplot(delta ~ log10(MeV), groups= material,
+                        auto.key=list(columns=2),
+                       par.strip.text=list(cex=1.5),
+                       main="Density correction (delta) from exact Sternheimer procedure\n Red points are from ICRU-37. Aluminium (Z=13).",
+                       panel=function(x,y,...){
+                         lattice::panel.xyplot(x,y,...)
+                         xx <- c(0.1,0.4,1,4,10,40,100,400,1000)
+                         yy <- c(0.01513, 0.1190,0.3339,1.183,2.384,4.669,6.363,9.091,10.92)
+                         lattice::panel.points(log10(xx),yy,col="red",pch=16,cex=0.6)
+                       },
+                       data=df)
+
+print(plt2)
 } # demo.Sternheimer.delta.exact.plot
 
 
 
+#' @title demo.Sternheimer.water
+#' Computation of electronic stopping power and density effect for liqud water
+#' using Sternheimer model as described in ICRU-90
+#' @export
 demo.Sternheimer.water <- function(){
 # Created: August 9, 2022
-#  Revised: August 25, 2022
+# Revised: August 25, 2022
 # Name:    Claus E. Andersen
 
 # How to compute the density-correction for a compound
@@ -606,33 +670,30 @@ df
 } # water (demo)
 
 
+#' @title demo.Sternheimer.graphite
+#' Computation of electronic stopping power and density effect for graphite
+#' using Sternheimer model as described in ICRU-90
+#' @export
 demo.Sternheimer.graphite <- function(){
   # Created: August 25, 2022
-  #  Revised: August 25, 2022
+  # Revised: August 25, 2022
   # Name:    Claus E. Andersen
 
-  # How to compute the density-correction for a compound
-  # like water? Add the Z for all atoms involved.
+  # How to compute the density-correction for a conductor
+  # like graphite? Move one or more electrons to nc (i.e.
+  # binding energy zero).
 
-  # Arrange the fvec and the Evec atom by atom.
-  # Compute electron subshell occopancy factor as the number of electrons
-  # divided by the total Z. So, for water we have Z.sum = 10 electrons.
-  # First we consider the two hydrogen atoms, they have 13.6 eV binding energy
-  # and we therefore set fvec[1] to 2/10 and Evec[1] to 13.6. Then we have the
-  # 8 electrons in oxygen: fvec[2] = 2, fvec[3] = 2, and fvec[4] = 4, with
-  # binding energies:  Evec[2] = 538.0, Evec[3] = 28.48, and Evec[4] = 13.62.
   # Compounds should be treated as an insulator.
 
-  # In this example, we use the recommended values of I = 78 eV for water
-  # and we also set the density to 0.998 g/cm3 which has some implications
+  # In this example, we use the recommended values of I = 81 eV for graphite
+  # and we also set the density to 2.265 g/cm3 which has some implications
   # for the density correction correction.
 
   dat.graphite <- list(
     Z    = 6,       # Atomic number
     A    = 12.011,  # Atomic mass
     I    = 81,      #78,       # Mean excitation energy in eV
-    nc = 1, #1,
-    #
+    nc = 1,
     exact.rho =  2.265,         # Density in g/cm3 only needed for the exact density-effect correction.
     fvec = c(2/6, 2/6,1/6),     # Occupation fractions for the subshells in C
     Evec = c(288, 16.59,11.26), # Binding energies of subshells from Carlson (1975), see ICRU-90.
@@ -764,7 +825,7 @@ demo.Sternheimer.graphite <- function(){
   # and ICRU-90 values for water. MSP.R0 is the mass electronic
   # stopping power without density effect correction (delta=0).
   #
-#  MeV I.eV   rho   MSP.R0    MSP.R MSP.ICRU90    delta.R delta.ICRU90
+#  MeV I.eV   rho   MSP.R0    MSP.R MSP.ICRU90    sdelta.R delta.ICRU90
 #  8e-01   81 2.265 1.694586 1.639646      1.640  0.6074777       0.6075
 #  1e+00   81 2.265 1.671790 1.606030      1.606  0.7593199       0.7593
 #  2e+00   81 2.265 1.694645 1.585502      1.586  1.3640823       1.3640
