@@ -12,7 +12,9 @@ and ICRU-90 publications.
 You specify Z, A, I, density and other material parameters and the package has functions for computation
 of electronic stopping power (both restricted and unrestricted) for electrons. The "exact" computation
 of the density effect using Sternheimer theory requires knowledge of binding energies and occupation fractions for electrons in the
-subshells of the material in question.
+subshells of the material in question. fvec is a vector with electron occupation levels per subshell (number of electrons / Z).
+Evec is a vector of the same length as fvec with binding energies in eV. nc is the number of conduction electrons per atom.
+For an insulator, nc = 0. In the example with graphite (see below), we set nc = 1.
 
 ## Example 1: Stopping power computation for water and comparison with ICRU-90
 
@@ -22,8 +24,8 @@ dat.H2O <- list(
   Z    = 10,
   A    = 18.0158,
   I    = 78,
-  exact.rho =  0.998,
-  nc   = 0,  # Number of conducting electrons pr. atom. Always treat compounds as insulators (i.e. nc =0)
+  exact.rho =  0.998,  # density in g/cm3
+  nc   = 0,            # Number of conducting electrons pr. atom. Always treat compounds as insulators (i.e. nc =0)
   fvec = c(2/10, 2/10, 2/10, 4/10), # First 2 x H, then O
   Evec = c(13.6, 538.0, 28.48, 13.62),
   exact.plot = FALSE)
@@ -57,12 +59,12 @@ delta.ICRU90 = 0.1005)
 
 ## Excellent agreement between clanElectrons and ICRU-90 values for liquid water. 
 ```
-     MeV I.eV   rho   MSP.R0    MSP.R MSP.ICRU90    delta.R delta.ICRU90
-     0.80   78 0.998 1.890531 1.880437      1.880  0.1004488       0.1005
-     1.00   78 0.998 1.864880 1.844806      1.845  0.2086075       0.2086
-     10.0   78 0.998 2.216852 1.966726      1.967  2.9279906       2.9280
+     MeV  I.eV   rho   MSP.R0    MSP.R MSP.ICRU90    delta.R delta.ICRU90
+      0.8   78 0.998 1.890531 1.880437      1.880  0.1004488       0.1005
+      1.0   78 0.998 1.864880 1.844806      1.845  0.2086075       0.2086
+      10    78 0.998 2.216852 1.966726      1.967  2.9279906       2.9280
      100    78 0.998 2.798672 2.202281      2.202  6.9977588       6.9980
-     1000   78 0.998 3.387159 2.400502      2.401 11.5772526      11.5800
+    1000    78 0.998 3.387159 2.400502      2.401 11.5772526      11.5800
 ```
 where
 
@@ -70,7 +72,8 @@ where
   - MSP.R =  mass electronic stopping power computed with the clanElectrons software.
   - delta.R = the density-effect correction computed with the clanElectrons software.
   - Index ICRU90 = reference values from ICRU-90.
-  
+
+The mass electronic stopping powers are given in units of MeV per g/cm2 (i.e. approximately in MeV/cm since water has a density close to 1 g/cm3). 
 See the function demo.Sternheimer.water() for further details.
   
 ## Example 2: Stopping power computation for graphite and comparison with ICRU-90
@@ -81,7 +84,7 @@ dat.graphite <- list(
     Z    = 6,       # Atomic number
     A    = 12.011,  # Atomic mass
     I    = 81,      # Mean excitation energy in eV
-    exact.rho =  2.265,         # Density in g/cm3 only needed for the exact density-effect correction.
+    exact.rho =  2.265,         # Density in g/cm3, only needed for the exact density-effect correction.
     nc   = 1,                   # Number of conducting electrons pr. atom   
     fvec = c(2/6, 2/6, 1/6),    # Occupation fractions for the subshells in C
     Evec = c(288, 16.59,11.26), # Binding energies of subshells from Carlson (1975), see ICRU-90.
