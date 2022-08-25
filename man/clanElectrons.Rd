@@ -36,5 +36,5 @@ Dummy function to ease acces to the help index.
 
   demo.MSP.Be
 
-  etc.
+  etc...ß
 }

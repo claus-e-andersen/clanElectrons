@@ -28,7 +28,7 @@
 #'
 #'   demo.MSP.Be
 #'
-#'   etc.
+#'   etc...ß
 #'
 #'
 #' @export
@@ -44,40 +44,6 @@ clanElectrons <- function(){
 #' The binding energy of the outer subshell is set to zero
 #' @export
 
-Sternheimer.set.to.conductor <- function(dat){
-# Set outer binding energy to zero
-# Assume: dat$exact.fvec and dat$exact.Evec  are the originals
-# that should NOT be modified. The working versions
-# dat$fvec and dat$Evec will be modified copies.
-dat$Evec       <- dat$exact.Evec
-dat$fvec       <- dat$exact.fvec
-nlev           <- length(dat$Evec)
-dat$Evec[nlev] <- 0
-dat$exact.type <- "conductor"
-dat
-}
-
-#' @title Sternheimer.set.to.insulation
-#' @description  Ascertain that material is treated as insulator in Sternheimer delta computations
-#'
-#'  dat <- Sternheimer.set.to.insulation(dat)
-#'
-#' The binding energy of the outer subshell is NOT set to zero
-#' @export
-Sternheimer.set.to.insulator <- function(dat){
-  # Set binding energies to original values
-  # Set outer binding energy to zero
-  # Assume: dat$exact.fvec and dat$exact.Evec are the originals
-  # that should NOT be modified. The working versions
-  # dat$fvec and dat$Evec will be modified copies.
-  dat$Evec <- dat$exact.Evec
-  dat$fvec <- dat$exact.fvec
-  dat$exact.type <- "insulator"
-  dat
-}
-
-
-
 #' @title Sternheimer.f.root.mu.st <-
 #' @description  Helper function (mu.st) for exact Sternheimer density correction
 #'
@@ -86,7 +52,7 @@ Sternheimer.set.to.insulator <- function(dat){
 Sternheimer.f.root.mu.st <- function(mu.st,dat){
 # Helper function (mu.st) for exact Sternheimer density correction
 # Created: Aug 7, 2022
-# Revised: Aug 7, 2022
+# Revised: Aug 25, 2022
 # Name   : Claus E. Andersen
 # Modified version of eq. 4.29 in ICRU-90
 # suitable for root finding: The requested
@@ -95,15 +61,18 @@ fvec <- dat$fvec
 Evec <- dat$Evec
 Ep   <- dat$Ep
 nlev <- dat$nlev
+nc   <- dat$nc
+fnc  <- nc/dat$Z
 I    <- dat$I
 ans <- 0
 fn <- fvec[nlev]
 for(i in 1:(nlev)){
   if(fvec[i]>0){
-  ans <- ans + fvec[i]* log( ( (mu.st*Evec[i])^2 + 2/3*fvec[i]*Ep^2)^0.5)
+    ans <- ans + fvec[i] * log(    ( (mu.st * Evec[i])^2 + 2/3 * fvec[i] * Ep^2 )^0.5   )
   }# if
 }# loop
 #ans <- ans + fn * log((fn)^0.5 * Ep)
+if(nc >0){ ans <- ans + fnc * log(fnc^0.5*Ep)  }
 ans <- ans - log(I)
 ans
 }# Sternheimer.f.root.mu.st
@@ -117,7 +86,7 @@ ans
 Sternheimer.f.root.L <- function(L,dat){
 # Helper function (L) for exact Sternheimer density correction
 # Created: Aug 7, 2022
-# Revised: Aug 7, 2022
+# Revised: Aug 25, 2022
 # Name   : Claus E. Andersen
 # Modified version of eq. 4.28 in ICRU-90
 # suitable for root finding: The requested
@@ -128,6 +97,8 @@ mu.st <- dat$mu.st
 Ep    <- dat$Ep
 beta  <- dat$beta
 nlev  <- dat$nlev
+nc    <- dat$nc
+fnc   <- nc/dat$Z
 
 ans <- 0
 for(i in 1:(nlev)){
@@ -135,10 +106,11 @@ for(i in 1:(nlev)){
   ans <- ans + fvec[i] / ( (mu.st*Evec[i]/Ep)^2 + L^2 )
   }# if
 }# loop
-
+if(nc>0){ ans <- ans + fnc / L^2 }
 ans <- ans + 1 - 1/beta^2
 ans
 }# Sternheimer.f.root.L
+
 
 ###############################################################
 ###############################################################
@@ -229,6 +201,9 @@ E0       <- 0.51099895000
 dat$beta <- (1 - (E0/(E0+MeV))^2)^0.5
 dat$Ep   <- 28.8159 * (dat$exact.rho *dat$Z/dat$A)^0.5
 dat$nlev <- length(dat$fvec)
+nc       <- dat$nc
+fnc      <- nc/dat$Z
+
 dat$exact.MeV <- MeV
 
 
@@ -353,6 +328,7 @@ for(i in 1:nlev){
 }# if
 }# loop
 # Important (?): The final part in 4.27 is not part of the summation!!!
+if(dat$nc>0){ans <- ans + fnc * log(1 + L^2/fnc) }
 delta <- ans - L^2 * (1-beta^2)
 
 # Done
@@ -370,8 +346,8 @@ dat
 #' @title demo.Sternheimer.delta.exact
 #' @export
 demo.Sternheimer.delta.exact <- function(){
-# Biniding energies can be found in
 # Carlson (1975) Book: Photoelectron and Auger Spectroscopy
+# Biniding energies can be found in
 # p. 338. Table A1.A
 # Binding Energies of Electrons in Free Atom (eV) : Z = 1-53
 # See also: G4AtomicShells.cc (Geant4)
@@ -488,7 +464,7 @@ print(plt)
 
 demo.Sternheimer.water <- function(){
 # Created: August 9, 2022
-#  Revised: August 9, 2022
+#  Revised: August 25, 2022
 # Name:    Claus E. Andersen
 
 # How to compute the density-correction for a compound
@@ -512,18 +488,16 @@ dat.H2O <- list(
   A    = 18.0158,
   I    = 78,
   exact.rho =  0.998,
-  exact.fvec = c(2/10, 2/10, 2/10, 4/10),
-  exact.Evec = c(13.6, 538.0, 28.48, 13.62),
+  fvec = c(2/10, 2/10, 2/10, 4/10),
+  Evec = c(13.6, 538.0, 28.48, 13.62),
+  nc = 0,  # Always set compounds to insulators
   exact.plot = FALSE,
   param.note="Sternheimer et. al 1984, water (liquid) I = 75 and rho = 1.000 ",
   param.C = -3.5017, param.X0 = 0.2400, param.X1 = 2.8004, param.a  = 0.09116, param.m  = 3.4773,
   param.delta.X0 = 0.097
 )
 
-# Always set compounds to insulators
-dat.H2O <- Sternheimer.set.to.insulator(dat.H2O)
 dat <- dat.H2O
-
 ############################
 # 800 keV
 ############################
@@ -629,6 +603,175 @@ df <- rbind(df1,df2,df3,df4,df5)
 #5 1e+03   75   1 3.393844 2.400333      2.401 11.6576817       11.580
 
 df
-}
+} # water (demo)
 
+
+demo.Sternheimer.graphite <- function(){
+  # Created: August 25, 2022
+  #  Revised: August 25, 2022
+  # Name:    Claus E. Andersen
+
+  # How to compute the density-correction for a compound
+  # like water? Add the Z for all atoms involved.
+
+  # Arrange the fvec and the Evec atom by atom.
+  # Compute electron subshell occopancy factor as the number of electrons
+  # divided by the total Z. So, for water we have Z.sum = 10 electrons.
+  # First we consider the two hydrogen atoms, they have 13.6 eV binding energy
+  # and we therefore set fvec[1] to 2/10 and Evec[1] to 13.6. Then we have the
+  # 8 electrons in oxygen: fvec[2] = 2, fvec[3] = 2, and fvec[4] = 4, with
+  # binding energies:  Evec[2] = 538.0, Evec[3] = 28.48, and Evec[4] = 13.62.
+  # Compounds should be treated as an insulator.
+
+  # In this example, we use the recommended values of I = 78 eV for water
+  # and we also set the density to 0.998 g/cm3 which has some implications
+  # for the density correction correction.
+
+  dat.graphite <- list(
+    Z    = 6,       # Atomic number
+    A    = 12.011,  # Atomic mass
+    I    = 81,      #78,       # Mean excitation energy in eV
+    nc = 1, #1,
+    #
+    exact.rho =  2.265,         # Density in g/cm3 only needed for the exact density-effect correction.
+    fvec = c(2/6, 2/6,1/6),     # Occupation fractions for the subshells in C
+    Evec = c(288, 16.59,11.26), # Binding energies of subshells from Carlson (1975), see ICRU-90.
+    exact.plot = FALSE          # Supplementary plots related to the root finding in the exact density correction
+  )
+
+  dat <- dat.graphite
+
+  ############################
+  # 800 keV
+  ############################
+  MeV <- 0.8 # Electron kinetic energy
+  dat <- Sternheimer.delta.exact(MeV, dat)
+  xx0 <- electronic.MSP.Bethe(MeV, dat, delta = 0)               # Compute MSP without density effect correction (delta = 0)
+  xx  <- electronic.MSP.Bethe(MeV, dat, delta = dat$exact.delta) # Compute MSP with exact Sternheimer density correction
+
+  df1 <- data.frame(
+    MeV = MeV,
+    I.eV = dat$I,
+    rho=dat$exact.rho,
+    MSP.R0 = xx0,
+    MSP.R = xx,
+    MSP.ICRU90 = 1.640,
+    delta.R = dat$exact.delta,
+    delta.ICRU90 = 0.6075)
+
+
+  ############################
+  # 1 MeV
+  ############################
+  MeV <- 1.0 # Electron kinetic energy
+  dat <- Sternheimer.delta.exact(MeV, dat)
+  xx0 <- electronic.MSP.Bethe(MeV, dat, delta = 0)               # Compute MSP without density effect correction (delta = 0)
+  xx  <- electronic.MSP.Bethe(MeV, dat, delta = dat$exact.delta) # Compute MSP with exact Sternheimer density correction
+
+  df2 <- data.frame(
+    MeV = MeV,
+    I.eV = dat$I,
+    rho=dat$exact.rho,
+    MSP.R0 = xx0,
+    MSP.R = xx,
+    MSP.ICRU90 = 1.606,
+    delta.R = dat$exact.delta,
+    delta.ICRU90 = 0.7593)
+
+
+  ############################
+  # 2 MeV
+  ############################
+  MeV <- 2.0 # Electron kinetic energy
+  dat <- Sternheimer.delta.exact(MeV, dat)
+  xx0 <- electronic.MSP.Bethe(MeV, dat, delta = 0)               # Compute MSP without density effect correction (delta = 0)
+  xx  <- electronic.MSP.Bethe(MeV, dat, delta = dat$exact.delta) # Compute MSP with exact Sternheimer density correction
+
+  df3 <- data.frame(
+    MeV = MeV,
+    I.eV = dat$I,
+    rho=dat$exact.rho,
+    MSP.R0 = xx0,
+    MSP.R = xx,
+    MSP.ICRU90 = 1.586,
+    delta.R = dat$exact.delta,
+    delta.ICRU90 = 1.364)
+
+  ############################
+  # 10 MeV
+  ############################
+
+  MeV <- 10 # Electron kinetic energy
+  dat <- Sternheimer.delta.exact(MeV, dat)
+  xx0 <- electronic.MSP.Bethe(MeV, dat, delta = 0)               # Compute MSP without density effect correction (delta = 0)
+  xx  <- electronic.MSP.Bethe(MeV, dat, delta = dat$exact.delta) # Compute MSP with exact Sternheimer density correction
+
+  df4 <- data.frame(
+    MeV = MeV,
+    I.eV = dat$I,
+    rho=dat$exact.rho,
+    MSP.R0 = xx0,
+    MSP.R = xx,
+    MSP.ICRU90 = 1.729,
+    delta.R = dat$exact.delta,
+    delta.ICRU90 = 3.381)
+
+  ############################
+  # 100 MeV
+  ############################
+  MeV <- 100 # Electron kinetic energy
+  dat <- Sternheimer.delta.exact(MeV, dat)
+  xx0 <- electronic.MSP.Bethe(MeV, dat, delta = 0)               # Compute MSP without density effect correction (delta = 0)
+  xx  <- electronic.MSP.Bethe(MeV, dat, delta = dat$exact.delta) # Compute MSP with exact Sternheimer density correction
+
+  df5 <- data.frame(
+    MeV = MeV,
+    I.eV = dat$I,
+    rho=dat$exact.rho,
+    MSP.R0 = xx0,
+    MSP.R = xx,
+    MSP.ICRU90 = 1.928,
+    delta.R = dat$exact.delta,
+    delta.ICRU90 = 7.624)
+
+
+  ############################
+  # 1000 MeV
+  ############################
+  MeV <- 1000 # Electron kinetic energy
+  dat <- Sternheimer.delta.exact(MeV, dat)
+  xx0 <- electronic.MSP.Bethe(MeV, dat, delta = 0)               # Compute MSP without density effect correction (delta = 0)
+  xx  <- electronic.MSP.Bethe(MeV, dat, delta = dat$exact.delta) # Compute MSP with exact Sternheimer density correction
+
+  df6 <- data.frame(
+    MeV = MeV,
+    I.eV = dat$I,
+    rho=dat$exact.rho,
+    MSP.R0 = xx0,
+    MSP.R = xx,
+    MSP.ICRU90 = 2.106,
+    delta.R = dat$exact.delta,
+    delta.ICRU90 = 12.22)
+
+
+  df <- rbind(df1,df2,df3,df4,df5,df6)
+
+  ############################################################################
+  # Main results
+  ############################################################################
+
+  # Excellent agreement with between the clanElectrons computations
+  # and ICRU-90 values for water. MSP.R0 is the mass electronic
+  # stopping power without density effect correction (delta=0).
+  #
+#  MeV I.eV   rho   MSP.R0    MSP.R MSP.ICRU90    delta.R delta.ICRU90
+#  8e-01   81 2.265 1.694586 1.639646      1.640  0.6074777       0.6075
+#  1e+00   81 2.265 1.671790 1.606030      1.606  0.7593199       0.7593
+#  2e+00   81 2.265 1.694645 1.585502      1.586  1.3640823       1.3640
+#  1e+01   81 2.265 1.989286 1.729347      1.729  3.3811044       3.3810
+#  1e+02   81 2.265 2.512917 1.928154      1.928  7.6239905       7.6240
+#  1e+03   81 2.265 3.042536 2.105602      2.106 12.2158180      12.2200
+
+df
+} # graphite (demo)
 
