@@ -87,7 +87,7 @@ dat.graphite <- list(
     exact.rho =  2.265,         # Density in g/cm3, only needed for the exact density-effect correction.
     nc   = 1,                   # Number of conducting electrons pr. atom   
     fvec = c(2/6, 2/6, 1/6),    # Occupation fractions for the subshells in C
-    Evec = c(288, 16.59,11.26), # Binding energies in eV of subshells from Carlson (1975), see ICRU-90.
+    Evec = c(288, 16.59, 11.26), # Binding energies in eV of subshells from Carlson (1975), see ICRU-90.
     exact.plot = FALSE          # Supplementary plots related to the root finding in the exact density correction
   )
 ```
