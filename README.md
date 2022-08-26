@@ -58,13 +58,13 @@ delta.ICRU90 = 0.1005)
 ```
 
 ## Excellent agreement between clanElectrons and ICRU-90 values for liquid water. 
-```
-     MeV  I.eV   rho   MSP.R0    MSP.R MSP.ICRU90    delta.R delta.ICRU90
-      0.8   78 0.998 1.890531 1.880437      1.880  0.1004488       0.1005
-      1.0   78 0.998 1.864880 1.844806      1.845  0.2086075       0.2086
-      10    78 0.998 2.216852 1.966726      1.967  2.9279906       2.9280
-     100    78 0.998 2.798672 2.202281      2.202  6.9977588       6.9980
-    1000    78 0.998 3.387159 2.400502      2.401 11.5772526      11.5800
+```   
+    MeV I.eV   rho   MSP.R0    MSP.R MSP.ICRU90    delta.R delta.ICRU90    mu.st           L
+  8e-01   78 0.998 1.890531 1.880437      1.880  0.1004487       0.1005 2.296822    1.267705
+  1e+00   78 0.998 1.864880 1.844806      1.845  0.2086080       0.2086 2.296822    1.783714
+  1e+01   78 0.998 2.216852 1.966726      1.967  2.9279911       2.9280 2.296822   18.486812
+  1e+02   78 0.998 2.798672 2.202281      2.202  6.9977589       6.9980 2.296822  195.100288
+  1e+03   78 0.998 3.387159 2.400502      2.401 11.5772527      11.5800 2.296822 1957.780695    
 ```
 where
 
@@ -72,6 +72,8 @@ where
   - MSP.R =  mass electronic stopping power computed with the clanElectrons software.
   - delta.R = the density-effect correction computed with the clanElectrons software.
   - Index ICRU90 = reference values from ICRU-90.
+  - mu.st = the scaling parameter from the oscillator strengths to I.
+  - L = the ell parameret in ICRU-90 equation 4.28. 
 
 The mass electronic stopping powers are given in units of MeV per g/cm2 (i.e. approximately in MeV/cm since water has a density close to 1 g/cm3). 
 See the function demo.Sternheimer.water() for further details.
@@ -122,13 +124,16 @@ xx  <- electronic.MSP.Bethe(MeV, dat, delta = dat$exact.delta) # Compute MSP wit
 
 ## Excellent agreement between clanElectrons and ICRU-90 values for graphite. 
 ```
-MeV   I.eV   rho   MSP.R0    MSP.R MSP.ICRU90    delta.R delta.ICRU90
-  0.8   81 2.265 1.694586 1.639646      1.640  0.6074777       0.6075
-  1.0   81 2.265 1.671790 1.606030      1.606  0.7593199       0.7593
-  2.0   81 2.265 1.694645 1.585502      1.586  1.3640823       1.3640
-  10    81 2.265 1.989286 1.729347      1.729  3.3811044       3.3810
- 100    81 2.265 2.512917 1.928154      1.928  7.6239905       7.6240
-1000    81 2.265 3.042536 2.105602      2.106 12.2158180      12.2200
+    MeV I.eV   rho     MSP.R0      MSP.R MSP.ICRU90      delta.R delta.ICRU90    mu.st            L
+  1e-03   81 2.265 104.766213 104.761358    104.800 2.470208e-04     0.000247 2.352228 2.557449e-02
+  1e-02   81 2.265  19.993257  19.987943     19.990 2.634413e-03     0.002634 2.352228 8.185347e-02
+  1e-01   81 2.265   3.664250   3.653922      3.654 4.047018e-02     0.040470 2.352228 2.937683e-01
+  8e-01   81 2.265   1.694586   1.639646      1.640 6.074781e-01     0.607500 2.352228 1.693603e+00
+  1e+00   81 2.265   1.671790   1.606030      1.606 7.593193e-01     0.759300 2.352228 2.069985e+00
+  2e+00   81 2.265   1.694645   1.585502      1.586 1.364082e+00     1.364000 2.352228 3.834607e+00
+  1e+01   81 2.265   1.989286   1.729347      1.729 3.381104e+00     3.381000 2.352228 1.838840e+01
+  1e+02   81 2.265   2.512917   1.928154      1.928 7.623991e+00     7.624000 2.352228 1.962800e+02
+  1e+03   81 2.265   3.042536   2.105602      2.106 1.221582e+01    12.220000 2.352228 1.957909e+03
 ```
 where the symbols have the same meaning as in Example 1. For further details, see demo.Sternheimer.graphite().
 
