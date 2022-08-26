@@ -300,7 +300,7 @@ df
 ############################################################################
 Sternheimer.delta.param <- function(MeV = 1, dat = NA){
 # Created: July 29, 2022
-# Revised: August 9, 2022
+# Revised: August 26, 2022
 # Name:    Claus E. Andersen
 # Input:
 #   MeV = kinetic energy of electron in MeV (this can be a vector)
@@ -358,9 +358,9 @@ dat
 ############################################################################
 # Stopping power validation computations
 ############################################################################
-demo.stopping.power.validation <- function(){
+demo.Sternheimer.delta.param <- function(){
 # Created: July 29, 2022
-# Revised: July 31, 2022
+# Revised: August 26, 2022
 # Name:    Claus E. Andersen
 print("This function should be run manually, line by line.")
 
@@ -368,53 +368,32 @@ dat.C <- list(
     Z    = 6,
     A    = 12.011,
     I    = 81,
-    exact.rho =  2.265,
-    exact.fvec = c(2/6, 2/6, 2/6),
-    exact.Evec = c(288.00, 16.59, 11.26),
-    exact.plot = !FALSE,
     param.note="Sternheimer et. al 1984, graphite w. I = 78 and rho = 2.265",
     param.C = -2.8680, param.X0 = -0.0178, param.X1 = 2.3415, param.a  = 0.26142, param.m  = 2.8697,
     param.delta.X0 = 0.12
     )
-dat.C <- Sternheimer.set.to.conductor(dat.C)
 dat <- dat.C
 
 # Note that the param data are for I = 78  whereas the Bethe eq. is evaluated at I = 81
 # Sternheimer parameter model
-out1 <- Sternheimer.delta.param(0.01,dat) # Result = 0.005147 ICRU-90 ref = 0.002634
-out2 <- Sternheimer.delta.param(0.1,dat)  # Result = 0.055967 ICRU-90 ref = 0.04047
-out3 <- Sternheimer.delta.param(1.0,dat)  # Result = 0.820704 ICRU-90 ref = 0.7593
-out4 <- Sternheimer.delta.param(10,dat)   # Result = 3.460897 ICRU-90 ref = 3.381
+MeV <- 0.01
+out <- Sternheimer.delta.param(MeV,dat)
+df1 <- data.frame(MeV=out$param.MeV, delta=out$param.delta,delta.ICRU=0.002634)
 
-# Stern exact  model
-out11 <- Sternheimer.delta.exact(0.01,out1) # Result = NA       ICRU-90 ref = 0.002634
-out12 <- Sternheimer.delta.exact(0.1,out2)  # Result = NA       ICRU-90 ref = 0.04047
-out13 <- Sternheimer.delta.exact(0.42,out3)  # Result = 0.732938 ICRU-90 ref = 0.7593
-out13 <- Sternheimer.delta.exact(1.0,out3)  # Result = 0.732938 ICRU-90 ref = 0.7593
-out14 <- Sternheimer.delta.exact(10,out4)   # Result = 3.304996 ICRU-90 ref = 3.381
+MeV <- 0.1
+out <- Sternheimer.delta.param(MeV,dat)
+df2 <- data.frame(MeV=out$param.MeV, delta=out$param.delta,delta.ICRU=0.04047)
 
-# Unrestricted mass electronic stopping power, delta = Sternheimer parameter model
-electronic.MSP.Bethe(MeV=0.010, out11, out11$param.delta) # Result = 19.983 ICRU-90 = 19.99
-electronic.MSP.Bethe(MeV=0.100, out12, out12$param.delta) # Result = 3.6500 ICRU-90 = 3.654
-electronic.MSP.Bethe(MeV=1.00,  out13, out13$param.delta) # Result = 1.6007 ICRU-90 = 1.606
-electronic.MSP.Bethe(MeV=10.00, out14, out14$param.delta) # Result = 1.7232 ICRU-90 = 1.729
+MeV <- 1
+out <- Sternheimer.delta.param(MeV,dat)
+df3 <- data.frame(MeV=out$param.MeV, delta=out$param.delta,delta.ICRU=0.7593)
 
-# Unrestricted mass electronic stopping power, delta = Sternheimer exact model
-electronic.MSP.Bethe(MeV=0.010, out11, out11$exact.delta) # Result = NA      ICRU-90 = 19.99
-electronic.MSP.Bethe(MeV=0.100, out12, out12$exact.delta) # Result = NA      ICRU-90 = 3.654
-electronic.MSP.Bethe(MeV=1.00,  out13, out13$exact.delta) # Result = 1.60832 ICRU-90 = 1.606
-electronic.MSP.Bethe(MeV=10.00, out14, out14$exact.delta) # Result = 1.7352  ICRU-90 = 1.729
+MeV <- 10
+out <- Sternheimer.delta.param(MeV,dat)
+df4 <- data.frame(MeV=out$param.MeV, delta=out$param.delta,delta.ICRU=3.381)
 
-# Supply density correction from ICRU-90 using the ICRU-90 value for delta:
-electronic.MSP.Bethe(MeV=0.010, out11, delta=0.002634) # Result = 19.99 ICRU-90 = 19.99
-electronic.MSP.Bethe(MeV=0.100, out12, delta=0.04047)  # Result = 3.654 ICRU-90 = 3.654
-electronic.MSP.Bethe(MeV=1.00,  out13, delta=0.7593)   # Result = 1.606 ICRU-90 = 1.606
-electronic.MSP.Bethe(MeV=10.00, out14, delta=3.381)    # Result = 1.729 ICRU-90 = 1.729
-# We now have full agreement with the ICRU-90 values. This implies that the
-# source of disagreement identified above arises solely from the density effect
-# computations.
-
-} # stopping.power.validation.computations
+rbind(df1,df2,df3,df4)
+} # demo.Sternheimer.delta.param
 
 #' demo.stopping.power.plot
 #' Not so easy as Sternheimer

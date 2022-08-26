@@ -365,58 +365,6 @@ dat
 #############################################################################
 
 
-#' @title demo.Sternheimer.delta.exact
-#' @export
-demo.Sternheimer.delta.exact <- function(){
-# Carlson (1975) Book: Photoelectron and Auger Spectroscopy
-# Biniding energies can be found in
-# p. 338. Table A1.A
-# Binding Energies of Electrons in Free Atom (eV) : Z = 1-53
-# See also: G4AtomicShells.cc (Geant4)
-
-dat.Al <- list(
-plot.wanted = FALSE,
-MeV = 1000,
-nlev = 6,
-Z    = 13,
-A    = 26.98154,
-rho.density =  2.265,
-fvec.org = c(2/13, 2/13 ,2/13, 2/13, 2/13, 3/13),
-Evec.org = c( 1564.0 , 121.0, 77.0, 77.0, 10.62, 5.986),
-I = 166.0)
-dat.Al <- Sternheimer.set.to.conductor(dat.Al)
-
-dat.C <- list(
-plot.wanted = FALSE,
-MeV = 1000,
-nlev = 3,
-Z    = 6,
-A    = 12.011,
-rho.density =  2.265,
-fvec.org = c(2/6,2/6,2/6),
-Evec.org = c(288.00, 16.59, 11.26),
-I = 78)
-dat.C <- Sternheimer.set.to.conductor(dat.C)
-
-
-dat.Be <- list(
-plot.wanted = !FALSE,
-MeV = 1000,
-nlev = 2,
-Z    = 4,
-A    = 9.01218,
-rho.density =  1.848,
-fvec.org = c(0.5,0.5),
-Evec.org = c(115.0, 9.322),
-I = 63.7)
-dat.Be <- Sternheimer.set.to.insulator(dat.Be)
-
-dat <- dat.Al
-dat$MeV <- 10
-dat <- Sternheimer.delta.exact(dat=dat)
-dat
-} # demo.Sternheimer.delta.exact
-
 ########################################################################################
 
 #' @title demo.Sternheimer.delta.exact.plot
@@ -472,7 +420,7 @@ dat.Al.model3 <- list(
   I = 166.0)
 
 
-xx <- seq(-0.6,3,length=50)
+xx <- seq(-2,3,length=50)
 ee <- 10^xx
 yy0 <- 0 * xx
 yy1 <- 0 * xx
