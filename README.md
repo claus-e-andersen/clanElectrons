@@ -11,7 +11,7 @@ and ICRU-90 publications.
 
 ## Binding energies and sub-shell occupation levels
 The atomic data required for the density effect computations can be found in the book by Carlson (1975, see above) starting page 338: Table A1.A
-Binding Energies of Electrons in Free Atom (eV) : Z = 1-53. The data file used by G4DensityEffectCalculator.cc (see above) seems to have used another source of data. ICRU-90 uses the Carlson data.
+Binding Energies of Electrons in Free Atom (eV) : Z = 1-53.  ICRU-90 uses the Carlson data. The Geant4 implementation in G4DensityEffectCalculator.cc (see above) seems to have used another source of data than Carlson.
 
 ## Applications:
 You specify Z, A, I, density and other material parameters and the package has functions for computation
