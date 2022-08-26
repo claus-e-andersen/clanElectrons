@@ -4,7 +4,12 @@
 \alias{Sternheimer.delta.exact}
 \title{Sternheimer.delta.exact}
 \usage{
-Sternheimer.delta.exact(MeV = 1, dat = NULL)
+Sternheimer.delta.exact(
+  MeV = 1,
+  dat = NULL,
+  mu.solver.parm = NULL,
+  L.solver.parm = NULL
+)
 }
 \arguments{
 \item{dat}{list with parameters}

@@ -160,9 +160,9 @@ ans
 #'     ATOMIC DATA AND NUCLEAR DATA TABLES 30,26 l-27 1 ( 1984)
 #' (3) G4DensityEffectCalculator.cc by Matthew Strait <straitm@umn.edu> 2019
 #' @export
-Sternheimer.delta.exact <- function(MeV=1, dat=NULL){
+Sternheimer.delta.exact <- function(MeV=1, dat=NULL, mu.solver.parm = NULL,  L.solver.parm = NULL) {
 # Created: Aug 7, 2022
-# Revised: Aug 7, 2022
+# Revised: Aug 26, 2022
 # Name   : Claus E. Andersen
 #
 # Computation of exact Sternheimer density correction (delta).
@@ -197,6 +197,25 @@ Sternheimer.delta.exact <- function(MeV=1, dat=NULL){
 # (3) G4DensityEffectCalculator.cc by Matthew Strait <straitm@umn.edu> 2019
 
 
+  if(is.null(mu.solver.parm)){
+    mu.solver.parm <- list(
+      mu.st.min = 0,
+      mu.st.max = 20,
+      mu.st.N   = 10000,
+      mu.st.eps = 6e-05
+    )
+  }
+
+  if(is.null(L.solver.parm)){
+    L.solver.parm <- list(
+      L.min = 0.02,
+      L.max = 4000,
+      L.N   = 80000,
+      L.eps  = 1e-03
+    )
+  }
+
+
 E0       <- 0.51099895000
 dat$beta <- (1 - (E0/(E0+MeV))^2)^0.5
 dat$Ep   <- 28.8159 * (dat$exact.rho *dat$Z/dat$A)^0.5
@@ -205,18 +224,15 @@ nc       <- dat$nc
 fnc      <- nc/dat$Z
 
 dat$exact.MeV <- MeV
+dat$mu.st.solution <- "None"
 
 
 ####################################################
 # Part 1: Find mu.st (solve eq. 4.29 in ICRU-90)
 ####################################################
 # Search for mu.st (coarse)
-mu.st.min <- 0
-mu.st.max <- 200
-mu.st.N   <- 10000
-mu.st.eps <- 0.00006
 
-xx <- seq(mu.st.min,mu.st.max,length=mu.st.N)
+xx <- seq(mu.solver.parm$mu.st.min, mu.solver.parm$mu.st.max, length = mu.solver.parm$mu.st.N)
 yy <- Sternheimer.f.root.mu.st(xx,dat)
 
 ok.pos <- yy>0
@@ -225,11 +241,11 @@ ok.neg <- yy<0
 if(sum(ok.pos)> 0 & sum(ok.neg)>0){
 # Search for mu.st (fine)
 mu.st.min <- max(xx[ok.neg])
-mu.st.max <- min(xx[ok.pos])
-mu.st.N   <- 1000
-mu.st.eps <- 0.0006
+mu.st.max <- min(xx[ok.pos]) + 0.001
+mu.st.N   <- mu.solver.parm$mu.st.N
+mu.st.eps <- mu.solver.parm$mu.st.eps
 
-xx <- seq(mu.st.min,mu.st.max,length=mu.st.N)
+xx <- seq(mu.st.min, mu.st.max, length = mu.st.N)
 yy <- Sternheimer.f.root.mu.st(xx,dat)
 
 ok <- abs(yy) < mu.st.eps & xx>0
@@ -238,6 +254,7 @@ if(sum(ok)>0){
   # Use regression to find final value (root)
   fm <- lm(xx[ok]~yy[ok])
   mu.st.root <- as.numeric(coefficients(fm)[1])
+  dat$mu.st.solution <- "Regression"
 }
 
 df <- data.frame(mu.st=xx,val=yy)
@@ -259,12 +276,10 @@ dat$mu.st <- mu.st.root
 # PART 2: Find L (solve eq. 4.28 in ICRU-90)
 ####################################################
 # Search interval for L (coarse)
-L.min <- -1
-L.max <- 2000
-L.N   <- 4000
-L.eps <- 0.0006
+dat$L.solution <- "None"
+L.root <- NA
 
-xx <- seq(L.min,L.max,length=L.N)
+xx <- seq(L.solver.parm$L.min, L.solver.parm$L.max, length = L.solver.parm$L.N)
 yy <- Sternheimer.f.root.L(xx,dat)
 
 ok.pos <- yy>0
@@ -274,32 +289,25 @@ if(sum(ok.pos)> 0 & sum(ok.neg)>0){
 # Search interval for L (fine)
 L.min <- max(xx[ok.pos])
 L.max <- min(xx[ok.neg])
-L.N   <- 10000
-L.eps <- 0.0006
+L.eps <- L.solver.parm$L.eps
 
-xx <- seq(L.min,L.max,length=L.N)
+xx <- seq(L.min ,L.max, length=L.solver.parm$L.N)
 yy <- Sternheimer.f.root.L(xx,dat)
 
-ok <- abs(yy) < L.eps & xx>0
+##ok <- abs(yy) < L.eps & xx>0
+ok <- abs(yy) < L.eps & yy < 0.5 & yy > -0.5
 L.root <- NA
 if(sum(ok)>0){
   # Use regression to find final value (root)
   fm <- lm(xx[ok]~yy[ok])
   L.root <- as.numeric(coefficients(fm)[1])
+  dat$L.solution <- "Regression"
 }
+
+
+} # both pos and neg
 
 df <- data.frame(L=xx,val=yy)
-plt.L <- lattice::xyplot(val ~ L,
-data=df,
-panel=function(x,y,...){
-  lattice::panel.xyplot(x,y,...)
-  lattice::panel.abline(h=0,lty="dashed")
-  lattice::panel.abline(v=L.root,lty="dashed")
-}
-)
-
-if(dat$exact.plot){print(plt.L)}
-} # both pos and neg
 
 dat$L  <- L.root
 
@@ -310,6 +318,20 @@ fvec  <- dat$fvec
 beta  <- dat$beta
 nlev  <- dat$nlev
 Ep    <- dat$Ep
+
+
+plt.L <- lattice::xyplot(val ~ L,
+                         data=df,
+                         main="Sternheimer.delta.exact, root finding (L equation)",
+                         panel=function(x,y,...){
+                           lattice::panel.xyplot(x,y,...)
+                           lattice::panel.abline(h=0,lty="dashed")
+                           lattice::panel.abline(v=L.root,lty="dashed")
+                         }
+)
+
+if(dat$exact.plot){print(plt.L)}
+
 
 ####################################################
 # Part 3: Find delta using eq. 4.27 in ICRU-90
@@ -571,7 +593,9 @@ xx0 <- electronic.MSP.Bethe(MeV, dat, delta = 0) # No density effect correction
 xx <- electronic.MSP.Bethe(MeV, dat, delta = dat$exact.delta) # Exact Sternheimer density correction
 df1 <- data.frame(MeV = MeV, I.eV = dat$I, rho=dat$exact.rho,  MSP.R0 = xx0,
                   MSP.R = xx, MSP.ICRU90=1.880,
-                  delta.R=dat$exact.delta, delta.ICRU90=0.1005)
+                  delta.R=dat$exact.delta, delta.ICRU90=0.1005,
+                  mu.st = dat$mu.st,
+                  L = dat$L)
 
 ############################
 # 1 MeV
@@ -582,7 +606,9 @@ xx0 <- electronic.MSP.Bethe(MeV, dat, delta = 0) # No density effect correction
 xx  <- electronic.MSP.Bethe(MeV, dat, delta = dat$exact.delta) # Exact Sternheimer density correction
 df2 <- data.frame(MeV = MeV, I.eV = dat$I, rho=dat$exact.rho,  MSP.R0 = xx0,
                   MSP.R = xx, MSP.ICRU90 = 1.845,
-                  delta.R = dat$exact.delta, delta.ICRU90 = 0.2086)
+                  delta.R = dat$exact.delta, delta.ICRU90 = 0.2086,
+                  mu.st = dat$mu.st,
+                  L = dat$L)
 
 ############################
 # 10 MeV
@@ -593,7 +619,9 @@ xx0 <- electronic.MSP.Bethe(MeV, dat, delta = 0) # No density effect correction
 xx  <- electronic.MSP.Bethe(MeV, dat, delta = dat$exact.delta) # Exact Sternheimer density correction
 df3 <- data.frame(MeV = MeV, I.eV = dat$I, rho=dat$exact.rho,  MSP.R0 = xx0,
                   MSP.R = xx, MSP.ICRU90 = 1.967,
-                  delta.R = dat$exact.delta, delta.ICRU90 = 2.928)
+                  delta.R = dat$exact.delta, delta.ICRU90 = 2.928,
+                  mu.st = dat$mu.st,
+                  L = dat$L)
 
 ############################
 # 100 MeV
@@ -604,7 +632,9 @@ xx0 <- electronic.MSP.Bethe(MeV, dat, delta = 0) # No density effect correction
 xx  <- electronic.MSP.Bethe(MeV, dat, delta = dat$exact.delta) # Exact Sternheimer density correction
 df4 <- data.frame(MeV = MeV, I.eV = dat$I, rho=dat$exact.rho,  MSP.R0 = xx0,
                   MSP.R = xx, MSP.ICRU90 = 2.202,
-                  delta.R = dat$exact.delta, delta.ICRU90 = 6.998)
+                  delta.R = dat$exact.delta, delta.ICRU90 = 6.998,
+                  mu.st = dat$mu.st,
+                  L = dat$L)
 
 
 ############################
@@ -616,7 +646,9 @@ xx0 <- electronic.MSP.Bethe(MeV, dat, delta = 0) # No density effect correction
 xx  <- electronic.MSP.Bethe(MeV, dat, delta = dat$exact.delta) # Exact Sternheimer density correction
 df5 <- data.frame(MeV = MeV, I.eV = dat$I, rho=dat$exact.rho,  MSP.R0 = xx0,
                   MSP.R = xx, MSP.ICRU90 = 2.401,
-                  delta.R = dat$exact.delta, delta.ICRU90 = 11.58)
+                  delta.R = dat$exact.delta, delta.ICRU90 = 11.58,
+                  mu.st = dat$mu.st,
+                  L = dat$L)
 
 # Combine all results:
 df <- rbind(df1,df2,df3,df4,df5)
@@ -701,6 +733,65 @@ demo.Sternheimer.graphite <- function(){
   )
 
   dat <- dat.graphite
+  ############################
+  # 1 keV
+  ############################
+  MeV <- 0.001 # Electron kinetic energy
+  dat <- Sternheimer.delta.exact(MeV, dat)
+  xx0 <- electronic.MSP.Bethe(MeV, dat, delta = 0)               # Compute MSP without density effect correction (delta = 0)
+  xx  <- electronic.MSP.Bethe(MeV, dat, delta = dat$exact.delta) # Compute MSP with exact Sternheimer density correction
+
+  df100 <- data.frame(
+    MeV = MeV,
+    I.eV = dat$I,
+    rho=dat$exact.rho,
+    MSP.R0 = xx0,
+    MSP.R = xx,
+    MSP.ICRU90 = 104.8,
+    delta.R = dat$exact.delta,
+    delta.ICRU90 = 2.470e-4,
+    mu.st = dat$mu.st,
+    L = dat$L)
+
+  ############################
+  # 10 keV
+  ############################
+  MeV <- 0.010 # Electron kinetic energy
+  dat <- Sternheimer.delta.exact(MeV, dat)
+  xx0 <- electronic.MSP.Bethe(MeV, dat, delta = 0)               # Compute MSP without density effect correction (delta = 0)
+  xx  <- electronic.MSP.Bethe(MeV, dat, delta = dat$exact.delta) # Compute MSP with exact Sternheimer density correction
+
+  df101 <- data.frame(
+    MeV = MeV,
+    I.eV = dat$I,
+    rho=dat$exact.rho,
+    MSP.R0 = xx0,
+    MSP.R = xx,
+    MSP.ICRU90 = 19.99,
+    delta.R = dat$exact.delta,
+    delta.ICRU90 = 2.634e-3,
+    mu.st = dat$mu.st,
+    L = dat$L)
+
+  ############################
+  # 100 keV
+  ############################
+  MeV <- 0.100 # Electron kinetic energy
+  dat <- Sternheimer.delta.exact(MeV, dat)
+  xx0 <- electronic.MSP.Bethe(MeV, dat, delta = 0)               # Compute MSP without density effect correction (delta = 0)
+  xx  <- electronic.MSP.Bethe(MeV, dat, delta = dat$exact.delta) # Compute MSP with exact Sternheimer density correction
+
+  df102 <- data.frame(
+    MeV = MeV,
+    I.eV = dat$I,
+    rho=dat$exact.rho,
+    MSP.R0 = xx0,
+    MSP.R = xx,
+    MSP.ICRU90 = 3.654,
+    delta.R = dat$exact.delta,
+    delta.ICRU90 = 4.047e-2,
+    mu.st = dat$mu.st,
+    L = dat$L)
 
   ############################
   # 800 keV
@@ -710,7 +801,7 @@ demo.Sternheimer.graphite <- function(){
   xx0 <- electronic.MSP.Bethe(MeV, dat, delta = 0)               # Compute MSP without density effect correction (delta = 0)
   xx  <- electronic.MSP.Bethe(MeV, dat, delta = dat$exact.delta) # Compute MSP with exact Sternheimer density correction
 
-  df1 <- data.frame(
+  df103 <- data.frame(
     MeV = MeV,
     I.eV = dat$I,
     rho=dat$exact.rho,
@@ -718,7 +809,9 @@ demo.Sternheimer.graphite <- function(){
     MSP.R = xx,
     MSP.ICRU90 = 1.640,
     delta.R = dat$exact.delta,
-    delta.ICRU90 = 0.6075)
+    delta.ICRU90 = 0.6075,
+    mu.st = dat$mu.st,
+    L = dat$L)
 
 
   ############################
@@ -729,7 +822,7 @@ demo.Sternheimer.graphite <- function(){
   xx0 <- electronic.MSP.Bethe(MeV, dat, delta = 0)               # Compute MSP without density effect correction (delta = 0)
   xx  <- electronic.MSP.Bethe(MeV, dat, delta = dat$exact.delta) # Compute MSP with exact Sternheimer density correction
 
-  df2 <- data.frame(
+  df104 <- data.frame(
     MeV = MeV,
     I.eV = dat$I,
     rho=dat$exact.rho,
@@ -737,7 +830,9 @@ demo.Sternheimer.graphite <- function(){
     MSP.R = xx,
     MSP.ICRU90 = 1.606,
     delta.R = dat$exact.delta,
-    delta.ICRU90 = 0.7593)
+    delta.ICRU90 = 0.7593,
+    mu.st = dat$mu.st,
+    L = dat$L)
 
 
   ############################
@@ -748,7 +843,7 @@ demo.Sternheimer.graphite <- function(){
   xx0 <- electronic.MSP.Bethe(MeV, dat, delta = 0)               # Compute MSP without density effect correction (delta = 0)
   xx  <- electronic.MSP.Bethe(MeV, dat, delta = dat$exact.delta) # Compute MSP with exact Sternheimer density correction
 
-  df3 <- data.frame(
+  df105 <- data.frame(
     MeV = MeV,
     I.eV = dat$I,
     rho=dat$exact.rho,
@@ -756,7 +851,9 @@ demo.Sternheimer.graphite <- function(){
     MSP.R = xx,
     MSP.ICRU90 = 1.586,
     delta.R = dat$exact.delta,
-    delta.ICRU90 = 1.364)
+    delta.ICRU90 = 1.364,
+    mu.st = dat$mu.st,
+    L = dat$L)
 
   ############################
   # 10 MeV
@@ -767,7 +864,7 @@ demo.Sternheimer.graphite <- function(){
   xx0 <- electronic.MSP.Bethe(MeV, dat, delta = 0)               # Compute MSP without density effect correction (delta = 0)
   xx  <- electronic.MSP.Bethe(MeV, dat, delta = dat$exact.delta) # Compute MSP with exact Sternheimer density correction
 
-  df4 <- data.frame(
+  df106<- data.frame(
     MeV = MeV,
     I.eV = dat$I,
     rho=dat$exact.rho,
@@ -775,7 +872,9 @@ demo.Sternheimer.graphite <- function(){
     MSP.R = xx,
     MSP.ICRU90 = 1.729,
     delta.R = dat$exact.delta,
-    delta.ICRU90 = 3.381)
+    delta.ICRU90 = 3.381,
+    mu.st = dat$mu.st,
+    L = dat$L)
 
   ############################
   # 100 MeV
@@ -785,7 +884,7 @@ demo.Sternheimer.graphite <- function(){
   xx0 <- electronic.MSP.Bethe(MeV, dat, delta = 0)               # Compute MSP without density effect correction (delta = 0)
   xx  <- electronic.MSP.Bethe(MeV, dat, delta = dat$exact.delta) # Compute MSP with exact Sternheimer density correction
 
-  df5 <- data.frame(
+  df107 <- data.frame(
     MeV = MeV,
     I.eV = dat$I,
     rho=dat$exact.rho,
@@ -793,7 +892,10 @@ demo.Sternheimer.graphite <- function(){
     MSP.R = xx,
     MSP.ICRU90 = 1.928,
     delta.R = dat$exact.delta,
-    delta.ICRU90 = 7.624)
+    delta.ICRU90 = 7.624,
+    mu.st = dat$mu.st,
+    L = dat$L)
+
 
 
   ############################
@@ -804,7 +906,7 @@ demo.Sternheimer.graphite <- function(){
   xx0 <- electronic.MSP.Bethe(MeV, dat, delta = 0)               # Compute MSP without density effect correction (delta = 0)
   xx  <- electronic.MSP.Bethe(MeV, dat, delta = dat$exact.delta) # Compute MSP with exact Sternheimer density correction
 
-  df6 <- data.frame(
+  df108 <- data.frame(
     MeV = MeV,
     I.eV = dat$I,
     rho=dat$exact.rho,
@@ -812,10 +914,12 @@ demo.Sternheimer.graphite <- function(){
     MSP.R = xx,
     MSP.ICRU90 = 2.106,
     delta.R = dat$exact.delta,
-    delta.ICRU90 = 12.22)
+    delta.ICRU90 = 12.22,
+    mu.st = dat$mu.st,
+    L = dat$L)
 
 
-  df <- rbind(df1,df2,df3,df4,df5,df6)
+  df <- rbind(df100,df101,df102,df103,df104,df105,df106,df107,df108)
 
   ############################################################################
   # Main results
@@ -835,4 +939,5 @@ demo.Sternheimer.graphite <- function(){
 
 df
 } # graphite (demo)
+
 
