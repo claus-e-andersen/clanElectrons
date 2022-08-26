@@ -54,7 +54,9 @@ rho=dat$exact.rho,
 MSP.R0 = xx0,
 MSP.R = xx, MSP.ICRU90 = 1.880,
 delta.R = dat$exact.delta, 
-delta.ICRU90 = 0.1005)
+delta.ICRU90 = 0.1005,
+mu.st = dat$mu.st,
+L = dat$L)
 ```
 
 ## Excellent agreement between clanElectrons and ICRU-90 values for liquid water. 
@@ -118,7 +120,9 @@ xx  <- electronic.MSP.Bethe(MeV, dat, delta = dat$exact.delta) # Compute MSP wit
     MSP.R = xx,
     MSP.ICRU90 = 1.640,
     delta.R = dat$exact.delta,
-    delta.ICRU90 = 0.6075)
+    delta.ICRU90 = 0.6075,
+    mu.st = dat$mu.st,
+    L = dat$L)
 ```
 
 
