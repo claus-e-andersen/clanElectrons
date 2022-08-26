@@ -7,6 +7,11 @@ and ICRU-90 publications.
 - ICRU-90: Key data for ionizing-radiation dosimetry: Measurement standards and applications (2014/2016).
 - R.M. Sternheimer (Brookhaven), M.J. Berger (NBS) and S.M. Seltzer (NBS): Density effect for the ionization loss of charged particles in various substances. Atomic Data and Nuclear Data Tables 30,26 l-27 1 (1984).
 - G4DensityEffectCalculator.cc for Geant4 by Matthew Strait (straitm-at-umn-dot-edu) 2019. 
+- Carlson (1975) Book: Photoelectron and Auger Spectroscopy
+
+## Binding energies and sub-shell occupation levels
+The atomic data required for the density effect computations can be found in the book by Carlson (1975, see above) starting page 338: Table A1.A
+Binding Energies of Electrons in Free Atom (eV) : Z = 1-53. The data file used by G4DensityEffectCalculator.cc (see above) seems to have used another source of data. ICRU-90 uses the Carlson data.
 
 ## Applications:
 You specify Z, A, I, density and other material parameters and the package has functions for computation
@@ -14,7 +19,8 @@ of electronic stopping power (both restricted and unrestricted) for electrons. T
 of the density effect using Sternheimer theory requires knowledge of binding energies and occupation fractions for electrons in the
 subshells of the material in question. fvec is a vector with electron occupation levels per subshell (number of electrons / Z).
 Evec is a vector of the same length as fvec with binding energies in eV. nc is the number of conduction electrons per atom.
-For an insulator, nc = 0. In the example with graphite (see below), we set nc = 1.
+For an insulator, nc = 0. In the example with graphite (see below), we set nc = 1. 
+
 
 ## Example 1: Stopping power computation for water and comparison with ICRU-90
 
