@@ -8,33 +8,31 @@ clanElectrons()
 }
 \description{
 Package for computation of electronic stopping power and density effect (Sternheimer)
-Dummy function to ease acces to the help index.
+This is a simple dummy function to ease access to the help index.
 
  clanElectrons()
 
  ?clanElectrons # gives you an index of functions in package
 
- #' Status (August 10, 2022):
+ #' Status (August 28, 2022):
+ 1. We miss handling of delta for low energy electrons (delta = 0).
 
- 1. Bethe formula and Sternheimer.exact.delta agres perfectly with ICRU-90
- for water, but NOT for graphite.
+ 2. Further simplifications could be good.
 
- 2. More work needed for the lower energies for insulators and conductors.
- Clean up of examples are needed.
+Main functions for computation of the density-effect correction are:
+   dat <- Sternheimer.delta.param(MeV, dat)
+   dat <- Sternheimer.delta.exact(MeV, dat)
+Note that dat is a list with input and output parameters. The .parm version
+is just the simple use of the Sternheimer fitting parameters (see e.g. the 1984
+paper with parameters for many materials). The .exact version is the complex
+model based on oscillators (binding electies and subshell atomic structure) and
+dielectric (optical) stopping.
 
- 3. Consider if material data could be stored.
+ Main functions for stopping power power computations are:
+    electronic.MSP(MeV, dat, delta)
+    electronic.MSP.restricted(MeV,delta.keV, dat, delta)
 
- 4. Perhaps we should make a set of functions:
-
-  demo.MSP.water
-
-  demo.MSP.graphite
-
-  demo.alanine
-
-  demo.MSP.Al
-
-  demo.MSP.Be
-
-  etc...ß
+Main validation functions (comparison against ICRU-90 data):
+  demo.Sternheimer.graphite()
+  demo.Sternheimer.water()
 }

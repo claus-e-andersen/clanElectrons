@@ -1,36 +1,32 @@
 #' @title clanElectrons
 #' @description  Package for computation of electronic stopping power and density effect (Sternheimer)
-#' Dummy function to ease acces to the help index.
+#' This is a simple dummy function to ease access to the help index.
 #'
 #'  clanElectrons()
 #'
 #'  ?clanElectrons # gives you an index of functions in package
 #'
-#'  #' Status (August 10, 2022):
+#'  #' Status (August 28, 2022):
+#'  1. We miss handling of delta for low energy electrons (delta = 0).
 #'
-#'  1. Bethe formula and Sternheimer.exact.delta agres perfectly with ICRU-90
-#'  for water, but NOT for graphite.
+#'  2. Further simplifications could be good.
 #'
-#'  2. More work needed for the lower energies for insulators and conductors.
-#'  Clean up of examples are needed.
+#' Main functions for computation of the density-effect correction are:
+#'    dat <- Sternheimer.delta.param(MeV, dat)
+#'    dat <- Sternheimer.delta.exact(MeV, dat)
+#' Note that dat is a list with input and output parameters. The .parm version
+#' is just the simple use of the Sternheimer fitting parameters (see e.g. the 1984
+#' paper with parameters for many materials). The .exact version is the complex
+#' model based on oscillators (binding electies and subshell atomic structure) and
+#' dielectric (optical) stopping.
 #'
-#'  3. Consider if material data could be stored.
+#'  Main functions for stopping power power computations are:
+#'     electronic.MSP(MeV, dat, delta)
+#'     electronic.MSP.restricted(MeV,delta.keV, dat, delta)
 #'
-#'  4. Perhaps we should make a set of functions:
-#'
-#'   demo.MSP.water
-#'
-#'   demo.MSP.graphite
-#'
-#'   demo.alanine
-#'
-#'   demo.MSP.Al
-#'
-#'   demo.MSP.Be
-#'
-#'   etc...ß
-#'
-#'
+#' Main validation functions (comparison against ICRU-90 data):
+#'   demo.Sternheimer.graphite()
+#'   demo.Sternheimer.water()
 #' @export
 clanElectrons <- function(){
 # Dummy function
@@ -529,8 +525,8 @@ dat <- dat.H2O
 ############################
 MeV <- 0.8
 dat <- Sternheimer.delta.exact(MeV, dat)
-xx0 <- electronic.MSP.Bethe(MeV, dat, delta = 0) # No density effect correction
-xx <- electronic.MSP.Bethe(MeV, dat, delta = dat$exact.delta) # Exact Sternheimer density correction
+xx0 <- electronic.MSP(MeV, dat, delta = 0) # No density effect correction
+xx <- electronic.MSP(MeV, dat, delta = dat$exact.delta) # Exact Sternheimer density correction
 df1 <- data.frame(MeV = MeV, I.eV = dat$I, rho=dat$exact.rho,  MSP.R0 = xx0,
                   MSP.R = xx, MSP.ICRU90=1.880,
                   delta.R=dat$exact.delta, delta.ICRU90=0.1005,
@@ -542,8 +538,8 @@ df1 <- data.frame(MeV = MeV, I.eV = dat$I, rho=dat$exact.rho,  MSP.R0 = xx0,
 ############################
 MeV <- 1.0
 dat <- Sternheimer.delta.exact(MeV, dat)
-xx0 <- electronic.MSP.Bethe(MeV, dat, delta = 0) # No density effect correction
-xx  <- electronic.MSP.Bethe(MeV, dat, delta = dat$exact.delta) # Exact Sternheimer density correction
+xx0 <- electronic.MSP(MeV, dat, delta = 0) # No density effect correction
+xx  <- electronic.MSP(MeV, dat, delta = dat$exact.delta) # Exact Sternheimer density correction
 df2 <- data.frame(MeV = MeV, I.eV = dat$I, rho=dat$exact.rho,  MSP.R0 = xx0,
                   MSP.R = xx, MSP.ICRU90 = 1.845,
                   delta.R = dat$exact.delta, delta.ICRU90 = 0.2086,
@@ -555,8 +551,8 @@ df2 <- data.frame(MeV = MeV, I.eV = dat$I, rho=dat$exact.rho,  MSP.R0 = xx0,
 ############################
 MeV <- 10.0
 dat <- Sternheimer.delta.exact(MeV, dat)
-xx0 <- electronic.MSP.Bethe(MeV, dat, delta = 0) # No density effect correction
-xx  <- electronic.MSP.Bethe(MeV, dat, delta = dat$exact.delta) # Exact Sternheimer density correction
+xx0 <- electronic.MSP(MeV, dat, delta = 0) # No density effect correction
+xx  <- electronic.MSP(MeV, dat, delta = dat$exact.delta) # Exact Sternheimer density correction
 df3 <- data.frame(MeV = MeV, I.eV = dat$I, rho=dat$exact.rho,  MSP.R0 = xx0,
                   MSP.R = xx, MSP.ICRU90 = 1.967,
                   delta.R = dat$exact.delta, delta.ICRU90 = 2.928,
@@ -568,8 +564,8 @@ df3 <- data.frame(MeV = MeV, I.eV = dat$I, rho=dat$exact.rho,  MSP.R0 = xx0,
 ############################
 MeV <- 100.0
 dat <- Sternheimer.delta.exact(MeV, dat)
-xx0 <- electronic.MSP.Bethe(MeV, dat, delta = 0) # No density effect correction
-xx  <- electronic.MSP.Bethe(MeV, dat, delta = dat$exact.delta) # Exact Sternheimer density correction
+xx0 <- electronic.MSP(MeV, dat, delta = 0) # No density effect correction
+xx  <- electronic.MSP(MeV, dat, delta = dat$exact.delta) # Exact Sternheimer density correction
 df4 <- data.frame(MeV = MeV, I.eV = dat$I, rho=dat$exact.rho,  MSP.R0 = xx0,
                   MSP.R = xx, MSP.ICRU90 = 2.202,
                   delta.R = dat$exact.delta, delta.ICRU90 = 6.998,
@@ -582,8 +578,8 @@ df4 <- data.frame(MeV = MeV, I.eV = dat$I, rho=dat$exact.rho,  MSP.R0 = xx0,
 ############################
 MeV <- 1000.0
 dat <- Sternheimer.delta.exact(MeV, dat)
-xx0 <- electronic.MSP.Bethe(MeV, dat, delta = 0) # No density effect correction
-xx  <- electronic.MSP.Bethe(MeV, dat, delta = dat$exact.delta) # Exact Sternheimer density correction
+xx0 <- electronic.MSP(MeV, dat, delta = 0) # No density effect correction
+xx  <- electronic.MSP(MeV, dat, delta = dat$exact.delta) # Exact Sternheimer density correction
 df5 <- data.frame(MeV = MeV, I.eV = dat$I, rho=dat$exact.rho,  MSP.R0 = xx0,
                   MSP.R = xx, MSP.ICRU90 = 2.401,
                   delta.R = dat$exact.delta, delta.ICRU90 = 11.58,
@@ -678,8 +674,8 @@ demo.Sternheimer.graphite <- function(){
   ############################
   MeV <- 0.001 # Electron kinetic energy
   dat <- Sternheimer.delta.exact(MeV, dat)
-  xx0 <- electronic.MSP.Bethe(MeV, dat, delta = 0)               # Compute MSP without density effect correction (delta = 0)
-  xx  <- electronic.MSP.Bethe(MeV, dat, delta = dat$exact.delta) # Compute MSP with exact Sternheimer density correction
+  xx0 <- electronic.MSP(MeV, dat, delta = 0)               # Compute MSP without density effect correction (delta = 0)
+  xx  <- electronic.MSP(MeV, dat, delta = dat$exact.delta) # Compute MSP with exact Sternheimer density correction
 
   df100 <- data.frame(
     MeV = MeV,
@@ -698,8 +694,8 @@ demo.Sternheimer.graphite <- function(){
   ############################
   MeV <- 0.010 # Electron kinetic energy
   dat <- Sternheimer.delta.exact(MeV, dat)
-  xx0 <- electronic.MSP.Bethe(MeV, dat, delta = 0)               # Compute MSP without density effect correction (delta = 0)
-  xx  <- electronic.MSP.Bethe(MeV, dat, delta = dat$exact.delta) # Compute MSP with exact Sternheimer density correction
+  xx0 <- electronic.MSP(MeV, dat, delta = 0)               # Compute MSP without density effect correction (delta = 0)
+  xx  <- electronic.MSP(MeV, dat, delta = dat$exact.delta) # Compute MSP with exact Sternheimer density correction
 
   df101 <- data.frame(
     MeV = MeV,
@@ -718,8 +714,8 @@ demo.Sternheimer.graphite <- function(){
   ############################
   MeV <- 0.100 # Electron kinetic energy
   dat <- Sternheimer.delta.exact(MeV, dat)
-  xx0 <- electronic.MSP.Bethe(MeV, dat, delta = 0)               # Compute MSP without density effect correction (delta = 0)
-  xx  <- electronic.MSP.Bethe(MeV, dat, delta = dat$exact.delta) # Compute MSP with exact Sternheimer density correction
+  xx0 <- electronic.MSP(MeV, dat, delta = 0)               # Compute MSP without density effect correction (delta = 0)
+  xx  <- electronic.MSP(MeV, dat, delta = dat$exact.delta) # Compute MSP with exact Sternheimer density correction
 
   df102 <- data.frame(
     MeV = MeV,
@@ -738,8 +734,8 @@ demo.Sternheimer.graphite <- function(){
   ############################
   MeV <- 0.8 # Electron kinetic energy
   dat <- Sternheimer.delta.exact(MeV, dat)
-  xx0 <- electronic.MSP.Bethe(MeV, dat, delta = 0)               # Compute MSP without density effect correction (delta = 0)
-  xx  <- electronic.MSP.Bethe(MeV, dat, delta = dat$exact.delta) # Compute MSP with exact Sternheimer density correction
+  xx0 <- electronic.MSP(MeV, dat, delta = 0)               # Compute MSP without density effect correction (delta = 0)
+  xx  <- electronic.MSP(MeV, dat, delta = dat$exact.delta) # Compute MSP with exact Sternheimer density correction
 
   df103 <- data.frame(
     MeV = MeV,
@@ -759,8 +755,8 @@ demo.Sternheimer.graphite <- function(){
   ############################
   MeV <- 1.0 # Electron kinetic energy
   dat <- Sternheimer.delta.exact(MeV, dat)
-  xx0 <- electronic.MSP.Bethe(MeV, dat, delta = 0)               # Compute MSP without density effect correction (delta = 0)
-  xx  <- electronic.MSP.Bethe(MeV, dat, delta = dat$exact.delta) # Compute MSP with exact Sternheimer density correction
+  xx0 <- electronic.MSP(MeV, dat, delta = 0)               # Compute MSP without density effect correction (delta = 0)
+  xx  <- electronic.MSP(MeV, dat, delta = dat$exact.delta) # Compute MSP with exact Sternheimer density correction
 
   df104 <- data.frame(
     MeV = MeV,
@@ -780,8 +776,8 @@ demo.Sternheimer.graphite <- function(){
   ############################
   MeV <- 2.0 # Electron kinetic energy
   dat <- Sternheimer.delta.exact(MeV, dat)
-  xx0 <- electronic.MSP.Bethe(MeV, dat, delta = 0)               # Compute MSP without density effect correction (delta = 0)
-  xx  <- electronic.MSP.Bethe(MeV, dat, delta = dat$exact.delta) # Compute MSP with exact Sternheimer density correction
+  xx0 <- electronic.MSP(MeV, dat, delta = 0)               # Compute MSP without density effect correction (delta = 0)
+  xx  <- electronic.MSP(MeV, dat, delta = dat$exact.delta) # Compute MSP with exact Sternheimer density correction
 
   df105 <- data.frame(
     MeV = MeV,
@@ -801,8 +797,8 @@ demo.Sternheimer.graphite <- function(){
 
   MeV <- 10 # Electron kinetic energy
   dat <- Sternheimer.delta.exact(MeV, dat)
-  xx0 <- electronic.MSP.Bethe(MeV, dat, delta = 0)               # Compute MSP without density effect correction (delta = 0)
-  xx  <- electronic.MSP.Bethe(MeV, dat, delta = dat$exact.delta) # Compute MSP with exact Sternheimer density correction
+  xx0 <- electronic.MSP(MeV, dat, delta = 0)               # Compute MSP without density effect correction (delta = 0)
+  xx  <- electronic.MSP(MeV, dat, delta = dat$exact.delta) # Compute MSP with exact Sternheimer density correction
 
   df106<- data.frame(
     MeV = MeV,
@@ -821,8 +817,8 @@ demo.Sternheimer.graphite <- function(){
   ############################
   MeV <- 100 # Electron kinetic energy
   dat <- Sternheimer.delta.exact(MeV, dat)
-  xx0 <- electronic.MSP.Bethe(MeV, dat, delta = 0)               # Compute MSP without density effect correction (delta = 0)
-  xx  <- electronic.MSP.Bethe(MeV, dat, delta = dat$exact.delta) # Compute MSP with exact Sternheimer density correction
+  xx0 <- electronic.MSP(MeV, dat, delta = 0)               # Compute MSP without density effect correction (delta = 0)
+  xx  <- electronic.MSP(MeV, dat, delta = dat$exact.delta) # Compute MSP with exact Sternheimer density correction
 
   df107 <- data.frame(
     MeV = MeV,
@@ -843,8 +839,8 @@ demo.Sternheimer.graphite <- function(){
   ############################
   MeV <- 1000 # Electron kinetic energy
   dat <- Sternheimer.delta.exact(MeV, dat)
-  xx0 <- electronic.MSP.Bethe(MeV, dat, delta = 0)               # Compute MSP without density effect correction (delta = 0)
-  xx  <- electronic.MSP.Bethe(MeV, dat, delta = dat$exact.delta) # Compute MSP with exact Sternheimer density correction
+  xx0 <- electronic.MSP(MeV, dat, delta = 0)               # Compute MSP without density effect correction (delta = 0)
+  xx  <- electronic.MSP(MeV, dat, delta = dat$exact.delta) # Compute MSP with exact Sternheimer density correction
 
   df108 <- data.frame(
     MeV = MeV,
