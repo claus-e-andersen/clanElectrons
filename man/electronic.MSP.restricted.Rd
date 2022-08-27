@@ -4,7 +4,7 @@
 \alias{electronic.MSP.restricted}
 \title{electronic.MSP.restricted}
 \usage{
-electronic.MSP.restricted(MeV = 1, delta.keV = 10, dat = NULL, delta = NA)
+electronic.MSP.restricted(MeV = 1, delta.keV = 10, dat = NULL, delta = 0)
 }
 \arguments{
 \item{MeV}{kinetic energy of the electron in MeV}

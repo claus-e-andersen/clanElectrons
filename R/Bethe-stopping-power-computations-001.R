@@ -117,7 +117,7 @@ MSP
 # Restricted Mass electronic stopping power
 ############################################################################
 electronic.MSP.restricted <- function(MeV = 1, delta.keV = 10,
-                                            dat=NULL, delta=NA){
+                                            dat=NULL, delta=0){
 # Created: July 29, 2022
 # Revised: July 31, 2022
 # Revised: Aug 27, 2022
@@ -377,28 +377,38 @@ df4 <- data.frame(MeV=out$param.MeV, delta=out$param.delta, delta.ICRU=3.381)
 rbind(df1,df2,df3,df4)
 } # demo.Sternheimer.delta.param
 
-#' @title demo.stopping.power.plot
-#' @description  Demonstration of how to use some clanElectron functions.
+#' @title demo.electronic.MSP.restricted
+#' @description  Demonstration of how to use some the restricted electronic stopping
+#' power. Here we look at water with cutoff values equal to 1, 10, 100, and 1000 keV.
 #'
-#' @details Notes:
-#' none
+#' @details
+#' None
 #' @export
 
 ############################################################################
 # Stopping power demonstration
 ############################################################################
-demo.stopping.power.plot <- function(){
+demo.electronic.MSP.restricted <- function(){
 # Created: July 29, 2022
 # Revised: July 31, 2022
+# Revised: Aug 27, 2022
 # Name:    Claus E. Andersen
 print("This function should be run manually, line by line.")
 
+    dat.H2O <-
+    list(
+      I=75,
+      Z=10,
+      A=18.0158)
+
+    dat <- dat.H2O
+
 xx <- seq(-3,2,length=50)
 ee <- 10^xx
-yy1 <- electronic.MSP.restricted(ee,1)
-yy2 <- electronic.MSP.restricted(ee,10)
-yy3 <- electronic.MSP.restricted(ee,100)
-yy4 <- electronic.MSP.restricted(ee,1000)
+yy1 <- electronic.MSP.restricted(ee, delta.keV=1, dat, delta=0)
+yy2 <- electronic.MSP.restricted(ee, delta.keV=10, dat, delta=0)
+yy3 <- electronic.MSP.restricted(ee, delta.keV=100, dat, delta=0)
+yy4 <- electronic.MSP.restricted(ee, delta.keV=1000, dat, delta=0)
 
 df <- rbind(
       data.frame(MeV=ee, Sel.rho = yy1, keV.delta=1),
@@ -408,7 +418,7 @@ df <- rbind(
 )
 
 lattice::xyplot(log10(Sel.rho) ~ log10(MeV),
-main="Restricted mass electronic stopping power for graphite",
+main="Restricted mass electronic stopping power for water (I = 75 eV)",
 auto.key=list(title="Delta [keV]",columns=4),
 groups=keV.delta,
 data=df)
@@ -438,13 +448,13 @@ demo.Bragg.rule.test <- function(){
 # Created: July 29, 2022
 # Revised: July 31, 2022
 # Name:    Claus E. Andersen
-print("demo.stopping.power.for.water")
+print("demo.Bragg.rule.test (water at 100 keV, 1 MeV and 10 MeV)")
 print("This script should be run manually, line by line.")
 print("We compare computations of the mass electronic stopping power")
 print("using Bragg's rule (and the MSPs for H and O) and using a")
 print("single call to the Bethe formula using effective values for Z = 10 and A = 18.058")
-print("We test at 100 keV where there is omly a small density effect and at 1 MeV.")
-print("We use the Sternheimer fitted parameters for the density effect inH, O, and H2O.")
+print("We test at 100 keV where there is only a small density effect and at 1 MeV and 10 MeV.")
+print("We use the Sternheimer fitted parameters for the density effect in H, O, and H2O.")
 
 dat.H <- list(
   I=19.2,
@@ -501,14 +511,14 @@ MSP.H <- electronic.MSP(MeV, dat.H, delta=dat.H$param.delta)
 dat.O <- Sternheimer.delta.param(MeV,dat.O)
 MSP.O <- electronic.MSP(MeV, dat.O, delta=dat.O$param.delta)
 
-MSP.H20.Bragg <- MSP.H * 0.11189 + MSP.O * 0.88811
+MSP.H2O.Bragg <- MSP.H * 0.11189 + MSP.O * 0.88811
 print('Result should be:  4.162491')
 
 print('Set the NIST reference value:')
 MSP.H2O.NIST <- 4.115
 
 print('Deviation between the Bragg-rule esimate: 1.15%:')
-(MSP.H20.Bragg - MSP.H20.NIST)/MSP.H20.NIST*100
+(MSP.H2O.Bragg - MSP.H2O.NIST)/MSP.H2O.NIST*100
 
 print('We could compute an average density effect and apply it to both H and O.')
 print('However this does not make a big difference.')
@@ -521,7 +531,7 @@ print('Result should be: 4.11128')
 
 print('Deviation between the Bethe estimate using Z=2x1+8=10 and A=18.0158: -0.09%:')
 print('# Note that the delta correction is of little importance for low energies.')
-(MSP.H2O.Bethe - MSP.H20.NIST)/MSP.H2O.NIST*100
+(MSP.H2O.Bethe - MSP.H2O.NIST)/MSP.H2O.NIST*100
 
 
 ###############################
