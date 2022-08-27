@@ -2,17 +2,11 @@
 % Please edit documentation in R/Sternheimer-exact-001.R
 \name{Sternheimer.f.root.mu.st}
 \alias{Sternheimer.f.root.mu.st}
-\title{Sternheimer.set.to.conductor}
+\title{Sternheimer.f.root.mu.st}
 \usage{
 Sternheimer.f.root.mu.st(mu.st, dat)
 }
 \description{
-Ascertain that material is treated as conductor in Sternheimer delta computations
-
- dat <- Sternheimer.set.to.conductor(dat)
-
-The binding energy of the outer subshell is set to zero
-
 Helper function (mu.st) for exact Sternheimer density correction
 
 # Equation suitable for finding mu.st (eq. 4.29 in ICRU-90)

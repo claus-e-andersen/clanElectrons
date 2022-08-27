@@ -2,12 +2,14 @@
 % Please edit documentation in R/Bethe-stopping-power-computations-001.R
 \name{demo.stopping.power.plot}
 \alias{demo.stopping.power.plot}
-\title{demo.stopping.power.plot
-Not so easy as Sternheimer}
+\title{demo.stopping.power.plot}
 \usage{
 demo.stopping.power.plot()
 }
 \description{
-demo.stopping.power.plot
-Not so easy as Sternheimer
+Demonstration of how to use some clanElectron functions.
+}
+\details{
+Notes:
+none
 }

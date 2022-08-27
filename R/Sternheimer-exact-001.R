@@ -36,20 +36,12 @@ clanElectrons <- function(){
 # Dummy function
 }
 
-#' @title Sternheimer.set.to.conductor
-#' @description  Ascertain that material is treated as conductor in Sternheimer delta computations
-#'
-#'  dat <- Sternheimer.set.to.conductor(dat)
-#'
-#' The binding energy of the outer subshell is set to zero
-#' @export
-
-#' @title Sternheimer.f.root.mu.st <-
+#' @title Sternheimer.f.root.mu.st
 #' @description  Helper function (mu.st) for exact Sternheimer density correction
 #'
 #' # Equation suitable for finding mu.st (eq. 4.29 in ICRU-90)
 #' @export
-Sternheimer.f.root.mu.st <- function(mu.st,dat){
+Sternheimer.f.root.mu.st <- function(mu.st, dat){
 # Helper function (mu.st) for exact Sternheimer density correction
 # Created: Aug 7, 2022
 # Revised: Aug 25, 2022

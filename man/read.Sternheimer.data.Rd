@@ -2,12 +2,21 @@
 % Please edit documentation in R/Bethe-stopping-power-computations-001.R
 \name{read.Sternheimer.data}
 \alias{read.Sternheimer.data}
-\title{read.Sternheimer.data
-Not so easy as Sternheimer}
+\title{read.Sternheimer.data}
 \usage{
 read.Sternheimer.data(print.wanted = FALSE)
 }
+\arguments{
+\item{print.wanted}{= TRUE or FALSE}
+}
 \description{
-read.Sternheimer.data
-Not so easy as Sternheimer
+Data from Sternheimers approximitive fit to the density-effect correction
+in the paper:
+R.M. Sternheimer (Brookhaven), M.J. Berger (NBS) and S.M. Seltzer (NBS): Density effect
+for the ionization loss of charged particles in various substances. Atomic Data and Nuclear
+Data Tables 30,26 l-27 1 (1984).
+}
+\details{
+Notes:
+function returns a data frame with fitted parameters for a few selected materials.
 }

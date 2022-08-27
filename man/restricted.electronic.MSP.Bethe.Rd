@@ -2,8 +2,7 @@
 % Please edit documentation in R/Bethe-stopping-power-computations-001.R
 \name{restricted.electronic.MSP.Bethe}
 \alias{restricted.electronic.MSP.Bethe}
-\title{restricted.electronic.MSP.Bethe
-Not so easy as Sternheimer}
+\title{restricted.electronic.MSP.Bethe}
 \usage{
 restricted.electronic.MSP.Bethe(
   MeV = 1,
@@ -12,7 +11,27 @@ restricted.electronic.MSP.Bethe(
   delta = NA
 )
 }
+\arguments{
+\item{MeV}{kinetic energy of the electron in MeV}
+
+\item{delta.keV}{cut-off energy in keV}
+
+\item{dat}{list with parameters}
+
+\item{delta}{= density-effect correction}
+
+\item{dat$Z}{= atomic number}
+
+\item{dat$A}{= atomic mass}
+
+\item{dat$I}{= mean excitation energy in eV}
+}
 \description{
-restricted.electronic.MSP.Bethe
-Not so easy as Sternheimer
+Computation of restricted mass electronic stopping power (MSP)
+according to ICRU-90 eq. 4.11 (page 22). The correction for the density
+effect (delta) has to be supplied by the user.
+}
+\details{
+Notes:
+The computed restricted MSP is in units of MeV pr. g/cm2.
 }

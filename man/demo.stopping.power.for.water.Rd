@@ -2,12 +2,14 @@
 % Please edit documentation in R/Bethe-stopping-power-computations-001.R
 \name{demo.stopping.power.for.water}
 \alias{demo.stopping.power.for.water}
-\title{demo.stopping.power.for.water
-Not so easy as Sternheimer}
+\title{demo.stopping.power.for.water}
 \usage{
 demo.stopping.power.for.water()
 }
 \description{
-demo.stopping.power.for.water
-Not so easy as Sternheimer
+Demonstration of how to use some clanElectron functions.
+}
+\details{
+Notes:
+none
 }

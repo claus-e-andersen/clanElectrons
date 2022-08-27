@@ -42,42 +42,37 @@
 #   demo.stopping.power.for.water()
 #   demo.stopping.power.computations()
 
-#' electronic.MSP.Bethe
-#' Not so easy as Sternheimer
+
+#' @title electronic.MSP.Bethe
+#' @description  Computation of mass electronic stopping power (MSP) according to
+#' ICRU-90 eq. 4.8 (page 22). The correction for the density effect (delta)
+#' has to be supplied by the user.
+#'
+#' @param MeV kinetic energy of the electron in MeV
+#' @param dat list with parameters
+#' @param dat$Z = atomic number
+#' @param dat$A = atomic mass
+#' @param dat$I = mean excitation energy in eV
+#' @param delta = density-effect correction
+#' @details Notes:
+#' The computed MSP is in units of MeV pr. g/cm2.
 #' @export
 ############################################################################
 # Mass electronic stopping power
 ############################################################################
-electronic.MSP.Bethe <- function(MeV = 1, dat = NULL(), delta=NA){
-
-#                                 I = 81, Z = 6, A = 12.011, rho = 2.265,
-#                                 Sternheimer.tab.id = "graphite-1",
-#                                 C.model = "fixed",
-#                                 delta.fixed = NA,
-#                                 df.Sternheimer = NULL,
-#                                 verbose = FALSE){
+electronic.MSP.Bethe <- function(MeV = 1, dat = NULL(), delta=0){
 # Created: July 29, 2022
-# Revised: July 31, 2022
+# Revised: August 27, 2022
 # Name:    Claus E. Andersen
 # Input:
 #   MeV = kinetic energy of electron in MeV (this can be a vector)
 #   I   = ionization energy in eV
 #   Z   = atomic number (e.g. 6 for graphite)
 #   A   = atomic mass (e.g. 12.011 for graphite)
-#   rho = density in g/cm3
-#   Sternheimer.tab.id = the identified needed to find your material in the database.
-#   C.model = "plasma" or "fixed" (the model used by the Sternheimer function).
-#   delta.fixed = force this value for the density correction (overwrite Sternheimer).
-#   df.Sternheimer = supply Sternheimer data on the fly (if not included in database)
 # Output:
 #   The mass electronic stopping power for electrons in units of MeV pr. g/cm2
-# Sample call:
-#   electronic.MSP.Bethe(MeV=1)
-#   electronic.MSP.Bethe(MeV=c(0.01,0.1,1,10))
-#   electronic.MSP.Bethe(MeV=100,C.model="fixed")
-#   electronic.MSP.Bethe(MeV=100,C.model="plasma")
-T <- MeV
 
+T <- MeV
 Z <- dat$Z
 A <- dat$A
 I <- dat$I
@@ -92,34 +87,30 @@ c      <-  299792458 # m/s
 tau    <- T / E0.MeV
 
 beta <- (1 - (E0.MeV/(E0.MeV+T))^2 )^0.5
-
-# Density effect:
-#delta <- delta.Sternheimer(MeV=MeV,I=I, Z=Z, A=A, rho=rho,
-#                           Sternheimer.tab.id = Sternheimer.tab.id,
-#                           C.model=C.model,
-#                           df.Sternheimer=df.Sternheimer,
-#                           verbose=verbose)
-
-#if(!is.na(delta.fixed)){
-#  # Overwrite Sternheimer
-#  if(verbose){
-#    print("Message from electronic.MSP.Bethe")
-#    print("A delta.fixed value has been supplied, and this will be used in the MSP computations.")
-#    print(paste("delta =", delta.fixed))
-#  }
-#  delta <- delta.fixed
-#}
-
 Fminus <- (1-beta^2)*(1 + tau^2/8 - (2*tau+1)*log(2))
 
 P1 <- 2*pi*re^2*E0/beta^2 * Z * Na /  A
 P2 <- 2*log(T*1e6/I) + log(1+tau/2) + Fminus - delta
+MSP <- P1 * P2 /( 1E6 * e) * 10000 # MeV pr. g/cm2
 
-P1 * P2 /( 1E6 * e) * 10000 # MeV pr. g/cm2
+MSP
 } # End function
 
-#' restricted.electronic.MSP.Bethe
-#' Not so easy as Sternheimer
+
+#' @title restricted.electronic.MSP.Bethe
+#' @description  Computation of restricted mass electronic stopping power (MSP)
+#' according to ICRU-90 eq. 4.11 (page 22). The correction for the density
+#' effect (delta) has to be supplied by the user.
+#'
+#' @param MeV kinetic energy of the electron in MeV
+#' @param delta.keV cut-off energy in keV
+#' @param dat list with parameters
+#' @param dat$Z = atomic number
+#' @param dat$A = atomic mass
+#' @param dat$I = mean excitation energy in eV
+#' @param delta = density-effect correction
+#' @details Notes:
+#' The computed restricted MSP is in units of MeV pr. g/cm2.
 #' @export
 
 ############################################################################
@@ -127,14 +118,9 @@ P1 * P2 /( 1E6 * e) * 10000 # MeV pr. g/cm2
 ############################################################################
 restricted.electronic.MSP.Bethe <- function(MeV = 1, delta.keV = 10,
                                             dat=NULL, delta=NA){
-#                                            I = 81, Z = 6, A = 12.011, rho = 2.265,
-#                                            Sternheimer.tab.id = "graphite-1",
-#                                            C.model = "fixed",
-#                                            delta.fixed = NA,
-#                                            df.Sternheimer = NULL,
-#                                           verbose=FALSE){
 # Created: July 29, 2022
 # Revised: July 31, 2022
+# Revised: Aug 27, 2022
 # Name:    Claus E. Andersen
 # Input:
 #   MeV = kinetic energy of electron in MeV (this can be a vector)
@@ -142,26 +128,13 @@ restricted.electronic.MSP.Bethe <- function(MeV = 1, delta.keV = 10,
 #   delta.kV = threshold energy in keV for the restriction
 #   Z   = atomic number (e.g. 6 for graphite)
 #   A   = atomic mass (e.g. 12.011 for graphite)
-#   rho = density in g/cm3
-#   Sternheimer.tab.id = the identified needed to find your material in the database.
-#   C.model = "plasma" or "fixed" (the model used by the Sternheimer function).
-#   delta.fixed = force this value for the density correction (overwrite Sternheimer).
-#   df.Sternheimer = supply Sternheimer data on the fly (if not included in database)
 # Output:
 #   The restricted mass electronic stopping power for electrons in units of MeV pr. g/cm2
-# Sample call:
-#   restricted.electronic.MSP.Bethe(MeV=1,0.1)
-#   restricted.electronic.MSP.Bethe(MeV=1,1)
-#   restricted.electronic.MSP.Bethe(MeV=1,10)
-#   restricted.electronic.MSP.Bethe(MeV=1,100)
-#   restricted.electronic.MSP.Bethe(MeV=1,1000)
-#   electronic.MSP.Bethe(MeV=1)
 
 # The max delta is 50% of the kinetic energy
 delta.keV <- pmin(delta.keV, 0.5*MeV*1000)
 
 T      <- MeV
-
 Z      <- dat$Z
 A      <- dat$A
 I      <- dat$I
@@ -177,38 +150,31 @@ tau    <- T / E0.MeV
 eta    <- delta.keV / 1000 / T
 beta   <- (1 - (E0.MeV/(E0.MeV+T))^2 )^0.5
 
-## Density effect:
-#delta <- delta.Sternheimer(MeV=MeV, I=I, Z=Z, A=A, rho=rho,
-#                           Sternheimer.tab.id = Sternheimer.tab.id,
-#                           C.model = C.model,
-#                           df.Sternheimer = df.Sternheimer,
-#                           verbose = verbose)
-#if(!is.na(delta.fixed)){
-#  # Overwrite Sternheimer
-#  if(verbose){
-#    print("Message from electronic.MSP.Bethe")
-#    print("A delta.fixed value has been supplied, and this will be used in the MSP computations.")
-#    print(paste("delta =", delta.fixed))
-#  }
-#  delta <- delta.fixed
-#}
-
 # ICRU-90 eq. 4.12
 Hminus <-  -1 - beta^2 + log( 4*(1-eta)*eta) + (1-eta)^-1 + (1-beta^2)*(tau^2*eta^2/2 + (2*tau+1) * log(1-eta))
 
 P1 <- 2*pi*re^2*E0/beta^2 * Z * Na /  A
 P2 <- 2*log(T*1e6/I) + log(1+tau/2) + Hminus - delta
-P1 * P2 /( 1E6 * e) * 10000 # MeV pr. g/cm2
+rMSP <- P1 * P2 /( 1E6 * e) * 10000 # MeV pr. g/cm2
+rMSP
 } # End function
 
-#' read.Sternheimer.data
-#' Not so easy as Sternheimer
+
+#' @title read.Sternheimer.data
+#' @description  Data from Sternheimers approximitive fit to the density-effect correction
+#' in the paper:
+#' R.M. Sternheimer (Brookhaven), M.J. Berger (NBS) and S.M. Seltzer (NBS): Density effect
+#' for the ionization loss of charged particles in various substances. Atomic Data and Nuclear
+#' Data Tables 30,26 l-27 1 (1984).
+#' @param print.wanted = TRUE or FALSE
+#
+#' @details Notes:
+#' function returns a data frame with fitted parameters for a few selected materials.
 #' @export
 
 ############################################################################
 # Sternheimer model for density effect: Data for different materials
 ############################################################################
-
 read.Sternheimer.data <- function(print.wanted=FALSE){
 # Created: July 29, 2022
 # Revised: July 31, 2022
@@ -291,10 +257,29 @@ print(df)
 df
 }# end function
 
-#' Sternheimer.delta.param
-#'
+
+#' @title Sternheimer.delta.param
+#' @description  Compute the density-effect correction based on the fitting parameters
+#' published in the paper:
+#' R.M. Sternheimer (Brookhaven), M.J. Berger (NBS) and S.M. Seltzer (NBS): Density effect
+#' for the ionization loss of charged particles in various substances. Atomic Data and Nuclear
+#' Data Tables 30,26 l-27 1 (1984).
+#' @param MeV = kinetic energy of the electron (in MeV)
+#' @param dat = list with parameters
+#' @param dat$param.C = Sternheimer parameter (see 1984 paper)
+#' @param dat$param.X0 = Sternheimer parameter (see 1984 paper)
+#' @param dat$param.X1 = Sternheimer parameter (see 1984 paper)
+#' @param dat$param.a = Sternheimer parameter (see 1984 paper)
+#' @param dat$param.m = Sternheimer parameter (see 1984 paper)
+#
+#' @details Notes:
+#' The function returns an approximate value for the density-effect correction (delta).
+#' See also Andero et al. "Fundamentals of ionizing radiation dosimetry" (2017) p. 74
+#' Thw output ia returned as a list (dat):
+#'   dat$param.MeV =  MeV
+#'   dat$param.delta = delta
+
 #' @export
-#'
 ############################################################################
 # Sternheimer model for density effect
 ############################################################################
@@ -310,8 +295,6 @@ Sternheimer.delta.param <- function(MeV = 1, dat = NA){
 #   param.C, paran.X0 etc. : Sternheimer model fit parameters
 #   # Output:
 #   The Sternheimer density effect correction (delta) needed in the Bethe formula.
-# Reference: Andero et al. (2017) p. 74
-
 E0   <- 0.51099895000
 beta <- (1 - (E0/(E0+MeV))^2 )^0.5
 X  <- log10(beta / (1-beta^2)^0.5)
@@ -333,13 +316,11 @@ delta <- delta0
 
 ok <- (X0 < X) & (X < X1)
 if(sum(ok)>0){
-#  print("delta 1")
   delta[ok] <- delta1[ok]
 }
 
 ok <- X > X1
 if(sum(ok)>0){
-#  print("delta 2")
   delta[ok] <- delta2[ok]
 }
 
@@ -350,11 +331,12 @@ dat$param.delta <- delta
 dat
 } # Sternheimer.delta.param
 
-
-#' demo.stopping.power.validation
-#' Not so easy as Sternheimer
-#' @export
+#' @title demo.Sternheimer.delta.param
+#' @description  Demonstration of how to useSternheimer.delta.param().
 #'
+#' @details Notes:
+#' none
+#' @export
 ############################################################################
 # Stopping power validation computations
 ############################################################################
@@ -395,10 +377,13 @@ df4 <- data.frame(MeV=out$param.MeV, delta=out$param.delta,delta.ICRU=3.381)
 rbind(df1,df2,df3,df4)
 } # demo.Sternheimer.delta.param
 
-#' demo.stopping.power.plot
-#' Not so easy as Sternheimer
-#' @export
+#' @title demo.stopping.power.plot
+#' @description  Demonstration of how to use some clanElectron functions.
 #'
+#' @details Notes:
+#' none
+#' @export
+
 ############################################################################
 # Stopping power demonstration
 ############################################################################
@@ -430,8 +415,11 @@ data=df)
 }
 
 
-#' demo.stopping.power.for.water
-#' Not so easy as Sternheimer
+#' @title demo.stopping.power.for.water
+#' @description  Demonstration of how to use some clanElectron functions.
+#'
+#' @details Notes:
+#' none
 #' @export
 ############################################################################
 # Water stopping power demonstration
@@ -452,7 +440,6 @@ print("single call to the Bethe formula using effective values for Z = 10 and A 
 ###############################
 MSP.H <- electronic.MSP.Bethe(MeV=0.1, I=19.2, Z=1, A=1.0079, rho = NA * 8.3748e-5,
                                  Sternheimer.tab.id = "hydrogen-1",
-                                 C.model="fixed",
                                  #delta.fixed = delta.water,
                                  #df.Sternheimer=NULL,
                                  verbose = FALSE)
@@ -460,7 +447,6 @@ MSP.H <- electronic.MSP.Bethe(MeV=0.1, I=19.2, Z=1, A=1.0079, rho = NA * 8.3748e
 
 MSP.O <- electronic.MSP.Bethe(MeV=0.1, I=95, Z=8, A=16.000, rho = NA * 1.3315e-3,
                                  Sternheimer.tab.id = "oxygen",
-                                 C.model="fixed",
                                  #delta.fixed = delta.water,
                                  #df.Sternheimer=NULL,
                                  verbose = FALSE)
@@ -476,16 +462,12 @@ MSP.H20.NIST <- 4.115
 # We could computate an average density effect and apply it to both H and O.
 # However this does not make a big difference.
 delta.water <- delta.Sternheimer(MeV=0.1,  I=75, Z=10.000, A=18.0158, rho = 1,
-                                 Sternheimer.tab.id = "water-1",
-                                 C.model="fixed")
+                                 Sternheimer.tab.id = "water-1")
 # Result = 0.01380142
 
 #delta.water <-   0.0
 MSP.H20.Bethe <- electronic.MSP.Bethe(MeV=0.1, I=75, Z=10.000, A=18.0158, rho = NA * 1.3315e-3,
                                  Sternheimer.tab.id = "water-1",
-                                 C.model="fixed",
-                                 #delta.fixed = delta.water,
-                                 #df.Sternheimer=NULL,
                                  verbose = FALSE)
 MSP.H20.Bethe
 # Result: 4.11128
@@ -501,17 +483,11 @@ MSP.H20.Bethe
 ###############################
 MSP.H <- electronic.MSP.Bethe(MeV=1, I=19.2, Z=1, A=1.0079, rho = NA * 8.3748e-5,
                                  Sternheimer.tab.id = "hydrogen-1",
-                                 C.model="fixed",
-                                 #delta.fixed = delta.water,
-                                 #df.Sternheimer=NULL,
                                  verbose = FALSE)
 
 
 MSP.O <- electronic.MSP.Bethe(MeV=1, I=95, Z=8, A=16.000, rho = NA * 1.3315e-3,
                                  Sternheimer.tab.id = "oxygen",
-                                 C.model="fixed",
-                                 #delta.fixed = delta.water,
-                                 #df.Sternheimer=NULL,
                                  verbose = FALSE)
 
 MSP.H20.Bragg <- MSP.H * 0.11189 + MSP.O * 0.88811
@@ -527,14 +503,12 @@ MSP.H20.NIST <- 1.849
 # However this does not make a big difference.
 delta.water <- delta.Sternheimer(MeV=1, I=75, Z=10, A=18.0158, rho=1,
                                  Sternheimer.tab.id = "water-1",
-                                 C.model="fixed",
                                  verbose=TRUE)
 # Result = 0.3395958
 # NIST value = 0.2428
 
 delta.water <- delta.Sternheimer(MeV=1, I=75, Z=10, A=18.0158, rho=1,
                                  Sternheimer.tab.id = "water-1",
-                                 C.model="plasma",
                                  verbose=TRUE)
 # Result = 0.3395958
 # NIST value = 0.2428
@@ -543,7 +517,6 @@ delta.water <- delta.Sternheimer(MeV=1, I=75, Z=10, A=18.0158, rho=1,
 #delta.water <-   0.0
 MSP.H20.Bethe <- electronic.MSP.Bethe(MeV=1, I=75, Z=10.000, A=18.0158, rho = 1,
                                  Sternheimer.tab.id = "water-1",
-                                 C.model="fixed",
                                  #delta.fixed = delta.water,
                                  #df.Sternheimer=NULL,
                                  verbose = FALSE)
@@ -556,7 +529,6 @@ MSP.H20.Bethe
 # If we apply the NIST value for delta (0.2428), we get even better agreement:
 MSP.H20.Bethe.NIST.delta <- electronic.MSP.Bethe(MeV=1, I=75, Z=10.000, A=18.0158, rho = 1,
                                  Sternheimer.tab.id = "water-1",
-                                 C.model="fixed",
                                  delta.fixed = 0.2428,
                                  #df.Sternheimer=NULL,
                                  verbose = FALSE)
@@ -573,7 +545,6 @@ MSP.H20.Bethe.NIST.delta
 ###############################
 MSP.H <- electronic.MSP.Bethe(MeV=10, I=19.2, Z=1, A=1.0079, rho = NA * 8.3748e-5,
                                  Sternheimer.tab.id = "hydrogen-1",
-                                 C.model="fixed",
                                  #delta.fixed = delta.water,
                                  #df.Sternheimer=NULL,
                                  verbose = FALSE)
@@ -581,7 +552,6 @@ MSP.H <- electronic.MSP.Bethe(MeV=10, I=19.2, Z=1, A=1.0079, rho = NA * 8.3748e-
 
 MSP.O <- electronic.MSP.Bethe(MeV=10, I=95, Z=8, A=16.000, rho = NA * 1.3315e-3,
                                  Sternheimer.tab.id = "oxygen",
-                                 C.model="fixed",
                                  #delta.fixed = delta.water,
                                  #df.Sternheimer=NULL,
                                  verbose = FALSE)
@@ -600,7 +570,6 @@ MSP.H20.NIST <- 1.968
 
 delta.water <- delta.Sternheimer(MeV=10, I=75, Z=10, A=18.0158, rho=1,
                                  Sternheimer.tab.id = "water-1",
-                                 C.model="fixed",
                                  verbose=TRUE)
 
 # Result =  2.90640483377496
@@ -608,7 +577,6 @@ delta.water <- delta.Sternheimer(MeV=10, I=75, Z=10, A=18.0158, rho=1,
 
 MSP.H.H20.delta  <- electronic.MSP.Bethe(MeV=10, I=19.2, Z=1, A=1.0079, rho = NA * 8.3748e-5,
                                  Sternheimer.tab.id = "hydrogen-1",
-                                 C.model="fixed",
                                  delta.fixed = delta.water,
                                  #df.Sternheimer=NULL,
                                  verbose = FALSE)
@@ -616,7 +584,6 @@ MSP.H.H20.delta  <- electronic.MSP.Bethe(MeV=10, I=19.2, Z=1, A=1.0079, rho = NA
 
 MSP.O.H20.delta  <- electronic.MSP.Bethe(MeV=10, I=95, Z=8, A=16.000, rho = NA * 1.3315e-3,
                                  Sternheimer.tab.id = "oxygen",
-                                 C.model="fixed",
                                  delta.fixed = delta.water,
                                  #df.Sternheimer=NULL,
                                  verbose = FALSE)
@@ -628,7 +595,6 @@ MSP.H20.Bragg.H20.delta <- MSP.H.H20.delta  * 0.11189 + MSP.O.H20.delta  * 0.888
 #delta.water <-   0.0
 MSP.H20.Bethe <- electronic.MSP.Bethe(MeV=10, I=75, Z=10.000, A=18.0158, rho = 1,
                                  Sternheimer.tab.id = "water-1",
-                                 C.model="fixed",
                                  #delta.fixed = delta.water,
                                  #df.Sternheimer=NULL,
                                  verbose = FALSE)
@@ -641,7 +607,6 @@ MSP.H20.Bethe
 # If we apply the NIST value for delta (2.992E+00), we get even better agreement:
 MSP.H20.Bethe.NIST.delta <- electronic.MSP.Bethe(MeV=10, I=75, Z=10.000, A=18.0158, rho = 1,
                                  Sternheimer.tab.id = "water-1",
-                                 C.model="fixed",
                                  delta.fixed = 2.992E+00,
                                  #df.Sternheimer=NULL,
                                  verbose = FALSE)
@@ -664,13 +629,15 @@ MSP.H20.Bethe.NIST.delta
 
 
 
-#' demo.stopping.power.computations
-#' Not so easy as Sternheimer
+#' @title demo.stopping.power.computations
+#' @description  Demonstration of how to use some clanElectron functions.
+#'
+#' @details Notes:
+#' none
 #' @export
 ############################################################################
 # Demonstration of misc stopping power computations
 ############################################################################
-
 demo.stopping.power.computations <- function(){
 # Created: July 29, 2022
 # Revised: July 31, 2022

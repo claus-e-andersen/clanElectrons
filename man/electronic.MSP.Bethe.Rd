@@ -2,12 +2,29 @@
 % Please edit documentation in R/Bethe-stopping-power-computations-001.R
 \name{electronic.MSP.Bethe}
 \alias{electronic.MSP.Bethe}
-\title{electronic.MSP.Bethe
-Not so easy as Sternheimer}
+\title{electronic.MSP.Bethe}
 \usage{
-electronic.MSP.Bethe(MeV = 1, dat = NULL(), delta = NA)
+electronic.MSP.Bethe(MeV = 1, dat = NULL(), delta = 0)
+}
+\arguments{
+\item{MeV}{kinetic energy of the electron in MeV}
+
+\item{dat}{list with parameters}
+
+\item{delta}{= density-effect correction}
+
+\item{dat$Z}{= atomic number}
+
+\item{dat$A}{= atomic mass}
+
+\item{dat$I}{= mean excitation energy in eV}
 }
 \description{
-electronic.MSP.Bethe
-Not so easy as Sternheimer
+Computation of mass electronic stopping power (MSP) according to
+ICRU-90 eq. 4.8 (page 22). The correction for the density effect (delta)
+has to be supplied by the user.
+}
+\details{
+Notes:
+The computed MSP is in units of MeV pr. g/cm2.
 }

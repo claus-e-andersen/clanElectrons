@@ -2,12 +2,14 @@
 % Please edit documentation in R/Bethe-stopping-power-computations-001.R
 \name{demo.Sternheimer.delta.param}
 \alias{demo.Sternheimer.delta.param}
-\title{demo.stopping.power.validation
-Not so easy as Sternheimer}
+\title{demo.Sternheimer.delta.param}
 \usage{
 demo.Sternheimer.delta.param()
 }
 \description{
-demo.stopping.power.validation
-Not so easy as Sternheimer
+Demonstration of how to useSternheimer.delta.param().
+}
+\details{
+Notes:
+none
 }

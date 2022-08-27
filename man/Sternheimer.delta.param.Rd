@@ -6,6 +6,33 @@
 \usage{
 Sternheimer.delta.param(MeV = 1, dat = NA)
 }
+\arguments{
+\item{MeV}{= kinetic energy of the electron (in MeV)}
+
+\item{dat}{= list with parameters}
+
+\item{dat$param.C}{= Sternheimer parameter (see 1984 paper)}
+
+\item{dat$param.X0}{= Sternheimer parameter (see 1984 paper)}
+
+\item{dat$param.X1}{= Sternheimer parameter (see 1984 paper)}
+
+\item{dat$param.a}{= Sternheimer parameter (see 1984 paper)}
+
+\item{dat$param.m}{= Sternheimer parameter (see 1984 paper)}
+}
 \description{
-Sternheimer.delta.param
+Compute the density-effect correction based on the fitting parameters
+published in the paper:
+R.M. Sternheimer (Brookhaven), M.J. Berger (NBS) and S.M. Seltzer (NBS): Density effect
+for the ionization loss of charged particles in various substances. Atomic Data and Nuclear
+Data Tables 30,26 l-27 1 (1984).
+}
+\details{
+Notes:
+The function returns an approximate value for the density-effect correction (delta).
+See also Andero et al. "Fundamentals of ionizing radiation dosimetry" (2017) p. 74
+Thw output ia returned as a list (dat):
+  dat$param.MeV =  MeV
+  dat$param.delta = delta
 }

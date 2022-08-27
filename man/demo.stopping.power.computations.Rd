@@ -2,12 +2,14 @@
 % Please edit documentation in R/Bethe-stopping-power-computations-001.R
 \name{demo.stopping.power.computations}
 \alias{demo.stopping.power.computations}
-\title{demo.stopping.power.computations
-Not so easy as Sternheimer}
+\title{demo.stopping.power.computations}
 \usage{
 demo.stopping.power.computations()
 }
 \description{
-demo.stopping.power.computations
-Not so easy as Sternheimer
+Demonstration of how to use some clanElectron functions.
+}
+\details{
+Notes:
+none
 }
