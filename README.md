@@ -24,6 +24,19 @@ https://orbit.dtu.dk/en/persons/claus-e-andersen
 - G4DensityEffectCalculator.cc for Geant4 by Matthew Strait, School of Physics and Astronomy, University of Minneapolis, 2019. 
 - T.A. Carlson: Photoelectron and Auger Spectroscopy (1975, Springer).
 
+## Main functions in package
+```
+dat <- Sternheimer.delta.exact(MeV=1, dat) # "Exact" Sternheimer density-effect correction 
+dat <- Sternheimer.delta.param(MeV=1, dat) # Parametric model by Sternheimer for the density-effect correction
+
+s <- electronic.MSP(MeV = 1, dat, delta=0)
+s <- electronic.MSP.resticted(MeV = 1, delta.keV = 10, dat, delta=0)
+
+demo.water.table()     # How to use Sternheimer.delta.exact and electronic.MSP 
+demo.graphite.table()  # How to use Sternheimer.delta.exact and electronic.MSP
+
+demo.Bragg.rule.test() # How to use Sternheimer.delta.param
+```
 ## Binding energies and sub-shell occupation levels
 The atomic data required for the density effect computations can be found in the book by Carlson (1975, see above) starting page 337: Appendix 1
 Atomic binding Energies for each subshell for elements  Z = 1-106.  ICRU-90 uses the Carlson data. It is not clear if the Geant4 implementation in G4DensityEffectCalculator.cc (see above) uses the same data.
