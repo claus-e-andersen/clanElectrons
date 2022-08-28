@@ -2,18 +2,14 @@
 % Please edit documentation in R/Sternheimer-exact-001.R
 \name{demo.graphite}
 \alias{demo.graphite}
-\title{demo.graphite
-Computation of electronic stopping power and density effect for graphite
-using Sternheimer model as described in ICRU-90.
-
-Graphite is treated as a conductor (nc=1).}
+\title{demo.graphite}
 \usage{
 demo.graphite(MeV = 1)
 }
 \description{
-demo.graphite
 Computation of electronic stopping power and density effect for graphite
-using Sternheimer model as described in ICRU-90.
-
-Graphite is treated as a conductor (nc=1).
+}
+\details{
+#' We use the "exact" Sternheimer model as described in ICRU-90.
+Graphite is treated as a conductor (nc=1). We compare against ICRU-90 computations.
 }

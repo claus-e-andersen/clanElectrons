@@ -2,28 +2,14 @@
 % Please edit documentation in R/Sternheimer-exact-001.R
 \name{demo.water.table}
 \alias{demo.water.table}
-\title{demo.water.table
-Computation of electronic stopping power and density effect for liquid water
-using Sternheimer model as described in ICRU-90.
-
-How to compute the density-correction for a compound
-like water? Add the Z for all atoms involved.
-Arrange the fvec and the Evec atom by atom.
-Compute electron subshell occupancy factor as the number of electrons
-divided by the total Z. So, for water we have Z.sum = 10 electrons.
-First we consider the two hydrogen atoms, they have 13.6 eV binding energy
-and we therefore set fvec[1] to 2/10 and Evec[1] to 13.6. Then we have the
-8 electrons in oxygen: fvec[2] = 2, fvec[3] = 2, and fvec[4] = 4, with
-binding energies:  Evec[2] = 538.0, Evec[3] = 28.48, and Evec[4] = 13.62.
-Compounds should be treated as an insulator.
-In this example, we use the recommended values of I = 78 eV for water
-and we also set the density to 0.998 g/cm3 which has some implications
-for the density-efect correction (delta).}
+\title{demo.water.table}
 \usage{
 demo.water.table()
 }
 \description{
-demo.water.table
+Demonstration, comparison of computations for water against ICRU-90 data
+}
+\details{
 Computation of electronic stopping power and density effect for liquid water
 using Sternheimer model as described in ICRU-90.
 

@@ -2,12 +2,13 @@
 % Please edit documentation in R/Sternheimer-exact-001.R
 \name{demo.Sternheimer.delta.exact.plot}
 \alias{demo.Sternheimer.delta.exact.plot}
-\title{demo.Sternheimer.delta.exact.plot
-Delta vs. energy for two different models (Al: En=0 or not)}
+\title{demo.Sternheimer.delta.exact.plot}
 \usage{
 demo.Sternheimer.delta.exact.plot()
 }
 \description{
-demo.Sternheimer.delta.exact.plot
 Delta vs. energy for two different models (Al: En=0 or not)
+}
+\details{
+none.
 }

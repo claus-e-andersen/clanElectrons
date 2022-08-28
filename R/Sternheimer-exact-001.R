@@ -152,15 +152,33 @@ Sternheimer.beta.threshold <- function(L,dat){
 
 
 #' @title Sternheimer.delta.exact
-#' @description  Computation of exact Sternheimer density correction.
+#' @description  Computation of "exact" Sternheimer density correction.
+#'@details
+#' By "exact", we just mean that this is not the simple parameter fitting solution.
 #'
-#' By exact, we just mean that this is not the simple
-#' parameter fitting solution. The ICRU-90 terminology
-#' (p. 26) is followed as close as possible).
+#' The ICRU-90 terminology (p. 26) is followed as close as possible). The procedure is
+#' as follows:
+#'
+#' - The equations for mu.st and L are solved using a search strategy
+#'     (coarse + fine + regression) which may fail, for example, if the first interval
+#'     does not include the root. Graphs can be plotted to inspect  the procedure.
+#'
+#' - MeV is the kinetic energy and only one value can be computed (not vectorized).
+#'
+#
+#' Main references:
+#'
+#' - ICRU-90: Key data for ionizing-radiation dosimetry: Measurement standards
+#'     and applications (2014/2016).
+
+#' - DENSITY EFFECT FOR THE IONIZATION LOSS OF CHARGED PARTICLES
+#'     IN VARIOUS SUBSTANCES
+#'     by R. M. STERNHEIMER (Brookhaven), M. J. BERGER (NBS) and S. M. SELTZER (NBS).
+#'     ATOMIC DATA AND NUCLEAR DATA TABLES 30,26 l-27 1 ( 1984).
+#'
 #'
 #' @param MeV = electron kinetic energy
-#' @param dat list with parameters
-#' @param dat$nlev = number of sub-shells
+#' @param dat = list with parameters (both input and output)
 #' @param dat$Z = atomic number
 #' @param dat$A = atomic mass
 #' @param dat$I = mean excitation energy in eV
@@ -171,21 +189,10 @@ Sternheimer.beta.threshold <- function(L,dat){
 #' @param dat$plot.wanted = TRUE or FALSE,
 #' @param mu.solver.parm = search parameters for the mu.st solver
 #' @param L.solver.parm = search parameters for the L solver
-#' #' @details Notes:
-#' (1) The equations for mu.st and L are solved using a search strategy
-#'     (coarse + fine + regression) which may fail, for example, if the first interval
-#'     does not include the root. Graphs can be plotted to inspect  the procedure.
-#' (2) MeV is the kinetic energy and only one value can be computed (not vectorized).
+#' @param dat$nlev = number of sub-shells (output)
+#' @param dat$exact.delta = the computed delta (output)
+#' @return a list (dat)
 #'
-#
-#' Main references:
-#' (1) ICRU-90: Key data for ionizing-radiation dosimetry: Measurement standards
-#'     and applications (2014/2016).
-#' (2) DENSITY EFFECT FOR THE IONIZATION LOSS OF CHARGED PARTICLES
-#'     IN VARIOUS SUBSTANCES
-#'     by R. M. STERNHEIMER (Brookhaven), M. J. BERGER (NBS) and S. M. SELTZER (NBS).
-#'     ATOMIC DATA AND NUCLEAR DATA TABLES 30,26 l-27 1 ( 1984)
-#' (3) G4DensityEffectCalculator.cc by Matthew Strait, 2019
 #' @export
 Sternheimer.delta.exact <- function(MeV=1, dat=NULL, mu.solver.parm = NULL,  L.solver.parm = NULL) {
 # Created: Aug 7, 2022
@@ -395,7 +402,8 @@ dat
 ########################################################################################
 
 #' @title demo.Sternheimer.delta.exact.plot
-#' Delta vs. energy for two different models (Al: En=0 or not)
+#' @description  Delta vs. energy for two different models (Al: En=0 or not)
+#' @details none.
 #' @export
 demo.Sternheimer.delta.exact.plot <- function(){
 # Created: July 29, 2022
@@ -520,6 +528,8 @@ print(plt2)
 
 
 #' @title demo.water.table
+#' @description Demonstration, comparison of computations for water against ICRU-90 data
+#' @details
 #' Computation of electronic stopping power and density effect for liquid water
 #' using Sternheimer model as described in ICRU-90.
 #'
@@ -767,6 +777,8 @@ df
 
 
 #' @title demo.graphite.table
+#' @description Demonstration, comparison of computations for graphite against ICRU-90 data
+#' @details
 #' Computation of electronic stopping power and density effect for graphite
 #' using Sternheimer model as described in ICRU-90.
 #'
@@ -1017,6 +1029,7 @@ df
 
 
 #' @title demo.water
+#' @details
 #' Computation of electronic stopping power and density effect for liquid water
 #' using Sternheimer model as described in ICRU-90.
 #'
@@ -1061,11 +1074,9 @@ demo.water <- function(MeV=1){
 
 
 #' @title demo.graphite
-#' Computation of electronic stopping power and density effect for graphite
-#' using Sternheimer model as described in ICRU-90.
-#'
-#' Graphite is treated as a conductor (nc=1).
-
+#' @description Computation of electronic stopping power and density effect for graphite
+#'@details #' We use the "exact" Sternheimer model as described in ICRU-90.
+#' Graphite is treated as a conductor (nc=1). We compare against ICRU-90 computations.
 #' @export
 demo.graphite <- function(MeV=1){
   # Created: August 28 2022

@@ -2,18 +2,14 @@
 % Please edit documentation in R/Sternheimer-exact-001.R
 \name{demo.water}
 \alias{demo.water}
-\title{demo.water
-Computation of electronic stopping power and density effect for liquid water
-using Sternheimer model as described in ICRU-90.
-
-How to compute the density-correction for a compound
-like water? Add the Z for all atoms involved.
-Arrange the fvec and the Evec atom by atom.}
+\title{demo.water}
 \usage{
 demo.water(MeV = 1)
 }
 \description{
 demo.water
+}
+\details{
 Computation of electronic stopping power and density effect for liquid water
 using Sternheimer model as described in ICRU-90.
 

@@ -22,15 +22,17 @@ Sternheimer.delta.param(MeV = 1, dat = NA)
 \item{dat$param.m}{= Sternheimer parameter (see 1984 paper)}
 }
 \description{
-Compute the approximative density-effect correction based on the fitting parameters
-published in the paper:
-R.M. Sternheimer (Brookhaven), M.J. Berger (NBS) and S.M. Seltzer (NBS): Density effect
-for the ionization loss of charged particles in various substances. Atomic Data and Nuclear
-Data Tables 30,26 l-27 1 (1984).
+Compute the density-effect correction based on the fitting parameters
 }
 \details{
+The fitted parameters can be found, for example, in the paper:
+- R.M. Sternheimer (Brookhaven), M.J. Berger (NBS) and S.M. Seltzer (NBS): Density effect
+for the ionization loss of charged particles in various substances. Atomic Data and Nuclear
+Data Tables 30,26 l-27 1 (1984).
+
 The function returns an approximate value for the density-effect correction (delta).
 See also Andero et al. "Fundamentals of ionizing radiation dosimetry" (2017) p. 74.
+
 The output ia returned as a list (dat):
   dat$param.MeV =  MeV
   dat$param.delta = delta
@@ -39,5 +41,5 @@ First create a material (i.e. make a dat-list) called dat or something like than
 
 Then call the function for the given energy MeV:
 
-  dat <- Sternheimer.delta.param(MeV, dat)
+dat <- Sternheimer.delta.param(MeV, dat)
 }

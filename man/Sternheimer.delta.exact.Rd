@@ -14,27 +14,11 @@ Sternheimer.delta.exact(
 \arguments{
 \item{MeV}{= electron kinetic energy}
 
-\item{dat}{list with parameters}
+\item{dat}{= list with parameters (both input and output)}
 
 \item{mu.solver.parm}{= search parameters for the mu.st solver}
 
-\item{L.solver.parm}{= search parameters for the L solver
-#' @details Notes:
-(1) The equations for mu.st and L are solved using a search strategy
-    (coarse + fine + regression) which may fail, for example, if the first interval
-    does not include the root. Graphs can be plotted to inspect  the procedure.
-(2) MeV is the kinetic energy and only one value can be computed (not vectorized).
-
-Main references:
-(1) ICRU-90: Key data for ionizing-radiation dosimetry: Measurement standards
-    and applications (2014/2016).
-(2) DENSITY EFFECT FOR THE IONIZATION LOSS OF CHARGED PARTICLES
-    IN VARIOUS SUBSTANCES
-    by R. M. STERNHEIMER (Brookhaven), M. J. BERGER (NBS) and S. M. SELTZER (NBS).
-    ATOMIC DATA AND NUCLEAR DATA TABLES 30,26 l-27 1 ( 1984)
-(3) G4DensityEffectCalculator.cc by Matthew Strait, 2019}
-
-\item{dat$nlev}{= number of sub-shells}
+\item{L.solver.parm}{= search parameters for the L solver}
 
 \item{dat$Z}{= atomic number}
 
@@ -49,11 +33,35 @@ Main references:
 \item{dat$Evec}{= sub-shell binding energy (used in computation)}
 
 \item{dat$plot.wanted}{= TRUE or FALSE,}
+
+\item{dat$nlev}{= number of sub-shells (output)}
+
+\item{dat$exact.delta}{= the computed delta (output)}
+}
+\value{
+a list (dat)
 }
 \description{
-Computation of exact Sternheimer density correction.
+Computation of "exact" Sternheimer density correction.
+}
+\details{
+By "exact", we just mean that this is not the simple parameter fitting solution.
 
-By exact, we just mean that this is not the simple
-parameter fitting solution. The ICRU-90 terminology
-(p. 26) is followed as close as possible).
+The ICRU-90 terminology (p. 26) is followed as close as possible). The procedure is
+as follows:
+
+- The equations for mu.st and L are solved using a search strategy
+    (coarse + fine + regression) which may fail, for example, if the first interval
+    does not include the root. Graphs can be plotted to inspect  the procedure.
+
+- MeV is the kinetic energy and only one value can be computed (not vectorized).
+
+Main references:
+
+- ICRU-90: Key data for ionizing-radiation dosimetry: Measurement standards
+    and applications (2014/2016).
+- DENSITY EFFECT FOR THE IONIZATION LOSS OF CHARGED PARTICLES
+    IN VARIOUS SUBSTANCES
+    by R. M. STERNHEIMER (Brookhaven), M. J. BERGER (NBS) and S. M. SELTZER (NBS).
+    ATOMIC DATA AND NUCLEAR DATA TABLES 30,26 l-27 1 ( 1984).
 }

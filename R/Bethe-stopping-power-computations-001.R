@@ -224,22 +224,17 @@ df
 
 
 #' @title Sternheimer.delta.param
-#' @description  Compute the approximative density-effect correction based on the fitting parameters
-#' published in the paper:
-#' R.M. Sternheimer (Brookhaven), M.J. Berger (NBS) and S.M. Seltzer (NBS): Density effect
+#' @description  Compute the density-effect correction based on the fitting parameters
+#' @details
+#' The fitted parameters can be found, for example, in the paper:
+
+#' - R.M. Sternheimer (Brookhaven), M.J. Berger (NBS) and S.M. Seltzer (NBS): Density effect
 #' for the ionization loss of charged particles in various substances. Atomic Data and Nuclear
 #' Data Tables 30,26 l-27 1 (1984).
-#' @param MeV = kinetic energy of the electron (in MeV)
-#' @param dat = list with parameters
-#' @param dat$param.C = Sternheimer parameter (see 1984 paper)
-#' @param dat$param.X0 = Sternheimer parameter (see 1984 paper)
-#' @param dat$param.X1 = Sternheimer parameter (see 1984 paper)
-#' @param dat$param.a = Sternheimer parameter (see 1984 paper)
-#' @param dat$param.m = Sternheimer parameter (see 1984 paper)
-#
-#' @details
+#'
 #' The function returns an approximate value for the density-effect correction (delta).
 #' See also Andero et al. "Fundamentals of ionizing radiation dosimetry" (2017) p. 74.
+#'
 #' The output ia returned as a list (dat):
 #'   dat$param.MeV =  MeV
 #'   dat$param.delta = delta
@@ -248,8 +243,15 @@ df
 #'
 #' Then call the function for the given energy MeV:
 #'
-#'   dat <- Sternheimer.delta.param(MeV, dat)
-
+#' dat <- Sternheimer.delta.param(MeV, dat)
+#'
+#' @param MeV = kinetic energy of the electron (in MeV)
+#' @param dat = list with parameters
+#' @param dat$param.C = Sternheimer parameter (see 1984 paper)
+#' @param dat$param.X0 = Sternheimer parameter (see 1984 paper)
+#' @param dat$param.X1 = Sternheimer parameter (see 1984 paper)
+#' @param dat$param.a = Sternheimer parameter (see 1984 paper)
+#' @param dat$param.m = Sternheimer parameter (see 1984 paper)
 #' @export
 ############################################################################
 # Sternheimer model for density effect
@@ -304,7 +306,6 @@ dat
 
 #' @title demo.Sternheimer.delta.param
 #' @description  Demonstration of how to use Sternheimer.delta.param().
-#'
 #' @details
 #' None
 #' @export
@@ -349,13 +350,10 @@ rbind(df1,df2,df3,df4)
 } # demo.Sternheimer.delta.param
 
 #' @title demo.electronic.MSP.restricted
-#' @description  Demonstration of how to use some the restricted electronic stopping
-#' power. Here we look at water with cutoff values equal to 1, 10, 100, and 1000 keV.
-#'
+#' @description  Demonstration of how to use some the restricted electronic stopping power.
 #' @details
-#' None
+#' Here we look at water with cutoff values equal to 1, 10, 100, and 1000 keV.
 #' @export
-
 ############################################################################
 # Stopping power demonstration
 ############################################################################
@@ -397,22 +395,22 @@ data=df)
 
 
 #' @title demo.Bragg.rule.test
-#' @description  This function test the application of Bragg's rule
-#' where, for example, the stopping power for water is computed pased on the
-#' stopping powers of H and O.
+#' @description  This function demonstrates the application of Bragg's rule
+#' @details
+#' We compute the stopping power for water based on the stopping powers of H and O and we
+#' then compare that with a computation for H2O in one go.
 #'
 #' What we can learn from this function:
 #'
-#' (1) For a compound like water, it is better to use effective values for Z and A than Braggs rule.
+#' - For a compound like water, it is better to use effective values for Z and A than Braggs rule.
 #'     So, for water it is best to apply Z = 10 and A = 18.0158 in a single call to the Bethe formula.
 #'     The Bragg rule by taking the Sel/rho(H2O)  = w.H * Sel/rho(H) + w.O * Sel/rho(O) can easily be
 #'     a some percent off.
 #'
-#' (2) The remaining deviations between the Bethe estimate using Z=2x1+8=10 and A=18.0158 originates from
+#' - The remaining deviations between the Bethe estimate using Z=2x1+8=10 and A=18.0158 originates from
 #'     the delta value used for the density effect.
 #'
-#' @details
-#' None
+
 #' @export
 ############################################################################
 # Water stopping power demonstration

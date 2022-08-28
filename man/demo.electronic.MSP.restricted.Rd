@@ -7,9 +7,8 @@
 demo.electronic.MSP.restricted()
 }
 \description{
-Demonstration of how to use some the restricted electronic stopping
-power. Here we look at water with cutoff values equal to 1, 10, 100, and 1000 keV.
+Demonstration of how to use some the restricted electronic stopping power.
 }
 \details{
-None
+Here we look at water with cutoff values equal to 1, 10, 100, and 1000 keV.
 }

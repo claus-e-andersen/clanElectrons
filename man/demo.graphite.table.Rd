@@ -2,22 +2,14 @@
 % Please edit documentation in R/Sternheimer-exact-001.R
 \name{demo.graphite.table}
 \alias{demo.graphite.table}
-\title{demo.graphite.table
-Computation of electronic stopping power and density effect for graphite
-using Sternheimer model as described in ICRU-90.
-
-How to compute the density-correction for a conductor
-like graphite? Move one or more electrons to nc (i.e.
-binding energy zero).
-Compounds should be treated as an insulator.
-In this example, we use the recommended values of I = 81 eV for graphite
-and we also set the density to the gRAIN DENSITY (2.265 g/cm3) which has some implications
-for the density-effect correction.}
+\title{demo.graphite.table}
 \usage{
 demo.graphite.table()
 }
 \description{
-demo.graphite.table
+Demonstration, comparison of computations for graphite against ICRU-90 data
+}
+\details{
 Computation of electronic stopping power and density effect for graphite
 using Sternheimer model as described in ICRU-90.
 
