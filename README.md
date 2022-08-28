@@ -44,13 +44,13 @@ of the density effect using Sternheimer theory requires knowledge of binding ene
 subshells of the material in question. 
 
 We provide the material parameters to the functions using a list called dat (see dat.H2O and dat.graphite given below). 
-Some of the important parameters for the "exact" Sternheimer model are dat$fvec, dat$Evec and dat$nc.
+Some of the important parameters for the "exact" Sternheimer model are dat$fvec, dat$Evec and dat$nc:
 
-fvec is a vector with electron occupation levels per subshell (number of electrons / Z).
+- fvec is a vector with electron occupation levels per subshell (number of electrons / Z).
 
-Evec is a vector of the same length as fvec with binding energies in eV. 
+- Evec is a vector of the same length as fvec with binding energies in eV. 
 
-nc is the number of conduction electrons per atom. For an insulator, nc = 0. In the example with graphite (see below), we set nc = 1. 
+- nc is the number of conduction electrons per atom. For an insulator, nc = 0. In the example with graphite (see below), we set nc = 1. 
 
 ## Binding energies and sub-shell occupation levels
 The atomic data required for the density effect computations can be found in the book by Carlson (1975, see above) starting page 337: Appendix 1
