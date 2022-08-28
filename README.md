@@ -42,19 +42,15 @@ For an insulator, nc = 0. In the example with graphite (see below), we set nc = 
 First, we provide the data for water (liquid) in a list called dat.H2O:
 ```
 dat.H2O <- list(
-  Z    = 10,
-  A    = 18.0158,
-  I    = 78,           
-  exact.rho =  0.998,  # density in g/cm3
-  nc   = 0,            # Number of conducting electrons pr. atom. Always treat compounds as insulators (i.e. nc =0)
-  fvec = c(2/10, 2/10, 2/10, 4/10), # First 2 x H, then O
-  Evec = c(13.6, 538.0, 28.48, 13.62),
+  Z    = 10,           # Atomic number
+  A    = 18.0158,      # Atomic mass
+  I    = 78,           # Mean excitation energy in eV       
+  exact.rho =  0.998,  # Density in g/cm3, needed for the "exact" density-effect correction
+  nc   = 0,            # Number of conducting electrons pr. atom. Always treat compounds as insulators (i.e. nc = 0)
+  fvec = c(2/10, 2/10, 2/10, 4/10),    # First 2 x H, then O
+  Evec = c(13.6, 538.0, 28.48, 13.62), # Binding energies in eV for the subshells as given by Carlson (1975), see ICRU-90
   exact.plot = FALSE)
 ```
-
-Notes:
-
-exact referes to the detailed "exact" Sternheimer computation whereas param referes to the simplified 1984 model fits by Sternheimer. In the example below, we only use the exact method. We here include the param stuff for completeness. 
 
 Secondly, we assign the parameter list to dat and do the computations:
 
@@ -128,10 +124,10 @@ dat.graphite <- list(
     Z    = 6,       # Atomic number
     A    = 12.011,  # Atomic mass
     I    = 81,      # Mean excitation energy in eV
-    exact.rho =  2.265,          # Density in g/cm3, only needed for the exact density-effect correction.
+    exact.rho =  2.265,          # Density in g/cm3, needed for the "exact" density-effect correction
     nc   = 1,                    # Number of conducting electrons pr. atom   
     fvec = c(2/6, 2/6, 1/6),     # Occupation fractions for the subshells in C
-    Evec = c(288, 16.59, 11.26), # Binding energies in eV of subshells from Carlson (1975), see ICRU-90.
+    Evec = c(288, 16.59, 11.26), # Binding energies in eV for the subshells as given by Carlson (1975), see ICRU-90
     exact.plot = FALSE           # Supplementary plots related to the root finding in the exact density correction
   )
 ```
@@ -139,7 +135,7 @@ These parameters are identical to what was used by Stefan Pojtinger and Ludwig B
 Physikalisch-Technische Bundesanstalt (PTB) in their paper "Characterization of new primary air kerma standards for dosimetry in Co-60, Cs-137 and Ir-192 gamma ray sources", Journal of Instrumentation, Volume 16, October 2021 (http://dx.doi.org/10.1088/1748-0221/16/10/P10014). Note that one electron per atom is modelled to be a "conducting, free electron" with zero binding energy whereas the remaining five electrons per atom are in three oscillators with given binding energies.  
 
 
-Secondly, we assign the parameter list to dat and du the computations:
+Secondly, we assign the parameter list to dat and do the computations:
 
 ```
 dat <- dat.graphite
