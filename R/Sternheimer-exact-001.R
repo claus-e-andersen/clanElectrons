@@ -6,11 +6,6 @@
 #'
 #'  ?clanElectrons # gives you an index of functions in package
 #'
-#'  Status (August 28, 2022):
-#'  1. We miss handling of delta for low energy electrons (delta = 0).
-#'
-#'  2. Further simplifications could be good.
-#'
 #' Main functions for computation of the density-effect correction are:
 #'
 #'    dat <- Sternheimer.delta.param(MeV, dat)
@@ -27,9 +22,13 @@
 #'     electronic.MSP(MeV, dat, delta)
 #'     electronic.MSP.restricted(MeV,delta.keV, dat, delta)
 #'
+#' Simple demonstration functions:
+#'   demo.graphite(MeV = 1)
+#'   demo.water(MeV = 1)
+
 #' Main validation functions (comparison against ICRU-90 data):
-#'   demo.Sternheimer.graphite()
-#'   demo.Sternheimer.water()
+#'   demo.graphite.table()
+#'   demo.water.table()
 #' @export
 clanElectrons <- function(){
 # Dummy function
@@ -104,6 +103,49 @@ ans <- ans + 1 - 1/beta^2
 ans
 }# Sternheimer.f.root.L
 
+#' @title Sternheimer.beta.threshold
+#' @description Helper function computing the threshold below which an insulator will have
+#' zero density-effect correction. Formulated both as a beta.threshold and MeV.threshold (i.e.
+#' kinitic energy expressed in MeV).
+#' Function returns an updated version of dat.
+#' @export
+Sternheimer.beta.threshold <- function(L,dat){
+  # Helper function (L) for exact Sternheimer density correction
+  # Created: Aug 7, 2022
+  # Revised: Aug 25, 2022
+  # Name   : Claus E. Andersen
+  # Modified version of eq. 4.28 in ICRU-90
+  # suitable for root finding: The requested
+  # x = L will fulfill: f.root.L(x) = 0
+  fvec  <- dat$fvec
+  Evec  <- dat$Evec
+  mu.st <- dat$mu.st
+  Ep    <- dat$Ep
+  beta  <- dat$beta
+  nlev  <- dat$nlev
+  nc    <- dat$nc
+  fnc   <- nc/dat$Z
+  E0       <- 0.51099895000
+
+
+  # We set L = 0 and find the beta:
+ L <- 0
+    ans <- 0
+  for(i in 1:(nlev)){
+    if(fvec[i]>0){
+      ans <- ans + fvec[i] / ( (mu.st*Evec[i]/Ep)^2 + L^2 )
+    }# if
+  }# loop
+  if(nc>0){ ans <- ans + fnc / L^2 }
+  ans <- ans + 1
+  beta.threshold <- (1/ans)^0.5
+  gamma <- 1/((1-beta.threshold^2)^0.5)
+  Ekin.threshold <- (gamma - 1) * E0
+  dat$beta.threshold <- beta.threshold
+  dat$MeV.threshold <- Ekin.threshold
+  dat$output.gamma <- gamma
+  dat
+}# Sternheimer.beta.threshold
 
 ###############################################################
 ###############################################################
@@ -116,19 +158,20 @@ ans
 #' parameter fitting solution. The ICRU-90 terminology
 #' (p. 26) is followed as close as possible).
 #'
+#' @param MeV = electron kinetic energy
 #' @param dat list with parameters
-#' @param dat$MeV = electron kinetic energy
 #' @param dat$nlev = number of sub-shells
 #' @param dat$Z = atomic number
 #' @param dat$A = atomic mass
-#' @param dat$rho.density = density in g/cm3
+#' @param dat$I = mean excitation energy in eV
+#' @param dat$rho.density = density in g/cm3 (only used for the delta computation)
 #' @param dat$fvec = sub-shell occupancy level (used in computation)
 #' @param dat$Evec = sub-shell binding energy (used in computation)
-#' @param dat$fvec.org = sub-shell occupancy level (NOT used in computation)
-#' @param dat$Evec.org = sub-shell binding energy (NOT used in computation)
-#' @param dat$I = mean excitation energy in eV
+#
 #' @param dat$plot.wanted = TRUE or FALSE,
-#' @details Notes:
+#' @param mu.solver.parm = search parameters for the mu.st solver
+#' @param L.solver.parm = search parameters for the L solver
+#' #' @details Notes:
 #' (1) The equations for mu.st and L are solved using a search strategy
 #'     (coarse + fine + regression) which may fail, for example, if the first interval
 #'     does not include the root. Graphs can be plotted to inspect  the procedure.
@@ -327,6 +370,16 @@ for(i in 1:nlev){
 if(dat$nc>0){ans <- ans + fnc * log(1 + L^2/fnc) }
 delta <- ans - L^2 * (1-beta^2)
 
+
+####################################################
+# Part 4: For insulators there is an energy threshold below which delta is zero
+####################################################
+dat <- Sternheimer.beta.threshold(MeV,dat)
+
+if(nc<0.0001 & MeV < dat$MeV.threshold){
+delta <- 0
+dat$threshold.note <- "Delta was set to zero because material is an insulator and kin. energy is below threshold"
+}
 # Done
 dat$exact.delta <- delta
 
@@ -466,7 +519,7 @@ print(plt2)
 
 
 
-#' @title demo.Sternheimer.water
+#' @title demo.water.table
 #' Computation of electronic stopping power and density effect for liquid water
 #' using Sternheimer model as described in ICRU-90.
 #'
@@ -487,7 +540,7 @@ print(plt2)
 #' and we also set the density to 0.998 g/cm3 which has some implications
 #' for the density-efect correction (delta).
 #' @export
-demo.Sternheimer.water <- function(){
+demo.water.table <- function(){
 # Created: August 9, 2022
 # Revised: August 25, 2022
 # Name:    Claus E. Andersen
@@ -521,6 +574,78 @@ dat.H2O <- list(
   param.C = -3.5017, param.X0 = 0.2400, param.X1 = 2.8004, param.a  = 0.09116, param.m  = 3.4773,
   param.delta.X0 = 0.097
 )
+
+dat <- dat.H2O
+############################
+# 1 keV
+############################
+MeV <- 0.001
+dat <- Sternheimer.delta.exact(MeV, dat)
+xx0 <- electronic.MSP(MeV, dat, delta = 0) # No density effect correction
+xx <- electronic.MSP(MeV, dat, delta = dat$exact.delta) # Exact Sternheimer density correction
+df10 <- data.frame(MeV = MeV, I.eV = dat$I, rho=dat$exact.rho,  MSP.R0 = xx0,
+                  MSP.R = xx, MSP.ICRU90=118.1,
+                  delta.R=dat$exact.delta, delta.ICRU90=0.000,
+                  mu.st = dat$mu.st,
+                  L = dat$L)
+
+dat <- dat.H2O
+############################
+# 10 keV
+############################
+MeV <- 0.01
+dat <- Sternheimer.delta.exact(MeV, dat)
+xx0 <- electronic.MSP(MeV, dat, delta = 0) # No density effect correction
+xx <- electronic.MSP(MeV, dat, delta = dat$exact.delta) # Exact Sternheimer density correction
+df11 <- data.frame(MeV = MeV, I.eV = dat$I, rho=dat$exact.rho,  MSP.R0 = xx0,
+                   MSP.R = xx, MSP.ICRU90=22.39,
+                   delta.R=dat$exact.delta, delta.ICRU90=0.000,
+                   mu.st = dat$mu.st,
+                   L = dat$L)
+
+dat <- dat.H2O
+############################
+# 100 keV
+############################
+MeV <- 0.1
+dat <- Sternheimer.delta.exact(MeV, dat)
+xx0 <- electronic.MSP(MeV, dat, delta = 0) # No density effect correction
+xx <- electronic.MSP(MeV, dat, delta = dat$exact.delta) # Exact Sternheimer density correction
+df12 <- data.frame(MeV = MeV, I.eV = dat$I, rho=dat$exact.rho,  MSP.R0 = xx0,
+                   MSP.R = xx, MSP.ICRU90=4.093,
+                   delta.R=dat$exact.delta, delta.ICRU90=0.000,
+                   mu.st = dat$mu.st,
+                   L = dat$L)
+
+
+dat <- dat.H2O
+############################
+# 500 keV
+############################
+MeV <- 0.5
+dat <- Sternheimer.delta.exact(MeV, dat)
+xx0 <- electronic.MSP(MeV, dat, delta = 0) # No density effect correction
+xx <- electronic.MSP(MeV, dat, delta = dat$exact.delta) # Exact Sternheimer density correction
+df13 <- data.frame(MeV = MeV, I.eV = dat$I, rho=dat$exact.rho,  MSP.R0 = xx0,
+                   MSP.R = xx, MSP.ICRU90=2.025,
+                   delta.R=dat$exact.delta, delta.ICRU90=0.000,
+                   mu.st = dat$mu.st,
+                   L = dat$L)
+
+dat <- dat.H2O
+############################
+# 600 keV
+############################
+MeV <- 0.6
+dat <- Sternheimer.delta.exact(MeV, dat)
+xx0 <- electronic.MSP(MeV, dat, delta = 0) # No density effect correction
+xx <- electronic.MSP(MeV, dat, delta = dat$exact.delta) # Exact Sternheimer density correction
+df14 <- data.frame(MeV = MeV, I.eV = dat$I, rho=dat$exact.rho,  MSP.R0 = xx0,
+                   MSP.R = xx, MSP.ICRU90=1.956,
+                   delta.R=dat$exact.delta, delta.ICRU90=0.01501,
+                   mu.st = dat$mu.st,
+                   L = dat$L)
+
 
 dat <- dat.H2O
 ############################
@@ -590,7 +715,7 @@ df5 <- data.frame(MeV = MeV, I.eV = dat$I, rho=dat$exact.rho,  MSP.R0 = xx0,
                   L = dat$L)
 
 # Combine all results:
-df <- rbind(df1,df2,df3,df4,df5)
+df <- rbind(df10,df11,df12,df13,df14,df1,df2,df3,df4,df5)
 
 ############################################################################
 # Main results
@@ -641,7 +766,7 @@ df
 } # water (demo)
 
 
-#' @title demo.Sternheimer.graphite
+#' @title demo.graphite.table
 #' Computation of electronic stopping power and density effect for graphite
 #' using Sternheimer model as described in ICRU-90.
 #'
@@ -655,7 +780,7 @@ df
 #' and we also set the density to the gRAIN DENSITY (2.265 g/cm3) which has some implications
 #' for the density-effect correction.
 #' @export
-demo.Sternheimer.graphite <- function(){
+demo.graphite.table <- function(){
   # Created: August 25, 2022
   # Revised: August 25, 2022
   # Name:    Claus E. Andersen
@@ -890,3 +1015,84 @@ df
 } # graphite (demo)
 
 
+
+#' @title demo.water
+#' Computation of electronic stopping power and density effect for liquid water
+#' using Sternheimer model as described in ICRU-90.
+#'
+#' How to compute the density-correction for a compound
+#' like water? Add the Z for all atoms involved.
+
+#' Arrange the fvec and the Evec atom by atom.
+
+#' @export
+demo.water <- function(MeV=1){
+  # Created: August 28 2022
+  # Revised: August 28, 2022
+  # Name:    Claus E. Andersen
+
+  dat.H2O <- list(
+    Z    = 10,
+    A    = 18.0158,
+    I    = 78,
+    exact.rho =  0.998,
+    fvec = c(2/10, 2/10, 2/10, 4/10),
+    Evec = c(13.6, 538.0, 28.48, 13.62),
+    nc = 0,  # Always set compounds to insulators
+    exact.plot = FALSE,
+    param.note="Sternheimer et. al 1984, water (liquid) I = 75 and rho = 1.000 ",
+    param.C = -3.5017, param.X0 = 0.2400, param.X1 = 2.8004, param.a  = 0.09116, param.m  = 3.4773,
+    param.delta.X0 = 0.097
+  )
+
+  dat <- dat.H2O
+  dat <- Sternheimer.delta.exact(MeV, dat)
+  xx0 <- electronic.MSP(MeV, dat, delta = 0)               # Compute MSP without density effect correction (delta = 0)
+  xx  <- electronic.MSP(MeV, dat, delta = dat$exact.delta) # Compute MSP with exact Sternheimer density correction
+  df <- data.frame(MeV = MeV, I.eV = dat$I, rho=dat$exact.rho,
+                     MSP.R0 = xx0,
+                     MSP.R = xx,
+                     delta.R=dat$exact.delta,
+                     mu.st = dat$mu.st,
+                     L = dat$L)
+
+  list(dat=dat,df=df)
+}
+
+
+#' @title demo.graphite
+#' Computation of electronic stopping power and density effect for graphite
+#' using Sternheimer model as described in ICRU-90.
+#'
+#' Graphite is treated as a conductor (nc=1).
+
+#' @export
+demo.graphite <- function(MeV=1){
+  # Created: August 28 2022
+  # Revised: August 28, 2022
+  # Name:    Claus E. Andersen
+
+  dat.graphite <- list(
+    Z    = 6,       # Atomic number
+    A    = 12.011,  # Atomic mass
+    I    = 81,      #78,       # Mean excitation energy in eV
+    nc = 1,
+    exact.rho =  2.265,         # Density in g/cm3 only needed for the exact density-effect correction.
+    fvec = c(2/6, 2/6,1/6),     # Occupation fractions for the subshells in C
+    Evec = c(288, 16.59,11.26), # Binding energies of subshells from Carlson (1975), see ICRU-90.
+    exact.plot = FALSE          # Supplementary plots related to the root finding in the exact density correction
+  )
+
+  dat <- dat.graphite
+  dat <- Sternheimer.delta.exact(MeV, dat)
+  xx0 <- electronic.MSP(MeV, dat, delta = 0)               # Compute MSP without density effect correction (delta = 0)
+  xx  <- electronic.MSP(MeV, dat, delta = dat$exact.delta) # Compute MSP with exact Sternheimer density correction
+  df <- data.frame(MeV = MeV, I.eV = dat$I, rho=dat$exact.rho,
+                   MSP.R0 = xx0,
+                   MSP.R = xx,
+                   delta.R=dat$exact.delta,
+                   mu.st = dat$mu.st,
+                   L = dat$L)
+
+  list(dat=dat,df=df)
+}

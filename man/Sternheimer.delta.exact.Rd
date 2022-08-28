@@ -12,39 +12,14 @@ Sternheimer.delta.exact(
 )
 }
 \arguments{
+\item{MeV}{= electron kinetic energy}
+
 \item{dat}{list with parameters}
 
-\item{dat$MeV}{= electron kinetic energy}
+\item{mu.solver.parm}{= search parameters for the mu.st solver}
 
-\item{dat$nlev}{= number of sub-shells}
-
-\item{dat$Z}{= atomic number}
-
-\item{dat$A}{= atomic mass}
-
-\item{dat$rho.density}{= density in g/cm3}
-
-\item{dat$fvec}{= sub-shell occupancy level (used in computation)}
-
-\item{dat$Evec}{= sub-shell binding energy (used in computation)}
-
-\item{dat$fvec.org}{= sub-shell occupancy level (NOT used in computation)}
-
-\item{dat$Evec.org}{= sub-shell binding energy (NOT used in computation)}
-
-\item{dat$I}{= mean excitation energy in eV}
-
-\item{dat$plot.wanted}{= TRUE or FALSE,}
-}
-\description{
-Computation of exact Sternheimer density correction.
-
-By exact, we just mean that this is not the simple
-parameter fitting solution. The ICRU-90 terminology
-(p. 26) is followed as close as possible).
-}
-\details{
-Notes:
+\item{L.solver.parm}{= search parameters for the L solver
+#' @details Notes:
 (1) The equations for mu.st and L are solved using a search strategy
     (coarse + fine + regression) which may fail, for example, if the first interval
     does not include the root. Graphs can be plotted to inspect  the procedure.
@@ -57,5 +32,28 @@ Main references:
     IN VARIOUS SUBSTANCES
     by R. M. STERNHEIMER (Brookhaven), M. J. BERGER (NBS) and S. M. SELTZER (NBS).
     ATOMIC DATA AND NUCLEAR DATA TABLES 30,26 l-27 1 ( 1984)
-(3) G4DensityEffectCalculator.cc by Matthew Strait, 2019
+(3) G4DensityEffectCalculator.cc by Matthew Strait, 2019}
+
+\item{dat$nlev}{= number of sub-shells}
+
+\item{dat$Z}{= atomic number}
+
+\item{dat$A}{= atomic mass}
+
+\item{dat$I}{= mean excitation energy in eV}
+
+\item{dat$rho.density}{= density in g/cm3 (only used for the delta computation)}
+
+\item{dat$fvec}{= sub-shell occupancy level (used in computation)}
+
+\item{dat$Evec}{= sub-shell binding energy (used in computation)}
+
+\item{dat$plot.wanted}{= TRUE or FALSE,}
+}
+\description{
+Computation of exact Sternheimer density correction.
+
+By exact, we just mean that this is not the simple
+parameter fitting solution. The ICRU-90 terminology
+(p. 26) is followed as close as possible).
 }

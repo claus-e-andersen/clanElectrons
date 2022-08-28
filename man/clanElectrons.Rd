@@ -14,11 +14,6 @@ This is a simple dummy function to ease access to the help index.
 
  ?clanElectrons # gives you an index of functions in package
 
- Status (August 28, 2022):
- 1. We miss handling of delta for low energy electrons (delta = 0).
-
- 2. Further simplifications could be good.
-
 Main functions for computation of the density-effect correction are:
 
    dat <- Sternheimer.delta.param(MeV, dat)
@@ -35,7 +30,10 @@ dielectric (optical) stopping.
     electronic.MSP(MeV, dat, delta)
     electronic.MSP.restricted(MeV,delta.keV, dat, delta)
 
+Simple demonstration functions:
+  demo.graphite(MeV = 1)
+  demo.water(MeV = 1)
 Main validation functions (comparison against ICRU-90 data):
-  demo.Sternheimer.graphite()
-  demo.Sternheimer.water()
+  demo.graphite.table()
+  demo.water.table()
 }
