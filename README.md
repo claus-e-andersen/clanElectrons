@@ -21,12 +21,12 @@ https://orbit.dtu.dk/en/persons/claus-e-andersen
 ## Main references
 - ICRU-90: Key data for ionizing-radiation dosimetry: Measurement standards and applications (2014/2016).
 - R.M. Sternheimer (Brookhaven), M.J. Berger (NBS) and S.M. Seltzer (NBS): Density effect for the ionization loss of charged particles in various substances. Atomic Data and Nuclear Data Tables 30,26 l-27 1 (1984).
-- G4DensityEffectCalculator.cc for Geant4 by Matthew Strait (straitm-at-umn-dot-edu), 2019. 
+- G4DensityEffectCalculator.cc for Geant4 by Matthew Strait, School of Physics and Astronomy, University of Minneapolis, 2019. 
 - T.A. Carlson: Photoelectron and Auger Spectroscopy (1975, Springer).
 
 ## Binding energies and sub-shell occupation levels
 The atomic data required for the density effect computations can be found in the book by Carlson (1975, see above) starting page 337: Appendix 1
-Atomic binding Energies for each subshell for elements  Z = 1-106.  ICRU-90 uses the Carlson data. The Geant4 implementation in G4DensityEffectCalculator.cc (see above) seems to have used another source of data than Carlson.
+Atomic binding Energies for each subshell for elements  Z = 1-106.  ICRU-90 uses the Carlson data. It is not clear if the Geant4 implementation in G4DensityEffectCalculator.cc (see above) uses the same data.
 
 ## Applications
 You specify Z, A, I, density and other material parameters and the package has functions for computation
