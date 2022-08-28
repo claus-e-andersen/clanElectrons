@@ -9,5 +9,6 @@ Sternheimer.f.root.mu.st(mu.st, dat)
 \description{
 Helper function (mu.st) for exact Sternheimer density correction
 
-# Equation suitable for finding mu.st (eq. 4.29 in ICRU-90)
+# Equation suitable for finding mu.st (eq. 4.29 in ICRU-90). We search a value of mu.st such that
+Sternheimer.f.root.mu.st(mu.st, dat) is approximately zero.
 }

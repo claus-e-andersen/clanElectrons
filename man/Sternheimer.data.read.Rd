@@ -17,6 +17,5 @@ for the ionization loss of charged particles in various substances. Atomic Data 
 Data Tables 30,26 l-27 1 (1984).
 }
 \details{
-Notes:
-function returns a data frame with fitted parameters for a few selected materials.
+The function returns a data frame with fitted parameters for a few selected materials.
 }

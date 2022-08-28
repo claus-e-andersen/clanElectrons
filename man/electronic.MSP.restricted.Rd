@@ -24,7 +24,7 @@ electronic.MSP.restricted(MeV = 1, delta.keV = 10, dat = NULL, delta = 0)
 \description{
 Computation of restricted mass electronic stopping power (MSP)
 according to ICRU-90 eq. 4.11 (page 22). The correction for the density
-effect (delta) has to be supplied by the user.
+effect (delta) has to be supplied by the user in a seperate argument.
 }
 \details{
 Notes:

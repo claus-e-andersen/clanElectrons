@@ -47,18 +47,8 @@ parameter fitting solution. The ICRU-90 terminology
 Notes:
 (1) The equations for mu.st and L are solved using a search strategy
     (coarse + fine + regression) which may fail, for example, if the first interval
-    dose not include the root. Graphs can ne plotted to inspect  the procedure.
-(2) MeV is the kinetic energy and only one value can be computeted (not vectorized).
-(3) Only computations for single atoms has been implemented (not multi-atom materials).
-(4) The data fit well the ICRU-37 delta values for high energies (e.g. at 100 MeV), but
-    less well for lower energies (e.g. at 1 MeV). The source of deviation has not been
-    identified.
-(5) The main use of this work is to try to gain some insights into the procedure.
-    Like how conductors are handled. And that insulators have delta = 0 for energies
-    below a certain threshold beta0 (not roots).
-(6) Why is this insight relevant? This is needed as the text is not super clear and
-    since the  whole concept of dialetric / optical modelling is new to me (e.g. the
-    use of plasma energy).
+    does not include the root. Graphs can be plotted to inspect  the procedure.
+(2) MeV is the kinetic energy and only one value can be computed (not vectorized).
 
 Main references:
 (1) ICRU-90: Key data for ionizing-radiation dosimetry: Measurement standards
@@ -67,5 +57,5 @@ Main references:
     IN VARIOUS SUBSTANCES
     by R. M. STERNHEIMER (Brookhaven), M. J. BERGER (NBS) and S. M. SELTZER (NBS).
     ATOMIC DATA AND NUCLEAR DATA TABLES 30,26 l-27 1 ( 1984)
-(3) G4DensityEffectCalculator.cc by Matthew Strait <straitm@umn.edu> 2019
+(3) G4DensityEffectCalculator.cc by Matthew Strait, 2019
 }

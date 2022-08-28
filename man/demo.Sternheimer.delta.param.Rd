@@ -7,9 +7,8 @@
 demo.Sternheimer.delta.param()
 }
 \description{
-Demonstration of how to useSternheimer.delta.param().
+Demonstration of how to use Sternheimer.delta.param().
 }
 \details{
-Notes:
-none
+None
 }

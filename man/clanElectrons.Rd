@@ -14,14 +14,17 @@ This is a simple dummy function to ease access to the help index.
 
  ?clanElectrons # gives you an index of functions in package
 
- #' Status (August 28, 2022):
+ Status (August 28, 2022):
  1. We miss handling of delta for low energy electrons (delta = 0).
 
  2. Further simplifications could be good.
 
 Main functions for computation of the density-effect correction are:
+
    dat <- Sternheimer.delta.param(MeV, dat)
+
    dat <- Sternheimer.delta.exact(MeV, dat)
+
 Note that dat is a list with input and output parameters. The .parm version
 is just the simple use of the Sternheimer fitting parameters (see e.g. the 1984
 paper with parameters for many materials). The .exact version is the complex

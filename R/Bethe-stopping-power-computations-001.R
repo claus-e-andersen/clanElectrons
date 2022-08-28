@@ -1,52 +1,17 @@
 # Created: July 28, 2022
 # Revised: July 31, 2022
+# Revised: August 28, 2022
 # Name   : Claus E. Andersen
 
 # Mass electronic stopping Power for electrons
 # Restricted mass electronic stopping Power for electrons
-# References:
-#  ICRU-90 sec. 4.1.1
-#  Andero et al. (2017) p. 74
-
-# The main difference between ICRU-90 values and these functions are in
-# the selection of parameters and the computation of the density effect.
-# This package uses the simplified approach provided by Sternheimer et al. (1984)
-# whereas ICRU-90 uses a more accurate approach. The agreement seems to be
-# within 0.5%. The functions in this package can handle the
-# density effect corrections in three ways:
-#
-# (1) We can supply a value for delta directly using the delta.fixed argument.
-#     Setting delta.fixed = 1.3 forces the stopping power computations to use this value
-#     regardless of all other settings.
-# (2) The Sternheimer coefficients are specified for the given material using the
-#     Sternheimer et al. (1984) model. If the parameters for the model
-#     has already been implemented in the Sternheimer.data.read function, then we get
-#     the density effect correction automatically from the the specified Sternheimer.tab.id.
-# (3) The Sternheimer coefficients include an 'average' C-value. However, we can also compute this
-#     based on the a plasma electron-gas model thereby including an explicit variation with I and rho.
-#     If we set C.model to "plasma", we use this option,
-#     otherwise we use the 'average' value from Sternheimer directly.
-# (4) Finally, we can supply our own Sternheimer coefficients. This is useful if we need
-#     computations for materials not already included in the Sternheimer.data.read function.
-
-# Main functions:
-#   electronic.MSP()             # Compute mass electronic stopping power for electrons
-#   electronic.MSP.restricted()  # Compute restricted mass electronic stopping power for electrons
-#   Sternheimer.data.read()            # Read small database with Sternheimer data
-#   delta.Sternheimer()                # Compute delta = the density effect correction
-#
-# Applications and demonstrations:
-#   sensitivity.electronic.MSP.dlog.dlogI()
-#   demo.stopping.power.validation()
-#   demo.stopping.power.plot()
-#   demo.stopping.power.for.water()
-#   demo.stopping.power.computations()
-
+# Sternheimer "exact" modelling of the density-effect correction
+# Use of Sternheimer's fitter parameters for the density-effect correction
 
 #' @title electronic.MSP
 #' @description  Computation of mass electronic stopping power (MSP) according to
 #' ICRU-90 eq. 4.8 (page 22). The correction for the density effect (delta)
-#' has to be supplied by the user.
+#' has to be supplied by the user in a separate argument.
 #'
 #' @param MeV kinetic energy of the electron in MeV
 #' @param dat list with parameters
@@ -100,7 +65,7 @@ MSP
 #' @title electronic.MSP.restricted
 #' @description  Computation of restricted mass electronic stopping power (MSP)
 #' according to ICRU-90 eq. 4.11 (page 22). The correction for the density
-#' effect (delta) has to be supplied by the user.
+#' effect (delta) has to be supplied by the user in a seperate argument.
 #'
 #' @param MeV kinetic energy of the electron in MeV
 #' @param delta.keV cut-off energy in keV
@@ -168,8 +133,8 @@ rMSP
 #' Data Tables 30,26 l-27 1 (1984).
 #' @param print.wanted = TRUE or FALSE
 #
-#' @details Notes:
-#' function returns a data frame with fitted parameters for a few selected materials.
+#' @details
+#' The function returns a data frame with fitted parameters for a few selected materials.
 #' @export
 
 ############################################################################
@@ -259,7 +224,7 @@ df
 
 
 #' @title Sternheimer.delta.param
-#' @description  Compute the density-effect correction based on the fitting parameters
+#' @description  Compute the approximative density-effect correction based on the fitting parameters
 #' published in the paper:
 #' R.M. Sternheimer (Brookhaven), M.J. Berger (NBS) and S.M. Seltzer (NBS): Density effect
 #' for the ionization loss of charged particles in various substances. Atomic Data and Nuclear
@@ -278,6 +243,12 @@ df
 #' The output ia returned as a list (dat):
 #'   dat$param.MeV =  MeV
 #'   dat$param.delta = delta
+#'
+#' First create a material (i.e. make a dat-list) called dat or something like than.
+#'
+#' Then call the function for the given energy MeV:
+#'
+#'   dat <- Sternheimer.delta.param(MeV, dat)
 
 #' @export
 ############################################################################
@@ -332,10 +303,10 @@ dat
 } # Sternheimer.delta.param
 
 #' @title demo.Sternheimer.delta.param
-#' @description  Demonstration of how to useSternheimer.delta.param().
+#' @description  Demonstration of how to use Sternheimer.delta.param().
 #'
-#' @details Notes:
-#' none
+#' @details
+#' None
 #' @export
 ############################################################################
 # Stopping power validation computations
@@ -431,15 +402,17 @@ data=df)
 #' stopping powers of H and O.
 #'
 #' What we can learn from this function:
+#'
 #' (1) For a compound like water, it is better to use effective values for Z and A than Braggs rule.
 #'     So, for water it is best to apply Z = 10 and A = 18.0158 in a single call to the Bethe formula.
 #'     The Bragg rule by taking the Sel/rho(H2O)  = w.H * Sel/rho(H) + w.O * Sel/rho(O) can easily be
 #'     a some percent off.
+#'
 #' (2) The remaining deviations between the Bethe estimate using Z=2x1+8=10 and A=18.0158 originates from
 #'     the delta value used for the density effect.
 #'
-#' @details Notes:
-#' none
+#' @details
+#' None
 #' @export
 ############################################################################
 # Water stopping power demonstration

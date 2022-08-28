@@ -22,7 +22,7 @@ electronic.MSP(MeV = 1, dat = NULL(), delta = 0)
 \description{
 Computation of mass electronic stopping power (MSP) according to
 ICRU-90 eq. 4.8 (page 22). The correction for the density effect (delta)
-has to be supplied by the user.
+has to be supplied by the user in a separate argument.
 }
 \details{
 Notes:

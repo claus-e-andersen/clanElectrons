@@ -6,14 +6,17 @@
 #'
 #'  ?clanElectrons # gives you an index of functions in package
 #'
-#'  #' Status (August 28, 2022):
+#'  Status (August 28, 2022):
 #'  1. We miss handling of delta for low energy electrons (delta = 0).
 #'
 #'  2. Further simplifications could be good.
 #'
 #' Main functions for computation of the density-effect correction are:
+#'
 #'    dat <- Sternheimer.delta.param(MeV, dat)
+#'
 #'    dat <- Sternheimer.delta.exact(MeV, dat)
+#'
 #' Note that dat is a list with input and output parameters. The .parm version
 #' is just the simple use of the Sternheimer fitting parameters (see e.g. the 1984
 #' paper with parameters for many materials). The .exact version is the complex
@@ -35,7 +38,8 @@ clanElectrons <- function(){
 #' @title Sternheimer.f.root.mu.st
 #' @description  Helper function (mu.st) for exact Sternheimer density correction
 #'
-#' # Equation suitable for finding mu.st (eq. 4.29 in ICRU-90)
+#' # Equation suitable for finding mu.st (eq. 4.29 in ICRU-90). We search a value of mu.st such that
+#' Sternheimer.f.root.mu.st(mu.st, dat) is approximately zero.
 #' @export
 Sternheimer.f.root.mu.st <- function(mu.st, dat){
 # Helper function (mu.st) for exact Sternheimer density correction
@@ -69,7 +73,8 @@ ans
 
 #' @title Sternheimer.f.root.L
 #' @description Helper function (L) for exact Sternheimer density correction
-#' # Equation suitable for finding L (ell) (eq. 4.28 in ICRU-90)
+#' # Equation suitable for finding L (ell) (eq. 4.28 in ICRU-90). We search a value of L such that
+#' Sternheimer.f.root.L(L, dat) is approximately zero.
 #' @export
 Sternheimer.f.root.L <- function(L,dat){
 # Helper function (L) for exact Sternheimer density correction
@@ -78,7 +83,7 @@ Sternheimer.f.root.L <- function(L,dat){
 # Name   : Claus E. Andersen
 # Modified version of eq. 4.28 in ICRU-90
 # suitable for root finding: The requested
-# x = L will fullfill: f.root.L(x) = 0
+# x = L will fulfill: f.root.L(x) = 0
 fvec  <- dat$fvec
 Evec  <- dat$Evec
 mu.st <- dat$mu.st
@@ -126,19 +131,10 @@ ans
 #' @details Notes:
 #' (1) The equations for mu.st and L are solved using a search strategy
 #'     (coarse + fine + regression) which may fail, for example, if the first interval
-#'     dose not include the root. Graphs can ne plotted to inspect  the procedure.
-#' (2) MeV is the kinetic energy and only one value can be computeted (not vectorized).
-#' (3) Only computations for single atoms has been implemented (not multi-atom materials).
-#' (4) The data fit well the ICRU-37 delta values for high energies (e.g. at 100 MeV), but
-#'     less well for lower energies (e.g. at 1 MeV). The source of deviation has not been
-#'     identified.
-#' (5) The main use of this work is to try to gain some insights into the procedure.
-#'     Like how conductors are handled. And that insulators have delta = 0 for energies
-#'     below a certain threshold beta0 (not roots).
-#' (6) Why is this insight relevant? This is needed as the text is not super clear and
-#'     since the  whole concept of dialetric / optical modelling is new to me (e.g. the
-#'     use of plasma energy).
+#'     does not include the root. Graphs can be plotted to inspect  the procedure.
+#' (2) MeV is the kinetic energy and only one value can be computed (not vectorized).
 #'
+#
 #' Main references:
 #' (1) ICRU-90: Key data for ionizing-radiation dosimetry: Measurement standards
 #'     and applications (2014/2016).
@@ -146,7 +142,7 @@ ans
 #'     IN VARIOUS SUBSTANCES
 #'     by R. M. STERNHEIMER (Brookhaven), M. J. BERGER (NBS) and S. M. SELTZER (NBS).
 #'     ATOMIC DATA AND NUCLEAR DATA TABLES 30,26 l-27 1 ( 1984)
-#' (3) G4DensityEffectCalculator.cc by Matthew Strait <straitm@umn.edu> 2019
+#' (3) G4DensityEffectCalculator.cc by Matthew Strait, 2019
 #' @export
 Sternheimer.delta.exact <- function(MeV=1, dat=NULL, mu.solver.parm = NULL,  L.solver.parm = NULL) {
 # Created: Aug 7, 2022
@@ -162,18 +158,8 @@ Sternheimer.delta.exact <- function(MeV=1, dat=NULL, mu.solver.parm = NULL,  L.s
 # Notes:
 # (1) The equations for mu.st and L are solved using a search strategy
 #     (coarse + fine + regression) which may fail, for example, if the first interval
-#     dose not include the root. Graphs can ne plotted to inspect  the procedure.
-# (2) MeV is the kinetic energy and only one value can be computeted (not vectorized).
-# (3) Only computations for single atoms has been implemented (not multi-atom materials).
-# (4) The data fit well the ICRU-37 delta values for high energies (e.g. at 100 MeV), but
-#     less well for lower energies (e.g. at 1 MeV). The source of deviation has not been
-#     identified.
-# (5) The main use of this work is to try to gain some insights into the procedure.
-#     Like how conductors are handled. And that insulators have delta = 0 for energies
-#     below a certain threshold beta0 (not roots).
-# (6) Why is this insight relevant? This is needed as the text is not super clear and
-#     since the  whole concept of dialetric / optical modelling is new to me (e.g. the
-#     use of plasma energy).
+#     does not include the root. Graphs can ne plotted to inspect  the procedure.
+# (2) MeV is the kinetic energy and only one value can be computed (not vectorized).
 #
 # Main references:
 # (1) ICRU-90: Key data for ionizing-radiation dosimetry: Measurement standards
@@ -481,8 +467,25 @@ print(plt2)
 
 
 #' @title demo.Sternheimer.water
-#' Computation of electronic stopping power and density effect for liqud water
-#' using Sternheimer model as described in ICRU-90
+#' Computation of electronic stopping power and density effect for liquid water
+#' using Sternheimer model as described in ICRU-90.
+#'
+#' How to compute the density-correction for a compound
+#' like water? Add the Z for all atoms involved.
+
+#' Arrange the fvec and the Evec atom by atom.
+
+#' Compute electron subshell occupancy factor as the number of electrons
+#' divided by the total Z. So, for water we have Z.sum = 10 electrons.
+#' First we consider the two hydrogen atoms, they have 13.6 eV binding energy
+#' and we therefore set fvec[1] to 2/10 and Evec[1] to 13.6. Then we have the
+#' 8 electrons in oxygen: fvec[2] = 2, fvec[3] = 2, and fvec[4] = 4, with
+#' binding energies:  Evec[2] = 538.0, Evec[3] = 28.48, and Evec[4] = 13.62.
+#' Compounds should be treated as an insulator.
+
+#' In this example, we use the recommended values of I = 78 eV for water
+#' and we also set the density to 0.998 g/cm3 which has some implications
+#' for the density-efect correction (delta).
 #' @export
 demo.Sternheimer.water <- function(){
 # Created: August 9, 2022
@@ -503,7 +506,7 @@ demo.Sternheimer.water <- function(){
 
 # In this example, we use the recommended values of I = 78 eV for water
 # and we also set the density to 0.998 g/cm3 which has some implications
-# for the density correction correction.
+# for the density-effect correction (delta).
 
 dat.H2O <- list(
   Z    = 10,
@@ -640,7 +643,17 @@ df
 
 #' @title demo.Sternheimer.graphite
 #' Computation of electronic stopping power and density effect for graphite
-#' using Sternheimer model as described in ICRU-90
+#' using Sternheimer model as described in ICRU-90.
+#'
+#' How to compute the density-correction for a conductor
+#' like graphite? Move one or more electrons to nc (i.e.
+#' binding energy zero).
+
+#' Compounds should be treated as an insulator.
+
+#' In this example, we use the recommended values of I = 81 eV for graphite
+#' and we also set the density to the gRAIN DENSITY (2.265 g/cm3) which has some implications
+#' for the density-effect correction.
 #' @export
 demo.Sternheimer.graphite <- function(){
   # Created: August 25, 2022
@@ -655,7 +668,7 @@ demo.Sternheimer.graphite <- function(){
 
   # In this example, we use the recommended values of I = 81 eV for graphite
   # and we also set the density to 2.265 g/cm3 which has some implications
-  # for the density correction correction.
+  # for the density-effect correction.
 
   dat.graphite <- list(
     Z    = 6,       # Atomic number

@@ -8,5 +8,6 @@ Sternheimer.f.root.L(L, dat)
 }
 \description{
 Helper function (L) for exact Sternheimer density correction
-# Equation suitable for finding L (ell) (eq. 4.28 in ICRU-90)
+# Equation suitable for finding L (ell) (eq. 4.28 in ICRU-90). We search a value of L such that
+Sternheimer.f.root.L(L, dat) is approximately zero.
 }

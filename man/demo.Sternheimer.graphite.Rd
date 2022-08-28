@@ -4,12 +4,28 @@
 \alias{demo.Sternheimer.graphite}
 \title{demo.Sternheimer.graphite
 Computation of electronic stopping power and density effect for graphite
-using Sternheimer model as described in ICRU-90}
+using Sternheimer model as described in ICRU-90.
+
+How to compute the density-correction for a conductor
+like graphite? Move one or more electrons to nc (i.e.
+binding energy zero).
+Compounds should be treated as an insulator.
+In this example, we use the recommended values of I = 81 eV for graphite
+and we also set the density to the gRAIN DENSITY (2.265 g/cm3) which has some implications
+for the density-effect correction.}
 \usage{
 demo.Sternheimer.graphite()
 }
 \description{
 demo.Sternheimer.graphite
 Computation of electronic stopping power and density effect for graphite
-using Sternheimer model as described in ICRU-90
+using Sternheimer model as described in ICRU-90.
+
+How to compute the density-correction for a conductor
+like graphite? Move one or more electrons to nc (i.e.
+binding energy zero).
+Compounds should be treated as an insulator.
+In this example, we use the recommended values of I = 81 eV for graphite
+and we also set the density to the gRAIN DENSITY (2.265 g/cm3) which has some implications
+for the density-effect correction.
 }
