@@ -3,6 +3,9 @@ Restricted and unrestricted mass electronic stopping power (Bethe formula) for e
 (both "exact" and by parameters). Aimed for research applications within radiotherapy dosimetry and comparisons with ICRU-37 
 and ICRU-90 publications.
 
+# How to run it?
+First, you will need R which can be downloaded from cran (https://cran.r-project.org/). Then you can download and run this R package (called clanElectrons) using the install_github("claus-e-andersen/clanElectrons") command from the devtools package. More details are given below. 
+
 ## Main references
 - ICRU-90: Key data for ionizing-radiation dosimetry: Measurement standards and applications (2014/2016).
 - R.M. Sternheimer (Brookhaven), M.J. Berger (NBS) and S.M. Seltzer (NBS): Density effect for the ionization loss of charged particles in various substances. Atomic Data and Nuclear Data Tables 30,26 l-27 1 (1984).
@@ -51,14 +54,21 @@ dat <- dat.H2O
 ############################
 MeV <- 0.8 # Electron kinetic energy
 dat <- Sternheimer.delta.exact(MeV, dat)
-xx0 <- electronic.MSP.Bethe(MeV, dat, delta = 0) # Compute MSP without density effect correction (delta = 0)
-xx <- electronic.MSP.Bethe(MeV, dat, delta = dat$exact.delta) # Compute MSP with exact Sternheimer density correction
 
-df1 <- data.frame(MeV = MeV, 
+# Compute MSP without density effect correction (delta = 0):
+xx0 <- electronic.MSP.Bethe(MeV, dat, delta = 0) 
+
+# Compute MSP with exact Sternheimer density correction:
+xx <- electronic.MSP.Bethe(MeV, dat, delta = dat$exact.delta) 
+
+# Collect the data in a dataframe. This will be one row in the table shown below:
+df1 <- data.frame(
+MeV = MeV, 
 I.eV = dat$I, 
-rho=dat$exact.rho, 
+rho = dat$exact.rho, 
 MSP.R0 = xx0,
-MSP.R = xx, MSP.ICRU90 = 1.880,
+MSP.R = xx, 
+MSP.ICRU90 = 1.880,
 delta.R = dat$exact.delta, 
 delta.ICRU90 = 0.1005,
 mu.st = dat$mu.st,
@@ -115,9 +125,14 @@ dat <- dat.graphite
 ############################
 MeV <- 0.8 # Electron kinetic energy
 dat <- Sternheimer.delta.exact(MeV, dat)
-xx0 <- electronic.MSP.Bethe(MeV, dat, delta = 0)               # Compute MSP without density effect correction (delta = 0)
-xx  <- electronic.MSP.Bethe(MeV, dat, delta = dat$exact.delta) # Compute MSP with exact Sternheimer density correction
 
+# Compute MSP without density effect correction (delta = 0):
+xx0 <- electronic.MSP.Bethe(MeV, dat, delta = 0)               
+
+# Compute MSP with exact Sternheimer density correction
+xx  <- electronic.MSP.Bethe(MeV, dat, delta = dat$exact.delta) 
+
+# Collect the data in a dataframe. This will be one row in the table shown below:
   df1 <- data.frame(
     MeV = MeV,
     I.eV = dat$I,
@@ -150,7 +165,7 @@ where the symbols have the same meaning as in Example 1. For further details, se
   
 ## Installation in R or Rstudio
 
-The library can be loaded into R using the install_github command which is in the devtools package:
+The library can be loaded into R using the install_github command which is in the devtools package. So you first need to ascertain that you have this package and you need to load it with the library command:
 
 ```
 install.packages("devtools")
@@ -159,7 +174,7 @@ install_github("claus-e-andersen/clanElectrons")
 library(clanElectrons)
 
 ```
-You will also need to load the packages lattice, dplyr and clanLattice:
+For the full functionalyty you will also need to load the packages lattice, dplyr and clanLattice:
 ```
 library(lattice)
 install.packages(dplyr)
