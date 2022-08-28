@@ -41,9 +41,16 @@ demo.Bragg.rule.test() # How to use Sternheimer.delta.param
 You specify Z, A, I, density and other material parameters and the package has functions for computation
 of electronic stopping power (both restricted and unrestricted) for electrons. The "exact" computation
 of the density effect using Sternheimer theory requires knowledge of binding energies and occupation fractions for electrons in the
-subshells of the material in question. fvec is a vector with electron occupation levels per subshell (number of electrons / Z).
-Evec is a vector of the same length as fvec with binding energies in eV. nc is the number of conduction electrons per atom.
-For an insulator, nc = 0. In the example with graphite (see below), we set nc = 1. 
+subshells of the material in question. 
+
+We provide the material parameters to the functions using a list called dat (see dat.H2O and dat.graphite given below). 
+Some of the important parameters for the "exact" Sternheimer model are dat$fvec, dat$Evec and dat$nc.
+
+fvec is a vector with electron occupation levels per subshell (number of electrons / Z).
+
+Evec is a vector of the same length as fvec with binding energies in eV. 
+
+nc is the number of conduction electrons per atom. For an insulator, nc = 0. In the example with graphite (see below), we set nc = 1. 
 
 ## Binding energies and sub-shell occupation levels
 The atomic data required for the density effect computations can be found in the book by Carlson (1975, see above) starting page 337: Appendix 1
@@ -56,7 +63,7 @@ First, we provide the data for water (liquid) in a list called dat.H2O:
 dat.H2O <- list(
   Z    = 10,           # Atomic number
   A    = 18.0158,      # Atomic mass
-  I    = 78,           # Mean excitation energy in eV       
+  I    = 78,           # Mean excitation energy of medium in eV       
   exact.rho =  0.998,  # Density in g/cm3, needed for the "exact" density-effect correction
   nc   = 0,            # Number of conducting electrons pr. atom. Always treat compounds as insulators (i.e. nc = 0)
   fvec = c(2/10, 2/10, 2/10, 4/10),    # First 2 x H, then O
@@ -135,7 +142,7 @@ First, we provide the data for graphite in a list called dat.graphite:
 dat.graphite <- list(
     Z    = 6,       # Atomic number
     A    = 12.011,  # Atomic mass
-    I    = 81,      # Mean excitation energy in eV
+    I    = 81,      # Mean excitation energy of medium in eV
     exact.rho =  2.265,          # Density in g/cm3, needed for the "exact" density-effect correction
     nc   = 1,                    # Number of conducting electrons pr. atom   
     fvec = c(2/6, 2/6, 1/6),     # Occupation fractions for the subshells in C
