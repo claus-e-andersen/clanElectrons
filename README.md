@@ -1,10 +1,22 @@
 # clanElectrons (R package)
 Restricted and unrestricted mass electronic stopping power (Bethe formula) for electrons including Sternheimer density-effect corrections
-(both "exact" and by parameters). Aimed for research applications within radiotherapy dosimetry and comparisons with ICRU-37 
+(both "exact" and by published parameters). Aimed for research applications within radiotherapy dosimetry and comparisons with ICRU-37 
 and ICRU-90 publications.
 
 # How to run it?
 First, you will need R which can be downloaded from cran (https://cran.r-project.org/). Then you can download and run this R package (called clanElectrons) using the install_github("claus-e-andersen/clanElectrons") command from the devtools package. More details are given below. 
+
+After a successful installation of the clanElectrons package, try to run the demonstration function:
+```
+demo.Sternheimer.graphite() 
+```
+That should produce a table of computed stopping power data for graphite (discussed below).
+To see the contents of the function (i.e. the function body), just call the function without "()":
+```
+demo.Sternheimer.graphite
+```
+## Contact
+https://orbit.dtu.dk/en/persons/claus-e-andersen
 
 ## Main references
 - ICRU-90: Key data for ionizing-radiation dosimetry: Measurement standards and applications (2014/2016).
@@ -32,7 +44,7 @@ First, we provide the data for water (liquid) in a list called dat.H2O:
 dat.H2O <- list(
   Z    = 10,
   A    = 18.0158,
-  I    = 78,
+  I    = 78,           
   exact.rho =  0.998,  # density in g/cm3
   nc   = 0,            # Number of conducting electrons pr. atom. Always treat compounds as insulators (i.e. nc =0)
   fvec = c(2/10, 2/10, 2/10, 4/10), # First 2 x H, then O
@@ -44,7 +56,7 @@ Notes:
 
 exact referes to the detailed "exact" Sternheimer computation whereas param referes to the simplified 1984 model fits by Sternheimer. In the example below, we only use the exact method. We here include the param stuff for completeness. 
 
-Secondly, we assign the parameter list to dat and du the computations:
+Secondly, we assign the parameter list to dat and do the computations:
 
 ```
 dat <- dat.H2O
@@ -53,6 +65,8 @@ dat <- dat.H2O
 # 800 keV
 ############################
 MeV <- 0.8 # Electron kinetic energy
+
+# Note that the results of the density-effect correction computation will be included in dat:
 dat <- Sternheimer.delta.exact(MeV, dat)
 
 # Compute MSP without density effect correction (delta = 0):
@@ -95,7 +109,9 @@ where
 
 The mass electronic stopping powers are given in units of MeV per g/cm2 (i.e. approximately in MeV/cm since water has a density close to 1 g/cm3). 
 See the function demo.Sternheimer.water() for further details.
-  
+
+The agreement is excellent in the sense that all four digits provided in ICRU-90 are replicated by the clanElectrons functions.
+
 ## Example 2: Stopping power computation for graphite and comparison with ICRU-90
 
 First, we provide the data for graphite in a list called dat.graphite:
@@ -104,11 +120,11 @@ dat.graphite <- list(
     Z    = 6,       # Atomic number
     A    = 12.011,  # Atomic mass
     I    = 81,      # Mean excitation energy in eV
-    exact.rho =  2.265,         # Density in g/cm3, only needed for the exact density-effect correction.
-    nc   = 1,                   # Number of conducting electrons pr. atom   
-    fvec = c(2/6, 2/6, 1/6),    # Occupation fractions for the subshells in C
+    exact.rho =  2.265,          # Density in g/cm3, only needed for the exact density-effect correction.
+    nc   = 1,                    # Number of conducting electrons pr. atom   
+    fvec = c(2/6, 2/6, 1/6),     # Occupation fractions for the subshells in C
     Evec = c(288, 16.59, 11.26), # Binding energies in eV of subshells from Carlson (1975), see ICRU-90.
-    exact.plot = FALSE          # Supplementary plots related to the root finding in the exact density correction
+    exact.plot = FALSE           # Supplementary plots related to the root finding in the exact density correction
   )
 ```
 These parameters are identical to what was used by Stefan Pojtinger and Ludwig Büermann from 
@@ -124,6 +140,8 @@ dat <- dat.graphite
 # 800 keV
 ############################
 MeV <- 0.8 # Electron kinetic energy
+
+# Note that the results of the density-effect correction computation will be included in dat:
 dat <- Sternheimer.delta.exact(MeV, dat)
 
 # Compute MSP without density effect correction (delta = 0):
@@ -162,6 +180,7 @@ xx  <- electronic.MSP.Bethe(MeV, dat, delta = dat$exact.delta)
 ```
 where the symbols have the same meaning as in Example 1. For further details, see demo.Sternheimer.graphite().
 
+The agreement is excellent in the sense that all four digits provided in ICRU-90 are replicated by the clanElectrons functions.
   
 ## Installation in R or Rstudio
 
