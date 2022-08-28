@@ -7,14 +7,14 @@ and ICRU-90 publications.
 First, you will need R which can be downloaded from cran (https://cran.r-project.org/). Then you can download and run this R package (called clanElectrons) using the install_github("claus-e-andersen/clanElectrons") command from the devtools package. More details are given below. 
 
 As a first demonstration, run the function:
-'''
+´´´
 demo.Sternheimer.graphite() 
-'''
+´´´
 That should produce a table of computed stopping power data for graphite (discussed below).
 To see the contents of the function (i.e. the function body), just call the function without "()":
-'''
+´´´
 demo.Sternheimer.graphite
-'''
+
 
 ## Main references
 - ICRU-90: Key data for ionizing-radiation dosimetry: Measurement standards and applications (2014/2016).
