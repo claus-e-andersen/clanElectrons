@@ -75,7 +75,7 @@ xx0 <- electronic.MSP.Bethe(MeV, dat, delta = 0)
 # Compute MSP with exact Sternheimer density correction:
 xx <- electronic.MSP.Bethe(MeV, dat, delta = dat$exact.delta) 
 
-# Collect the data in a dataframe. This will be one row in the table shown below:
+# Collect the data in a dataframe. The following will produce the 800 keV row for the table shown below:
 df1 <- data.frame(
 MeV = MeV, 
 I.eV = dat$I, 
@@ -158,7 +158,7 @@ xx0 <- electronic.MSP.Bethe(MeV, dat, delta = 0)
 # Compute MSP with exact Sternheimer density correction
 xx  <- electronic.MSP.Bethe(MeV, dat, delta = dat$exact.delta) 
 
-# Collect the data in a dataframe. This will be one row in the table shown below:
+# Collect the data in a dataframe. The following will produce the 800 keV row for the table shown below:
   df1 <- data.frame(
     MeV = MeV,
     I.eV = dat$I,
