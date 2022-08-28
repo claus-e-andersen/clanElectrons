@@ -187,10 +187,10 @@ xx  <- electronic.MSP.Bethe(MeV, dat, delta = dat$exact.delta)
 ```
 where the symbols have the same meaning as in Example 1. For further details, see demo.Sternheimer.graphite().
 
-The agreement is excellent in the sense that all four digits provided in ICRU-90 are replicated by the clanElectrons functions.
-
 Note that the density-effect correction (delta) for a conductor like graphite (where some electrons are essentially assigned zero
 binding  energy), will have a non-zero value even for very low electron energies.
+
+The agreement is excellent in the sense that all four digits provided in ICRU-90 are replicated by the clanElectrons functions.
 
 ## Installation in R or Rstudio
 
