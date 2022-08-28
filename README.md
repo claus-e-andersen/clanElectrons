@@ -56,7 +56,7 @@ Notes:
 
 exact referes to the detailed "exact" Sternheimer computation whereas param referes to the simplified 1984 model fits by Sternheimer. In the example below, we only use the exact method. We here include the param stuff for completeness. 
 
-Secondly, we assign the parameter list to dat and du the computations:
+Secondly, we assign the parameter list to dat and do the computations:
 
 ```
 dat <- dat.H2O
@@ -65,6 +65,8 @@ dat <- dat.H2O
 # 800 keV
 ############################
 MeV <- 0.8 # Electron kinetic energy
+
+# Note that the results of the density-effect correction computation will be included in dat:
 dat <- Sternheimer.delta.exact(MeV, dat)
 
 # Compute MSP without density effect correction (delta = 0):
@@ -136,6 +138,8 @@ dat <- dat.graphite
 # 800 keV
 ############################
 MeV <- 0.8 # Electron kinetic energy
+
+# Note that the results of the density-effect correction computation will be included in dat:
 dat <- Sternheimer.delta.exact(MeV, dat)
 
 # Compute MSP without density effect correction (delta = 0):
