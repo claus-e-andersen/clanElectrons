@@ -4,7 +4,7 @@
 \alias{demo.water}
 \title{demo.water}
 \usage{
-demo.water(MeV = 1)
+demo.water(MeV = 1, delta.keV = 10)
 }
 \description{
 demo.water

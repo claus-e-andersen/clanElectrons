@@ -4,7 +4,7 @@
 \alias{demo.graphite}
 \title{demo.graphite}
 \usage{
-demo.graphite(MeV = 1)
+demo.graphite(MeV = 1, delta.keV = 10)
 }
 \description{
 Computation of electronic stopping power and density effect for graphite

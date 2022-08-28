@@ -1039,7 +1039,7 @@ df
 #' Arrange the fvec and the Evec atom by atom.
 
 #' @export
-demo.water <- function(MeV=1){
+demo.water <- function(MeV=1, delta.keV = 10){
   # Created: August 28 2022
   # Revised: August 28, 2022
   # Name:    Claus E. Andersen
@@ -1062,9 +1062,13 @@ demo.water <- function(MeV=1){
   dat <- Sternheimer.delta.exact(MeV, dat)
   xx0 <- electronic.MSP(MeV, dat, delta = 0)               # Compute MSP without density effect correction (delta = 0)
   xx  <- electronic.MSP(MeV, dat, delta = dat$exact.delta) # Compute MSP with exact Sternheimer density correction
-  df <- data.frame(MeV = MeV, I.eV = dat$I, rho=dat$exact.rho,
+  rr  <- electronic.MSP.restricted(MeV, delta.keV = delta.keV, dat, delta = dat$exact.delta) # Compute restricted MSP with exact Sternheimer density correction
+    df <- data.frame(MeV = MeV, I.eV = dat$I, rho=dat$exact.rho,
                      MSP.R0 = xx0,
                      MSP.R = xx,
+                     delta.cut.keV = delta.keV,
+                     restrictMSP.R = rr,
+                     ratio.restric.inf = rr/xx,
                      delta.R=dat$exact.delta,
                      mu.st = dat$mu.st,
                      L = dat$L)
@@ -1078,7 +1082,7 @@ demo.water <- function(MeV=1){
 #'@details #' We use the "exact" Sternheimer model as described in ICRU-90.
 #' Graphite is treated as a conductor (nc=1). We compare against ICRU-90 computations.
 #' @export
-demo.graphite <- function(MeV=1){
+demo.graphite <- function(MeV=1,  delta.keV = 10){
   # Created: August 28 2022
   # Revised: August 28, 2022
   # Name:    Claus E. Andersen
@@ -1098,9 +1102,13 @@ demo.graphite <- function(MeV=1){
   dat <- Sternheimer.delta.exact(MeV, dat)
   xx0 <- electronic.MSP(MeV, dat, delta = 0)               # Compute MSP without density effect correction (delta = 0)
   xx  <- electronic.MSP(MeV, dat, delta = dat$exact.delta) # Compute MSP with exact Sternheimer density correction
+  rr  <- electronic.MSP.restricted(MeV, delta.keV = delta.keV, dat, delta = dat$exact.delta) # Compute restricted MSP with exact Sternheimer density correction
   df <- data.frame(MeV = MeV, I.eV = dat$I, rho=dat$exact.rho,
                    MSP.R0 = xx0,
                    MSP.R = xx,
+                   delta.cut.keV = delta.keV,
+                   restrictMSP.R = rr,
+                   ratio.restric.inf = rr/xx,
                    delta.R=dat$exact.delta,
                    mu.st = dat$mu.st,
                    L = dat$L)
