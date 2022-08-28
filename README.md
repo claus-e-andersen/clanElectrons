@@ -29,8 +29,8 @@ https://orbit.dtu.dk/en/persons/claus-e-andersen
 dat <- Sternheimer.delta.exact(MeV=1, dat) # "Exact" Sternheimer density-effect correction 
 dat <- Sternheimer.delta.param(MeV=1, dat) # Parametric model by Sternheimer for the density-effect correction
 
-s <- electronic.MSP(MeV = 1, dat, delta = 0)
-s <- electronic.MSP.resticted(MeV = 1, delta.keV = 10, dat, delta = 0)
+s <- electronic.MSP(MeV = 1, dat, delta = 0) # Electronic mass stopping power 
+s <- electronic.MSP.resticted(MeV = 1, delta.keV = 10, dat, delta = 0) # Electronic mass stopping power, restricted at delta.keV 
 
 demo.water.table()     # How to use Sternheimer.delta.exact and electronic.MSP 
 demo.graphite.table()  # How to use Sternheimer.delta.exact and electronic.MSP
