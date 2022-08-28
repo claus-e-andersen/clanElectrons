@@ -44,7 +44,7 @@ First, we provide the data for water (liquid) in a list called dat.H2O:
 dat.H2O <- list(
   Z    = 10,
   A    = 18.0158,
-  I    = 78,
+  I    = 78,           
   exact.rho =  0.998,  # density in g/cm3
   nc   = 0,            # Number of conducting electrons pr. atom. Always treat compounds as insulators (i.e. nc =0)
   fvec = c(2/10, 2/10, 2/10, 4/10), # First 2 x H, then O
