@@ -91,12 +91,17 @@ L = dat$L)
 
 ## Excellent agreement between clanElectrons and ICRU-90 values for liquid water. 
 ```   
-    MeV I.eV   rho   MSP.R0    MSP.R MSP.ICRU90    delta.R delta.ICRU90    mu.st           L
-  8e-01   78 0.998 1.890531 1.880437      1.880  0.1004487       0.1005 2.296822    1.267705
-  1e+00   78 0.998 1.864880 1.844806      1.845  0.2086080       0.2086 2.296822    1.783714
-  1e+01   78 0.998 2.216852 1.966726      1.967  2.9279911       2.9280 2.296822   18.486812
-  1e+02   78 0.998 2.798672 2.202281      2.202  6.9977589       6.9980 2.296822  195.100288
-  1e+03   78 0.998 3.387159 2.400502      2.401 11.5772527      11.5800 2.296822 1957.780695    
+  MeV I.eV   rho     MSP.R0      MSP.R MSP.ICRU90     delta.R delta.ICRU90    mu.st            L
+1e-03   78 0.998 118.059816 118.059816    118.100  0.00000000      0.00000 2.296822           NA
+1e-02   78 0.998  22.384790  22.384790     22.390  0.00000000      0.00000 2.296822           NA
+1e-01   78 0.998   4.092951   4.092951      4.093  0.00000000      0.00000 2.296822           NA
+5e-01   78 0.998   2.025140   2.025140      2.025  0.00000000      0.00000 2.296822           NA
+6e-01   78 0.998   1.958041   1.956419      1.956  0.01500487      0.01501 2.296822    0.5473502
+8e-01   78 0.998   1.890531   1.880437      1.880  0.10044873      0.10050 2.296822    1.2677047
+1e+00   78 0.998   1.864880   1.844806      1.845  0.20860797      0.20860 2.296822    1.7837140
+1e+01   78 0.998   2.216852   1.966726      1.967  2.92799113      2.92800 2.296822   18.4868124
+1e+02   78 0.998   2.798672   2.202281      2.202  6.99775891      6.99800 2.296822  195.1002875
+1e+03   78 0.998   3.387159   2.400502      2.401 11.57725269     11.58000 2.296822 1957.7806954
 ```
 where
 
@@ -109,6 +114,8 @@ where
 
 The mass electronic stopping powers are given in units of MeV per g/cm2 (i.e. approximately in MeV/cm since water has a density close to 1 g/cm3). 
 See the function demo.Sternheimer.water() for further details.
+
+Note that the density-effect correction (delta) for an insulator will be zero below a certain threshold.
 
 The agreement is excellent in the sense that all four digits provided in ICRU-90 are replicated by the clanElectrons functions.
 
@@ -181,7 +188,10 @@ xx  <- electronic.MSP.Bethe(MeV, dat, delta = dat$exact.delta)
 where the symbols have the same meaning as in Example 1. For further details, see demo.Sternheimer.graphite().
 
 The agreement is excellent in the sense that all four digits provided in ICRU-90 are replicated by the clanElectrons functions.
-  
+
+Note that the density-effect correction (delta) for a conductor like graphite (where some electrons are essentially assigned zero
+binding  energy), will have a non-zero value even for very low electron energies.
+
 ## Installation in R or Rstudio
 
 The library can be loaded into R using the install_github command which is in the devtools package. So you first need to ascertain that you have this package and you need to load it with the library command:
