@@ -8,12 +8,12 @@ First, you will need R which can be downloaded from cran (https://cran.r-project
 
 After a successful installation of the clanElectrons package, try to run the demonstration function:
 ```
-demo.Sternheimer.graphite() 
+demo.graphite.table() 
 ```
 That should produce a table of computed stopping power data for graphite (discussed below).
 To see the contents of the function (i.e. the function body), just call the function without "()":
 ```
-demo.Sternheimer.graphite
+demo.graphite.table
 ```
 ## Contact
 https://orbit.dtu.dk/en/persons/claus-e-andersen
