@@ -3,7 +3,7 @@ Restricted and unrestricted mass electronic stopping power (Bethe formula) for e
 (both "exact" and by published parameters). Aimed for research applications within radiotherapy dosimetry and comparisons with ICRU-37 
 and ICRU-90 publications.
 
-The density-effect correction accounts for the polarization of the material. Essentially it explains why liquid water at energies above about 550 keV has a stopping power that is less than the stopping power for water vapour at the same energy. The modelling involves dialectric stopping or optics (i.e. transport of electro-magnetic fields in solid-state materials), where the material is represented by oscillators with resonance frequencies determined by the binding energies of the electrons of the material.
+The density-effect correction accounts for the polarization of the material. Essentially it explains why liquid water at energies above about 550 keV has a stopping power that is less than the stopping power for water vapour at the same energy. The modelling involves dialectric stopping or optics (i.e. transport of electro-magnetic fields in solid-state materials). The electrons in the material are responsible for the absorption and re-emission of the "light". They are represented by oscillators with resonance frequencies determined by the binding energies of the electrons of the material. 
 
 # How to run it?
 First, you will need R which can be downloaded from cran (https://cran.r-project.org/). Then you can download and run this R package (called clanElectrons) using the install_github("claus-e-andersen/clanElectrons") command from the devtools package. More details are given below. 
