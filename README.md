@@ -109,7 +109,9 @@ where
 
 The mass electronic stopping powers are given in units of MeV per g/cm2 (i.e. approximately in MeV/cm since water has a density close to 1 g/cm3). 
 See the function demo.Sternheimer.water() for further details.
-  
+
+The agreement is excellent in the sense that all four digits provided in ICRU-90 are replicated by the clanElectrons functions.
+
 ## Example 2: Stopping power computation for graphite and comparison with ICRU-90
 
 First, we provide the data for graphite in a list called dat.graphite:
@@ -118,11 +120,11 @@ dat.graphite <- list(
     Z    = 6,       # Atomic number
     A    = 12.011,  # Atomic mass
     I    = 81,      # Mean excitation energy in eV
-    exact.rho =  2.265,         # Density in g/cm3, only needed for the exact density-effect correction.
-    nc   = 1,                   # Number of conducting electrons pr. atom   
-    fvec = c(2/6, 2/6, 1/6),    # Occupation fractions for the subshells in C
+    exact.rho =  2.265,          # Density in g/cm3, only needed for the exact density-effect correction.
+    nc   = 1,                    # Number of conducting electrons pr. atom   
+    fvec = c(2/6, 2/6, 1/6),     # Occupation fractions for the subshells in C
     Evec = c(288, 16.59, 11.26), # Binding energies in eV of subshells from Carlson (1975), see ICRU-90.
-    exact.plot = FALSE          # Supplementary plots related to the root finding in the exact density correction
+    exact.plot = FALSE           # Supplementary plots related to the root finding in the exact density correction
   )
 ```
 These parameters are identical to what was used by Stefan Pojtinger and Ludwig Büermann from 
@@ -178,6 +180,7 @@ xx  <- electronic.MSP.Bethe(MeV, dat, delta = dat$exact.delta)
 ```
 where the symbols have the same meaning as in Example 1. For further details, see demo.Sternheimer.graphite().
 
+The agreement is excellent in the sense that all four digits provided in ICRU-90 are replicated by the clanElectrons functions.
   
 ## Installation in R or Rstudio
 
