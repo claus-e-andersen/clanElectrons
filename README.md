@@ -110,14 +110,15 @@ where
   - delta.R = the density-effect correction computed with the clanElectrons software.
   - Index ICRU90 = reference values from ICRU-90.
   - mu.st = the scaling parameter from the oscillator strengths to I.
-  - L = the ell parameret in ICRU-90 equation 4.28. 
+  - L = the ell paramerer in ICRU-90 equation 4.28. 
 
 The mass electronic stopping powers are given in units of MeV per g/cm2 (i.e. approximately in MeV/cm since water has a density close to 1 g/cm3). 
 See the function demo.Sternheimer.water() for further details.
 
 Note that the density-effect correction (delta) for an insulator will be zero below a certain threshold.
 
-The agreement is excellent in the sense that all four digits provided in ICRU-90 are replicated by the clanElectrons functions.
+The agreement is excellent in the sense that all four digits provided in ICRU-90 are replicated by the clanElectrons functions
+if we allow for an uncertainty of +/- 1 on the last digit of the ICRU-90 results.
 
 ## Example 2: Stopping power computation for graphite and comparison with ICRU-90
 
@@ -190,7 +191,8 @@ where the symbols have the same meaning as in Example 1. For further details, se
 Note that the density-effect correction (delta) for a conductor like graphite (where some electrons are essentially assigned zero
 binding  energy), will have a non-zero value even for very low electron energies.
 
-The agreement is excellent in the sense that all four digits provided in ICRU-90 are replicated by the clanElectrons functions.
+The agreement is excellent in the sense that all four digits provided in ICRU-90 are replicated by the clanElectrons functions
+if we allow for an uncertainty of +/- 1 on the last digit of the ICRU-90 results.
 
 ## Installation in R or Rstudio
 
