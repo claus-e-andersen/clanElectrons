@@ -1,12 +1,12 @@
 # clanElectrons (R package)
 Restricted and unrestricted mass electronic stopping power (Bethe formula) for electrons including Sternheimer density-effect corrections
-(both "exact" and by parameters). Aimed for research applications within radiotherapy dosimetry and comparisons with ICRU-37 
+(both "exact" and by published parameters). Aimed for research applications within radiotherapy dosimetry and comparisons with ICRU-37 
 and ICRU-90 publications.
 
 # How to run it?
 First, you will need R which can be downloaded from cran (https://cran.r-project.org/). Then you can download and run this R package (called clanElectrons) using the install_github("claus-e-andersen/clanElectrons") command from the devtools package. More details are given below. 
 
-As a first demonstration, run the function:
+After a successful installation of the clanElectrons package, try to run the demonstration function:
 ```
 demo.Sternheimer.graphite() 
 ```
@@ -14,7 +14,9 @@ That should produce a table of computed stopping power data for graphite (discus
 To see the contents of the function (i.e. the function body), just call the function without "()":
 ```
 demo.Sternheimer.graphite
-
+```
+## Contact
+https://orbit.dtu.dk/en/persons/claus-e-andersen
 
 ## Main references
 - ICRU-90: Key data for ionizing-radiation dosimetry: Measurement standards and applications (2014/2016).
