@@ -46,7 +46,7 @@ subshells of the material in question.
 We provide the material parameters to the functions using a list called dat (see dat.H2O and dat.graphite given below). 
 Some of the important parameters for the "exact" Sternheimer model are dat$fvec, dat$Evec and dat$nc:
 
-- fvec is a vector with electron occupation levels per subshell (number of electrons / Z).
+- fvec is a vector with electron occupation levels per subshell (number of electrons divided by the atomic number, Z).
 
 - Evec is a vector of the same length as fvec with binding energies in eV. 
 
