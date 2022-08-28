@@ -37,10 +37,6 @@ demo.graphite.table()  # How to use Sternheimer.delta.exact and electronic.MSP
 
 demo.Bragg.rule.test() # How to use Sternheimer.delta.param
 ```
-## Binding energies and sub-shell occupation levels
-The atomic data required for the density effect computations can be found in the book by Carlson (1975, see above) starting page 337: Appendix 1
-Atomic binding Energies for each subshell for elements  Z = 1-106.  ICRU-90 uses the Carlson data. It is not clear if the Geant4 implementation in G4DensityEffectCalculator.cc (see above) uses the same data.
-
 ## Applications
 You specify Z, A, I, density and other material parameters and the package has functions for computation
 of electronic stopping power (both restricted and unrestricted) for electrons. The "exact" computation
@@ -49,6 +45,9 @@ subshells of the material in question. fvec is a vector with electron occupation
 Evec is a vector of the same length as fvec with binding energies in eV. nc is the number of conduction electrons per atom.
 For an insulator, nc = 0. In the example with graphite (see below), we set nc = 1. 
 
+## Binding energies and sub-shell occupation levels
+The atomic data required for the density effect computations can be found in the book by Carlson (1975, see above) starting page 337: Appendix 1
+Atomic binding Energies for each subshell for elements  Z = 1-106.  ICRU-90 uses the Carlson data. The Geant4 implementation in G4DensityEffectCalculator.cc (see above) is may be based on other data.
 
 ## Example 1: Stopping power computation for water and comparison with ICRU-90
 
