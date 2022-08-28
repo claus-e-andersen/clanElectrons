@@ -113,7 +113,7 @@ where
   - L = the ell paramerer in ICRU-90 equation 4.28. 
 
 The mass electronic stopping powers are given in units of MeV per g/cm2 (i.e. approximately in MeV/cm since water has a density close to 1 g/cm3). 
-See the function demo.Sternheimer.water() for further details.
+See the functions demo.water() and demo.water.table() for further details.
 
 Note that the density-effect correction (delta) for an insulator will be zero below a certain threshold.
 
@@ -186,7 +186,7 @@ xx  <- electronic.MSP.Bethe(MeV, dat, delta = dat$exact.delta)
   1e+02   81 2.265   2.512917   1.928154      1.928 7.623991e+00     7.624000 2.352228 1.962800e+02
   1e+03   81 2.265   3.042536   2.105602      2.106 1.221582e+01    12.220000 2.352228 1.957909e+03
 ```
-where the symbols have the same meaning as in Example 1. For further details, see demo.Sternheimer.graphite().
+where the symbols have the same meaning as in Example 1. For further details, see the functions demo.graphite() and demo.graphite.table().
 
 Note that the density-effect correction (delta) for a conductor like graphite (where some electrons are essentially assigned zero
 binding  energy), will have a non-zero value even for very low electron energies.
