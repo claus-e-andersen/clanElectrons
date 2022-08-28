@@ -47,7 +47,7 @@ For an insulator, nc = 0. In the example with graphite (see below), we set nc = 
 
 ## Binding energies and sub-shell occupation levels
 The atomic data required for the density effect computations can be found in the book by Carlson (1975, see above) starting page 337: Appendix 1
-Atomic binding Energies for each subshell for elements  Z = 1-106.  ICRU-90 uses the Carlson data. The Geant4 implementation in G4DensityEffectCalculator.cc (see above) is may be based on other data.
+Atomic binding Energies for each subshell for elements  Z = 1-106.  ICRU-90 uses the Carlson data. The Geant4 implementation in G4DensityEffectCalculator.cc (see above) may have been based on other data.
 
 ## Example 1: Stopping power computation for water and comparison with ICRU-90
 
