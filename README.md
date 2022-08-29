@@ -76,7 +76,7 @@ Two equations need to be solved in the function Sternheimer.delta.exact: one for
       L.eps  = 1e-03
     )
 ```
-where we provide minimum and maxium values to consider, the number of points where the function needs to be evaluated (N), and a criterium (eps) for how close to zero we need to be for the data included in the linear regression equation for finding the actual root. The user can supply alternative parameter sets in the call of Sternheimer.delta.exact. For example, we could limit the search for L to be between 0.02 and 20 as follows:
+where we provide minimum and maxium values to consider, the number of points where the function needs to be evaluated (N), and a criterium (eps) for how close to zero we need to be for the data included in the linear regression for finding the actual root. The user can supply alternative parameter sets in the call of Sternheimer.delta.exact. For example, we could limit the search for L to be between 0.02 and 20 as follows:
  ```
 LSP <- list(
       L.min = 0.02,
@@ -87,6 +87,12 @@ LSP <- list(
 
 dat <- Sternheimer.delta.exact(MeV = 1, dat, L.solver.parm = LSP) 
 ```
+The default parameters should work in most cases, but tweeks may be needed in some situations. If roots are not found, that it may be useful to consult a plot of the functions. Such a plot can be retrieved from the function my setting: 
+```
+exact.plot = TRUE
+```
+in the dat-list.
+
 
 ## Example 1: Stopping power computation for water and comparison with ICRU-90
 
