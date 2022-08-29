@@ -59,7 +59,34 @@ The atomic data required for the density effect computations can be found in the
 Atomic binding Energies for each subshell for elements  Z = 1-106.  ICRU-90 uses the Carlson data. The Geant4 implementation in G4DensityEffectCalculator.cc (see above) may have been based on other data.
 
 ## Solver details for the Sternheimer "exact" model
-Two equations need to be solved in the function Sternheimer.delta.exact: one for the scaling parameter mu.st and one for L. A simple root-finding solution has been adapted where we map the functions over a relevant range of parameters and identify the regions where the functions contain both positive and negative values. We then find the root by linear regression.  
+Two equations need to be solved in the function Sternheimer.delta.exact: one for the scaling parameter mu.st and one for L. A simple root-finding solution has been adapted where we map the functions over a relevant range of parameters and identify the regions where the functions contain both positive and negative values. We then find the root by linear regression.  The default parameters for the search algorithm are:
+
+```
+ mu.solver.parm <- list(
+      mu.st.min = 0,
+      mu.st.max = 20,
+      mu.st.N   = 10000,
+      mu.st.eps = 6e-05
+    )
+
+    L.solver.parm <- list(
+      L.min = 0.02,
+      L.max = 4000,
+      L.N   = 80000,
+      L.eps  = 1e-03
+    )
+
+where we provide minimum and maxium values to consider, the number of points where the function needs to be evaluated (N), and a criterium (eps) for how close to zero we need to be for the data included in the linear regression equation for finding the actual root. The user can supply alternative parameter sets in the call of Sternheimer.delta.exact. For example, we could limit the search for L to be between 0.02 and 20 as follows:
+```
+ LSP <- list(
+      L.min = 0.02,
+      L.max = 20,
+      L.N   = 80000,
+      L.eps  = 1e-03
+    )
+
+dat <- Sternheimer.delta.exact(MeV = 1, dat, L.solver.parm = LSP) 
+```
 
 ## Example 1: Stopping power computation for water and comparison with ICRU-90
 
