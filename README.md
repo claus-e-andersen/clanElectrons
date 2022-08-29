@@ -3,7 +3,7 @@ This package includes functions for computation of restricted and unrestricted m
 
 The density-effect correction accounts for the polarization of the material. Essentially, it explains why liquid water at energies above 550 keV has a mass electronic stopping power that is less than the mass electronic stopping power for water vapour at the same energy. The modelling involves dialectric stopping or optics (i.e. transport of electromagnetic fields in solid-state materials). The "stationary" electrons in the material are responsible for the absorption and re-emission of the "light" and the plasma frequency plays a vital role in the theory. The "stationary" electrons are represented by oscillators with resonance frequencies determined by the binding energies as given by the atomic configuration of the material. In what sense can we represent an electron from some beam as an electromagnetic wave with a certain frequency? From the perspective of the material, a swift electron in a beam creates an electromagnetic field much like a delta-function in time. This field therefore can be represented as the superposition of a very broad range of frequencies since the Fourier transformation of a delta function is unity. The density-effect concerns only long-distance collisions (i.e. soft collisions). These gain more importance at high energies due to the Lorentz contraction of the field (it becomes pancake like at high energies rather than spherical).
 
-Knowledge of the density effect can be of significant importance in composite materials like graphite or alanine dosimeters where the density controlling the "density effect" (i.e. the reduction by polarization of soft collisions) is the grain density rather than the bulk density of the material. Without proper accounting for these matters in Monte-Carlo modelling, one may wrongly introduce apparent changes in the intritic detector efficiency for high energies.   
+Knowledge of the density effect can be of significant importance in composite materials like graphite or alanine dosimeters where the density controlling the "density effect" is the grain density rather than the bulk density of the material. Without proper accounting for these matters in Monte-Carlo modelling, one may wrongly introduce, for example, apparent changes in the intritic detector efficiency for high energies.   
 
 # How to run it?
 First, you will need R which can be downloaded from cran (https://cran.r-project.org/). Then you can download and run this R package (called clanElectrons) using the install_github("claus-e-andersen/clanElectrons") command from the devtools package. More details are given below. 
@@ -57,6 +57,9 @@ Some of the important parameters for the "exact" Sternheimer model are dat$fvec,
 ## Binding energies and sub-shell occupation levels
 The atomic data required for the density effect computations can be found in the book by Carlson (1975, see above) starting page 337: Appendix 1
 Atomic binding Energies for each subshell for elements  Z = 1-106.  ICRU-90 uses the Carlson data. The Geant4 implementation in G4DensityEffectCalculator.cc (see above) may have been based on other data.
+
+## Solver details for the Sternheimer "exact" model
+Two equations need to be solved in the function Sternheimer.delta.exact: one for the scaling parameter mu.st and one for L. A simple root-finding solution has been adapted where we map the functions over a relevant range of parameters and identify the regions where the functions contain both positive and negative values. We then find the root by linear regression.  
 
 ## Example 1: Stopping power computation for water and comparison with ICRU-90
 
