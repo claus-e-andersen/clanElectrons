@@ -75,10 +75,10 @@ Two equations need to be solved in the function Sternheimer.delta.exact: one for
       L.N   = 80000,
       L.eps  = 1e-03
     )
-
-where we provide minimum and maxium values to consider, the number of points where the function needs to be evaluated (N), and a criterium (eps) for how close to zero we need to be for the data included in the linear regression equation for finding the actual root. The user can supply alternative parameter sets in the call of Sternheimer.delta.exact. For example, we could limit the search for L to be between 0.02 and 20 as follows:
 ```
- LSP <- list(
+where we provide minimum and maxium values to consider, the number of points where the function needs to be evaluated (N), and a criterium (eps) for how close to zero we need to be for the data included in the linear regression equation for finding the actual root. The user can supply alternative parameter sets in the call of Sternheimer.delta.exact. For example, we could limit the search for L to be between 0.02 and 20 as follows:
+ ```
+LSP <- list(
       L.min = 0.02,
       L.max = 20,
       L.N   = 80000,
