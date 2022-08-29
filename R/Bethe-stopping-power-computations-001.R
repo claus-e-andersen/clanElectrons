@@ -81,8 +81,7 @@ MSP
 ############################################################################
 # Restricted Mass electronic stopping power
 ############################################################################
-electronic.MSP.restricted <- function(MeV = 1, delta.keV = 10,
-                                            dat=NULL, delta=0){
+electronic.MSP.restricted <- function(MeV = 1, delta.keV = 10, dat=NULL, delta=0){
 # Created: July 29, 2022
 # Revised: July 31, 2022
 # Revised: Aug 27, 2022

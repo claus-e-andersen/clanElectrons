@@ -1,38 +1,250 @@
-#' @title clanElectrons
-#' @description  Package for computation of electronic stopping power and density effect (Sternheimer)
-#' This is a simple dummy function to ease access to the help index.
-#'
-#'  clanElectrons()
-#'
-#'  ?clanElectrons # gives you an index of functions in package
-#'
-#' Main functions for computation of the density-effect correction are:
-#'
-#'    dat <- Sternheimer.delta.param(MeV, dat)
-#'
-#'    dat <- Sternheimer.delta.exact(MeV, dat)
-#'
-#' Note that dat is a list with input and output parameters. The .parm version
-#' is just the simple use of the Sternheimer fitting parameters (see e.g. the 1984
-#' paper with parameters for many materials). The .exact version is the complex
-#' model based on oscillators (binding electies and subshell atomic structure) and
-#' dielectric (optical) stopping.
-#'
-#'  Main functions for stopping power power computations are:
-#'     electronic.MSP(MeV, dat, delta)
-#'     electronic.MSP.restricted(MeV,delta.keV, dat, delta)
-#'
-#' Simple demonstration functions:
-#'   demo.graphite(MeV = 1)
-#'   demo.water(MeV = 1)
 
-#' Main validation functions (comparison against ICRU-90 data):
-#'   demo.graphite.table()
-#'   demo.water.table()
+#' @title Sternheimer.delta.exact
+#' @description  Computation of "exact" Sternheimer density correction.
+#'@details
+#' By "exact", we just mean that this is not the simple parameter fitting solution.
+#'
+#' The ICRU-90 terminology (p. 26) is followed as close as possible). The procedure is
+#' as follows:
+#'
+#' - The equations for mu.st and L are solved using a search strategy
+#'     (coarse + fine + regression) which may fail, for example, if the first interval
+#'     does not include the root. Graphs can be plotted to inspect  the procedure.
+#'
+#' - MeV is the kinetic energy and only one value can be computed (not vectorized).
+#'
+#
+#' Main references:
+#'
+#' - ICRU-90: Key data for ionizing-radiation dosimetry: Measurement standards
+#'     and applications (2014/2016).
+
+#' - DENSITY EFFECT FOR THE IONIZATION LOSS OF CHARGED PARTICLES
+#'     IN VARIOUS SUBSTANCES
+#'     by R. M. STERNHEIMER (Brookhaven), M. J. BERGER (NBS) and S. M. SELTZER (NBS).
+#'     ATOMIC DATA AND NUCLEAR DATA TABLES 30,26 l-27 1 ( 1984).
+#'
+#'
+#' @param MeV = electron kinetic energy
+#' @param dat = list with parameters (both input and output)
+#' @param dat$Z = atomic number
+#' @param dat$A = atomic mass
+#' @param dat$I = mean excitation energy in eV
+#' @param dat$rho.density = density in g/cm3 (only used for the delta computation)
+#' @param dat$fvec = sub-shell occupancy level (used in computation)
+#' @param dat$Evec = sub-shell binding energy (used in computation)
+#
+#' @param dat$plot.wanted = TRUE or FALSE,
+#' @param mu.solver.parm = search parameters for the mu.st solver
+#' @param L.solver.parm = search parameters for the L solver
+#' @param dat$nlev = number of sub-shells (output)
+#' @param dat$exact.delta = the computed delta (output)
+#' @return a list (dat)
+#'
 #' @export
-clanElectrons <- function(){
-# Dummy function
-}
+Sternheimer.delta.exact <- function(MeV=1, dat=NULL, mu.solver.parm = NULL,  L.solver.parm = NULL) {
+  # Created: Aug 7, 2022
+  # Revised: Aug 26, 2022
+  # Name   : Claus E. Andersen
+  #
+  # Computation of exact Sternheimer density correction (delta).
+  #
+  # By exact, we just mean that this is not the simple
+  # parameter fitting solution. The ICRU-90 terminology
+  # (p. 26) is followed as close as possible).
+
+  # Notes:
+  # (1) The equations for mu.st and L are solved using a search strategy
+  #     (coarse + fine + regression) which may fail, for example, if the first interval
+  #     does not include the root. Graphs can ne plotted to inspect  the procedure.
+  # (2) MeV is the kinetic energy and only one value can be computed (not vectorized).
+  #
+  # Main references:
+  # (1) ICRU-90: Key data for ionizing-radiation dosimetry: Measurement standards
+  #     and applications (2014/2016).
+  # (2) DENSITY EFFECT FOR THE IONIZATION LOSS OF CHARGED PARTICLES
+  #     IN VARIOUS SUBSTANCES
+  #     by R. M. STERNHEIMER (Brookhaven), M. J. BERGER (NBS) and S. M. SELTZER (NBS).
+  #     ATOMIC DATA AND NUCLEAR DATA TABLES 30,26 l-27 1 ( 1984)
+  # (3) G4DensityEffectCalculator.cc by Matthew Strait <straitm@umn.edu> 2019
+
+
+  if(is.null(mu.solver.parm)){
+    mu.solver.parm <- list(
+      mu.st.min = 0,
+      mu.st.max = 20,
+      mu.st.N   = 10000,
+      mu.st.eps = 6e-05
+    )
+  }
+
+  if(is.null(L.solver.parm)){
+    L.solver.parm <- list(
+      L.min = 0.02,
+      L.max = 4000,
+      L.N   = 80000,
+      L.eps  = 1e-03
+    )
+  }
+
+
+  E0       <- 0.51099895000
+  dat$beta <- (1 - (E0/(E0+MeV))^2)^0.5
+  dat$Ep   <- 28.8159 * (dat$exact.rho *dat$Z/dat$A)^0.5
+  dat$nlev <- length(dat$fvec)
+  nc       <- dat$nc
+  fnc      <- nc/dat$Z
+
+  dat$exact.MeV <- MeV
+  dat$mu.st.solution <- "None"
+
+
+  ####################################################
+  # Part 1: Find mu.st (solve eq. 4.29 in ICRU-90)
+  ####################################################
+  # Search for mu.st (coarse)
+
+  xx <- seq(mu.solver.parm$mu.st.min, mu.solver.parm$mu.st.max, length = mu.solver.parm$mu.st.N)
+  yy <- Sternheimer.f.root.mu.st(xx,dat)
+
+  ok.pos <- yy>0
+  ok.neg <- yy<0
+
+  if(sum(ok.pos)> 0 & sum(ok.neg)>0){
+    # Search for mu.st (fine)
+    mu.st.min <- max(xx[ok.neg])
+    mu.st.max <- min(xx[ok.pos]) + 0.001
+    mu.st.N   <- mu.solver.parm$mu.st.N
+    mu.st.eps <- mu.solver.parm$mu.st.eps
+
+    xx <- seq(mu.st.min, mu.st.max, length = mu.st.N)
+    yy <- Sternheimer.f.root.mu.st(xx,dat)
+
+    ok <- abs(yy) < mu.st.eps & xx>0
+    mu.st.root <- NA
+    if(sum(ok)>0){
+      # Use regression to find final value (root)
+      fm <- lm(xx[ok]~yy[ok])
+      mu.st.root <- as.numeric(coefficients(fm)[1])
+      dat$mu.st.solution <- "Regression"
+    }
+
+    df <- data.frame(mu.st=xx,val=yy)
+
+    plt.mu.st <- lattice::xyplot(val ~ mu.st,
+                                 data=df,
+                                 panel=function(x,y,...){
+                                   lattice::panel.xyplot(x,y,...)
+                                   lattice::panel.abline(h=0,lty="dashed")
+                                   lattice::panel.abline(v=mu.st.root,lty="dashed")
+                                 }
+    )
+    if(dat$exact.plot)(print(plt.mu.st))
+  }# both pos and neg
+
+  dat$mu.st <- mu.st.root
+
+  ####################################################
+  # PART 2: Find L (solve eq. 4.28 in ICRU-90)
+  ####################################################
+  # Search interval for L (coarse)
+  dat$L.solution <- "None"
+  L.root <- NA
+
+  xx <- seq(L.solver.parm$L.min, L.solver.parm$L.max, length = L.solver.parm$L.N)
+  yy <- Sternheimer.f.root.L(xx,dat)
+
+  ok.pos <- yy>0
+  ok.neg <- yy<0
+
+  if(sum(ok.pos)> 0 & sum(ok.neg)>0){
+    # Search interval for L (fine)
+    L.min <- max(xx[ok.pos])
+    L.max <- min(xx[ok.neg])
+    L.eps <- L.solver.parm$L.eps
+
+    xx <- seq(L.min ,L.max, length=L.solver.parm$L.N)
+    yy <- Sternheimer.f.root.L(xx,dat)
+
+    ##ok <- abs(yy) < L.eps & xx>0
+    ok <- abs(yy) < L.eps & yy < 0.5 & yy > -0.5
+    L.root <- NA
+    if(sum(ok)>0){
+      # Use regression to find final value (root)
+      fm <- lm(xx[ok]~yy[ok])
+      L.root <- as.numeric(coefficients(fm)[1])
+      dat$L.solution <- "Regression"
+    }
+
+
+  } # both pos and neg
+
+  df <- data.frame(L=xx,val=yy)
+
+  dat$L  <- L.root
+
+  L     <- dat$L
+  mu.st <- dat$mu.st
+  Evec  <- dat$Evec
+  fvec  <- dat$fvec
+  beta  <- dat$beta
+  nlev  <- dat$nlev
+  Ep    <- dat$Ep
+
+
+  plt.L <- lattice::xyplot(val ~ L,
+                           data=df,
+                           main="Sternheimer.delta.exact, root finding (L equation)",
+                           panel=function(x,y,...){
+                             lattice::panel.xyplot(x,y,...)
+                             lattice::panel.abline(h=0,lty="dashed")
+                             lattice::panel.abline(v=L.root,lty="dashed")
+                           }
+  )
+
+  if(dat$exact.plot){print(plt.L)}
+
+
+  ####################################################
+  # Part 3: Find delta using eq. 4.27 in ICRU-90
+  ####################################################
+  Lvec <- (  (mu.st*Evec/Ep)^2 + 2/3*fvec ) ^0.5
+  if(Evec[nlev]==0){
+    Lvec[nlev] <- (fvec[nlev])^0.5
+  }
+
+  dat$Lvec <- Lvec
+
+  ans <- 0
+  for(i in 1:nlev){
+    if(fvec[i]>0){
+      ans <- ans + fvec[i] * log(1 + L^2/Lvec[i]^2)
+    }# if
+  }# loop
+  # Important (?): The final part in 4.27 is not part of the summation!!!
+  if(dat$nc>0){ans <- ans + fnc * log(1 + L^2/fnc) }
+  delta <- ans - L^2 * (1-beta^2)
+
+
+  ####################################################
+  # Part 4: For insulators there is an energy threshold below which delta is zero
+  ####################################################
+  dat <- Sternheimer.beta.threshold(MeV,dat)
+
+  if(nc<0.0001 & MeV < dat$MeV.threshold){
+    delta <- 0
+    dat$threshold.note <- "Delta was set to zero because material is an insulator and kin. energy is below threshold"
+  }
+  # Done
+  dat$exact.delta <- delta
+
+  if(dat$exact.plot){clanLattice::print.trellis.plots(list(plt.mu.st,plt.L),1)}
+
+  dat
+} #Sternheimer.delta.exact.function
+
+
+#############################################################################
 
 #' @title Sternheimer.f.root.mu.st
 #' @description  Helper function (mu.st) for exact Sternheimer density correction
@@ -149,254 +361,6 @@ Sternheimer.beta.threshold <- function(L,dat){
 
 ###############################################################
 ###############################################################
-
-
-#' @title Sternheimer.delta.exact
-#' @description  Computation of "exact" Sternheimer density correction.
-#'@details
-#' By "exact", we just mean that this is not the simple parameter fitting solution.
-#'
-#' The ICRU-90 terminology (p. 26) is followed as close as possible). The procedure is
-#' as follows:
-#'
-#' - The equations for mu.st and L are solved using a search strategy
-#'     (coarse + fine + regression) which may fail, for example, if the first interval
-#'     does not include the root. Graphs can be plotted to inspect  the procedure.
-#'
-#' - MeV is the kinetic energy and only one value can be computed (not vectorized).
-#'
-#
-#' Main references:
-#'
-#' - ICRU-90: Key data for ionizing-radiation dosimetry: Measurement standards
-#'     and applications (2014/2016).
-
-#' - DENSITY EFFECT FOR THE IONIZATION LOSS OF CHARGED PARTICLES
-#'     IN VARIOUS SUBSTANCES
-#'     by R. M. STERNHEIMER (Brookhaven), M. J. BERGER (NBS) and S. M. SELTZER (NBS).
-#'     ATOMIC DATA AND NUCLEAR DATA TABLES 30,26 l-27 1 ( 1984).
-#'
-#'
-#' @param MeV = electron kinetic energy
-#' @param dat = list with parameters (both input and output)
-#' @param dat$Z = atomic number
-#' @param dat$A = atomic mass
-#' @param dat$I = mean excitation energy in eV
-#' @param dat$rho.density = density in g/cm3 (only used for the delta computation)
-#' @param dat$fvec = sub-shell occupancy level (used in computation)
-#' @param dat$Evec = sub-shell binding energy (used in computation)
-#
-#' @param dat$plot.wanted = TRUE or FALSE,
-#' @param mu.solver.parm = search parameters for the mu.st solver
-#' @param L.solver.parm = search parameters for the L solver
-#' @param dat$nlev = number of sub-shells (output)
-#' @param dat$exact.delta = the computed delta (output)
-#' @return a list (dat)
-#'
-#' @export
-Sternheimer.delta.exact <- function(MeV=1, dat=NULL, mu.solver.parm = NULL,  L.solver.parm = NULL) {
-# Created: Aug 7, 2022
-# Revised: Aug 26, 2022
-# Name   : Claus E. Andersen
-#
-# Computation of exact Sternheimer density correction (delta).
-#
-# By exact, we just mean that this is not the simple
-# parameter fitting solution. The ICRU-90 terminology
-# (p. 26) is followed as close as possible).
-
-# Notes:
-# (1) The equations for mu.st and L are solved using a search strategy
-#     (coarse + fine + regression) which may fail, for example, if the first interval
-#     does not include the root. Graphs can ne plotted to inspect  the procedure.
-# (2) MeV is the kinetic energy and only one value can be computed (not vectorized).
-#
-# Main references:
-# (1) ICRU-90: Key data for ionizing-radiation dosimetry: Measurement standards
-#     and applications (2014/2016).
-# (2) DENSITY EFFECT FOR THE IONIZATION LOSS OF CHARGED PARTICLES
-#     IN VARIOUS SUBSTANCES
-#     by R. M. STERNHEIMER (Brookhaven), M. J. BERGER (NBS) and S. M. SELTZER (NBS).
-#     ATOMIC DATA AND NUCLEAR DATA TABLES 30,26 l-27 1 ( 1984)
-# (3) G4DensityEffectCalculator.cc by Matthew Strait <straitm@umn.edu> 2019
-
-
-  if(is.null(mu.solver.parm)){
-    mu.solver.parm <- list(
-      mu.st.min = 0,
-      mu.st.max = 20,
-      mu.st.N   = 10000,
-      mu.st.eps = 6e-05
-    )
-  }
-
-  if(is.null(L.solver.parm)){
-    L.solver.parm <- list(
-      L.min = 0.02,
-      L.max = 4000,
-      L.N   = 80000,
-      L.eps  = 1e-03
-    )
-  }
-
-
-E0       <- 0.51099895000
-dat$beta <- (1 - (E0/(E0+MeV))^2)^0.5
-dat$Ep   <- 28.8159 * (dat$exact.rho *dat$Z/dat$A)^0.5
-dat$nlev <- length(dat$fvec)
-nc       <- dat$nc
-fnc      <- nc/dat$Z
-
-dat$exact.MeV <- MeV
-dat$mu.st.solution <- "None"
-
-
-####################################################
-# Part 1: Find mu.st (solve eq. 4.29 in ICRU-90)
-####################################################
-# Search for mu.st (coarse)
-
-xx <- seq(mu.solver.parm$mu.st.min, mu.solver.parm$mu.st.max, length = mu.solver.parm$mu.st.N)
-yy <- Sternheimer.f.root.mu.st(xx,dat)
-
-ok.pos <- yy>0
-ok.neg <- yy<0
-
-if(sum(ok.pos)> 0 & sum(ok.neg)>0){
-# Search for mu.st (fine)
-mu.st.min <- max(xx[ok.neg])
-mu.st.max <- min(xx[ok.pos]) + 0.001
-mu.st.N   <- mu.solver.parm$mu.st.N
-mu.st.eps <- mu.solver.parm$mu.st.eps
-
-xx <- seq(mu.st.min, mu.st.max, length = mu.st.N)
-yy <- Sternheimer.f.root.mu.st(xx,dat)
-
-ok <- abs(yy) < mu.st.eps & xx>0
-mu.st.root <- NA
-if(sum(ok)>0){
-  # Use regression to find final value (root)
-  fm <- lm(xx[ok]~yy[ok])
-  mu.st.root <- as.numeric(coefficients(fm)[1])
-  dat$mu.st.solution <- "Regression"
-}
-
-df <- data.frame(mu.st=xx,val=yy)
-
-plt.mu.st <- lattice::xyplot(val ~ mu.st,
-  data=df,
-  panel=function(x,y,...){
-    lattice::panel.xyplot(x,y,...)
-    lattice::panel.abline(h=0,lty="dashed")
-    lattice::panel.abline(v=mu.st.root,lty="dashed")
-  }
-)
-if(dat$exact.plot)(print(plt.mu.st))
-}# both pos and neg
-
-dat$mu.st <- mu.st.root
-
-####################################################
-# PART 2: Find L (solve eq. 4.28 in ICRU-90)
-####################################################
-# Search interval for L (coarse)
-dat$L.solution <- "None"
-L.root <- NA
-
-xx <- seq(L.solver.parm$L.min, L.solver.parm$L.max, length = L.solver.parm$L.N)
-yy <- Sternheimer.f.root.L(xx,dat)
-
-ok.pos <- yy>0
-ok.neg <- yy<0
-
-if(sum(ok.pos)> 0 & sum(ok.neg)>0){
-# Search interval for L (fine)
-L.min <- max(xx[ok.pos])
-L.max <- min(xx[ok.neg])
-L.eps <- L.solver.parm$L.eps
-
-xx <- seq(L.min ,L.max, length=L.solver.parm$L.N)
-yy <- Sternheimer.f.root.L(xx,dat)
-
-##ok <- abs(yy) < L.eps & xx>0
-ok <- abs(yy) < L.eps & yy < 0.5 & yy > -0.5
-L.root <- NA
-if(sum(ok)>0){
-  # Use regression to find final value (root)
-  fm <- lm(xx[ok]~yy[ok])
-  L.root <- as.numeric(coefficients(fm)[1])
-  dat$L.solution <- "Regression"
-}
-
-
-} # both pos and neg
-
-df <- data.frame(L=xx,val=yy)
-
-dat$L  <- L.root
-
-L     <- dat$L
-mu.st <- dat$mu.st
-Evec  <- dat$Evec
-fvec  <- dat$fvec
-beta  <- dat$beta
-nlev  <- dat$nlev
-Ep    <- dat$Ep
-
-
-plt.L <- lattice::xyplot(val ~ L,
-                         data=df,
-                         main="Sternheimer.delta.exact, root finding (L equation)",
-                         panel=function(x,y,...){
-                           lattice::panel.xyplot(x,y,...)
-                           lattice::panel.abline(h=0,lty="dashed")
-                           lattice::panel.abline(v=L.root,lty="dashed")
-                         }
-)
-
-if(dat$exact.plot){print(plt.L)}
-
-
-####################################################
-# Part 3: Find delta using eq. 4.27 in ICRU-90
-####################################################
-Lvec <- (  (mu.st*Evec/Ep)^2 + 2/3*fvec ) ^0.5
-if(Evec[nlev]==0){
-  Lvec[nlev] <- (fvec[nlev])^0.5
-}
-
-dat$Lvec <- Lvec
-
-ans <- 0
-for(i in 1:nlev){
-  if(fvec[i]>0){
-  ans <- ans + fvec[i] * log(1 + L^2/Lvec[i]^2)
-}# if
-}# loop
-# Important (?): The final part in 4.27 is not part of the summation!!!
-if(dat$nc>0){ans <- ans + fnc * log(1 + L^2/fnc) }
-delta <- ans - L^2 * (1-beta^2)
-
-
-####################################################
-# Part 4: For insulators there is an energy threshold below which delta is zero
-####################################################
-dat <- Sternheimer.beta.threshold(MeV,dat)
-
-if(nc<0.0001 & MeV < dat$MeV.threshold){
-delta <- 0
-dat$threshold.note <- "Delta was set to zero because material is an insulator and kin. energy is below threshold"
-}
-# Done
-dat$exact.delta <- delta
-
-if(dat$exact.plot){clanLattice::print.trellis.plots(list(plt.mu.st,plt.L),1)}
-
-dat
-} #Sternheimer.delta.exact.function
-
-
-#############################################################################
 
 
 ########################################################################################
@@ -1095,7 +1059,7 @@ demo.graphite <- function(MeV=1,  delta.keV = 10){
     exact.rho =  2.265,         # Density in g/cm3 only needed for the exact density-effect correction.
     fvec = c(2/6, 2/6,1/6),     # Occupation fractions for the subshells in C
     Evec = c(288, 16.59,11.26), # Binding energies of subshells from Carlson (1975), see ICRU-90.
-    exact.plot = FALSE          # Supplementary plots related to the root finding in the exact density correction
+    exact.plot = !FALSE          # Supplementary plots related to the root finding in the exact density correction
   )
 
   dat <- dat.graphite
@@ -1114,4 +1078,40 @@ demo.graphite <- function(MeV=1,  delta.keV = 10){
                    L = dat$L)
 
   list(dat=dat,df=df)
+}
+
+#' @title clanElectrons
+#' @description  Package for computation of electronic stopping power and density effect (Sternheimer)
+#' This is a simple dummy function to ease access to the help index.
+#'
+#'  clanElectrons()
+#'
+#'  ?clanElectrons # gives you an index of functions in package
+#'
+#' Main functions for computation of the density-effect correction are:
+#'
+#'    dat <- Sternheimer.delta.param(MeV, dat)
+#'
+#'    dat <- Sternheimer.delta.exact(MeV, dat)
+#'
+#' Note that dat is a list with input and output parameters. The .parm version
+#' is just the simple use of the Sternheimer fitting parameters (see e.g. the 1984
+#' paper with parameters for many materials). The .exact version is the complex
+#' model based on oscillators (binding electies and subshell atomic structure) and
+#' dielectric (optical) stopping.
+#'
+#'  Main functions for stopping power power computations are:
+#'     electronic.MSP(MeV, dat, delta)
+#'     electronic.MSP.restricted(MeV,delta.keV, dat, delta)
+#'
+#' Simple demonstration functions:
+#'   demo.graphite(MeV = 1)
+#'   demo.water(MeV = 1)
+
+#' Main validation functions (comparison against ICRU-90 data):
+#'   demo.graphite.table()
+#'   demo.water.table()
+#' @export
+clanElectrons <- function(){
+  # Dummy function
 }
