@@ -91,7 +91,7 @@ The default parameters should work in most cases, but tweeks may be needed in so
 ```
 exact.plot = TRUE
 ```
-in the dat-list.
+in the dat-list. See the file plots001.pdf for an example of such a olot.
 
 
 ## Example 1: Stopping power computation for water and comparison with ICRU-90
