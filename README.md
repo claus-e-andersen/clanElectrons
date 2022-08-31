@@ -1,7 +1,7 @@
 # clanElectrons (R package)
 This package includes functions for computation of restricted and unrestricted mass electronic stopping power (Bethe formula) for electrons including Sternheimer density-effect corrections (both "exact" and by published parameters). The package is aimed for research applications within radiotherapy dosimetry and comparisons with ICRU-37 and ICRU-90 publications.
 
-The density-effect correction accounts for the polarization of the material. Essentially, it explains why liquid water at energies above 550 keV has a mass electronic stopping power that is less than the mass electronic stopping power for water vapour at the same energy. The modelling involves dialectric stopping or optics (i.e. transport of electromagnetic fields in solid-state materials). The "stationary" electrons in the material are responsible for the absorption and re-emission of the "light" and the plasma frequency plays a vital role in the theory. The "stationary" electrons are represented by oscillators with resonance frequencies determined by the binding energies as given by the atomic configuration of the material. In what sense can we represent an electron from some beam as an electromagnetic wave with a certain frequency? From the perspective of the material, a swift electron in a beam creates an electromagnetic field much like a delta-function in time. This field therefore can be represented as the superposition of a very broad range of frequencies since the Fourier transformation of a delta function is unity. The density-effect concerns only long-distance collisions (i.e. soft collisions). These gain more importance at high energies due to the Lorentz contraction of the field (it becomes pancake like at high energies rather than spherical).
+The density-effect correction accounts for the polarization of the material. Essentially, it explains why liquid water at energies above 550 keV or such has a mass electronic stopping power that is less than the mass electronic stopping power for water vapour at the same energy. The modelling involves dialectric stopping or optics (i.e. transport of electromagnetic fields in solid-state materials). The "stationary" electrons in the material are responsible for the absorption and re-emission of the "light" and the plasma frequency plays a vital role in the theory. The "stationary" electrons are are modelled as oscillators with resonance frequencies determined by the electronic binding energies as given by the atomic configuration of the material. You may ask in what sense can we represent an the electrical field from an electron from some beam as an electromagnetic wave with a certain frequency? From the perspective of the material, a swift electron in a beam actually creates an electromagnetic field much like a delta-function in time. This field therefore can be represented as the superposition of plane waves with a very broad range of frequencies since the Fourier transformation of a delta function is unity. The density-effect concerns only long-distance collisions (i.e. soft collisions). These gain more importance at high energies due to the Lorentz contraction of the field (it becomes pancake like at high energies rather than spherical).
 
 Knowledge of the density effect can be of significant importance in composite materials like graphite or alanine dosimeters where the density controlling the "density effect" is the grain density rather than the bulk density of the material. Without proper accounting for these matters in Monte-Carlo modelling, one may wrongly introduce, for example, apparent changes in the intritic detector efficiency for high energies.   
 
@@ -28,16 +28,23 @@ https://orbit.dtu.dk/en/persons/claus-e-andersen
 
 ## Main functions in package
 ```
-dat <- Sternheimer.delta.exact(MeV=1, dat) # "Exact" Sternheimer density-effect correction 
-dat <- Sternheimer.delta.param(MeV=1, dat) # Parametric model by Sternheimer for the density-effect correction
+# "Exact" Sternheimer density-effect correction:
+dat <- Sternheimer.delta.exact(MeV=1, dat)  
 
-s <- electronic.MSP(MeV = 1, dat, delta = 0) # Electronic mass stopping power 
-s <- electronic.MSP.resticted(MeV = 1, delta.keV = 10, dat, delta = 0) # Electronic mass stopping power, restricted at delta.keV 
+# Simple parametric model by Sternheimer for the density-effect correction:
+dat <- Sternheimer.delta.param(MeV=1, dat) 
 
-demo.water.table()     # How to use Sternheimer.delta.exact and electronic.MSP 
-demo.graphite.table()  # How to use Sternheimer.delta.exact and electronic.MSP
+# Electronic mass stopping power: 
+s <- electronic.MSP(MeV = 1, dat, delta = 0) 
+# Electronic mass stopping power, restricted at delta.keV: 
+s <- electronic.MSP.resticted(MeV = 1, delta.keV = 10, dat, delta = 0) 
 
-demo.Bragg.rule.test() # How to use Sternheimer.delta.param
+# How to use Sternheimer.delta.exact and electronic.MSP:
+demo.water.table()      
+demo.graphite.table() 
+
+# How to use Sternheimer.delta.param:
+demo.Bragg.rule.test() 
 ```
 ## Applications
 You specify Z, A, I, density and other material parameters and the package has functions for computation
