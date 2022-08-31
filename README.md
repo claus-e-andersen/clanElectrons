@@ -29,10 +29,10 @@ https://orbit.dtu.dk/en/persons/claus-e-andersen
 ## Main functions in package
 ```
 # "Exact" Sternheimer density-effect correction:
-dat <- Sternheimer.delta.exact(MeV=1, dat)  
+dat <- Sternheimer.delta.exact(MeV = 1, dat)  
 
 # Simple parametric model by Sternheimer for the density-effect correction:
-dat <- Sternheimer.delta.param(MeV=1, dat) 
+dat <- Sternheimer.delta.param(MeV = 1, dat) 
 
 # Electronic mass stopping power: 
 s <- electronic.MSP(MeV = 1, dat, delta = 0) 
