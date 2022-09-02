@@ -33,7 +33,7 @@ https://orbit.dtu.dk/en/persons/claus-e-andersen
 dat <- Sternheimer.delta.exact(MeV = 1, dat)  
 
 # Simple parametric model by Sternheimer for the density-effect correction:
-# See Sternheimer 1984 paper
+# See Sternheimer et al. 1984 paper
 dat <- Sternheimer.delta.param(MeV = 1, dat) 
 
 # Electronic mass stopping power:
