@@ -29,14 +29,19 @@ https://orbit.dtu.dk/en/persons/claus-e-andersen
 ## Main functions in package
 ```
 # "Exact" Sternheimer density-effect correction:
+# ICRU-90 equations 4.27, 4.28, and 4.29
 dat <- Sternheimer.delta.exact(MeV = 1, dat)  
 
 # Simple parametric model by Sternheimer for the density-effect correction:
+# See Sternheimer 1984 paper
 dat <- Sternheimer.delta.param(MeV = 1, dat) 
 
-# Electronic mass stopping power: 
+# Electronic mass stopping power:
+# ICRU-90 equation 4.8
 s <- electronic.MSP(MeV = 1, dat, delta = 0) 
+
 # Electronic mass stopping power, restricted at delta.keV: 
+# ICRU-90 equation 4.11
 s <- electronic.MSP.resticted(MeV = 1, delta.keV = 10, dat, delta = 0) 
 
 # How to use Sternheimer.delta.exact and electronic.MSP:
@@ -172,11 +177,11 @@ where
   - MSP.R0 = mass electronic stopping power with delta = 0 (no correction of density effect).
   - MSP.R =  mass electronic stopping power computed with the clanElectrons software.
   - delta.R = the density-effect correction computed with the clanElectrons software.
-  - Index ICRU90 = reference values from ICRU-90.
-  - mu.st = the scaling parameter from the oscillator strengths to I.
+  - Index ICRU90 = reference values from ICRU-90 (Appendix Table A.3).
+  - mu.st = the scaling parameter from the oscillator strengths to I (ICRU-90 eq. 4.29).
   - L = the ell paramerer in ICRU-90 equation 4.28. 
 
-The mass electronic stopping powers are given in units of MeV per g/cm2 (i.e. approximately in MeV/cm since water has a density close to 1 g/cm3). 
+The mass electronic stopping powers are given in units of MeV per g/cm2. 
 See the functions demo.water() and demo.water.table() for further details.
 
 Note that the density-effect correction (delta) for an insulator will be zero below a certain threshold.
@@ -250,7 +255,8 @@ xx  <- electronic.MSP.Bethe(MeV, dat, delta = dat$exact.delta)
   1e+02   81 2.265   2.512917   1.928154      1.928 7.623991e+00     7.624000 2.352228 1.962800e+02
   1e+03   81 2.265   3.042536   2.105602      2.106 1.221582e+01    12.220000 2.352228 1.957909e+03
 ```
-where the symbols have the same meaning as in Example 1. For further details, see the functions demo.graphite() and demo.graphite.table().
+where the symbols have the same meaning as in Example 1 except that now the ICRU-90 reference data are from
+ICRU-90, Appendix Table A.2. For further details, see the functions demo.graphite() and demo.graphite.table().
 
 Note that the density-effect correction (delta) for a conductor like graphite (where some electrons are essentially assigned zero
 binding  energy), will have a non-zero value even for very low electron energies.
