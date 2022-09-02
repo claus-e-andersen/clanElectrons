@@ -1,7 +1,7 @@
 # clanElectrons (R package)
 This package includes functions for computation of restricted and unrestricted mass electronic stopping power (Bethe formula) for electrons including Sternheimer density-effect corrections (both "exact" and by published parameters). The package is aimed for research applications within radiotherapy dosimetry and comparisons with ICRU-37 and ICRU-90 publications.
 
-The density-effect correction accounts for the polarization of the material. Essentially, it explains why liquid water at energies above 550 keV or such has a mass electronic stopping power that is less than the mass electronic stopping power for water vapour at the same energy. The modelling involves dialectric stopping (i.e. optics or transport of electromagnetic waves in solid-state materials). The "stationary" electrons in the material are responsible for the absorption and re-emission of the "light" and the plasma frequency plays a vital role in the theory. The "stationary" electrons are modelled as oscillators with resonance frequencies determined by the electronic binding energies as given by the atomic configuration of the material. You may ask in what sense we can represent the electrical field from a single electron in some beam as an electromagnetic wave with a certain frequency? From the perspective of the material, a swift electron in a beam actually creates an electromagnetic field much like a delta-function in time. This field therefore can be represented as the superposition of plane waves with a very broad range of frequencies since the Fourier transformation of a delta function is unity. The density effect concerns only long-distance collisions (i.e. soft collisions). These gain more importance at high energies due to the Lorentz contraction of the field (it becomes pancake like at high energies rather than spherical).
+The density-effect correction accounts for the polarization of the material. Essentially, it explains why liquid water at energies above 550 keV or such has a mass electronic stopping power that is less than the mass electronic stopping power for water vapour at the same energy. The modelling involves dielectric stopping (i.e. optics or transport of electromagnetic waves in solid-state materials). The "stationary" electrons in the material are responsible for the absorption and re-emission of the "light" and the plasma frequency plays a vital role in the theory. The "stationary" electrons are modelled as oscillators with resonance frequencies determined by the electronic binding energies as given by the atomic configuration of the material. You may ask in what sense we can represent the electrical field from a single electron in some beam as an electromagnetic wave with a certain frequency? From the perspective of the material, a swift electron in a beam actually creates an electromagnetic field much like a delta-function in time. This field therefore can be represented as the superposition of plane waves with a very broad range of frequencies since the Fourier transformation of a delta function is unity. The density effect concerns only long-distance collisions (i.e. soft collisions). These gain more importance at high energies due to the Lorentz contraction of the field (it becomes pancake like at high energies rather than spherical).
 
 Knowledge of the density effect can be of significant importance in composite materials like graphite or alanine dosimeters where the density controlling the "density effect" is the grain density rather than the bulk density of the material. Without proper accounting for these matters in Monte-Carlo modelling, one may wrongly introduce, for example, apparent changes in the intritic detector efficiency for high energies.   
 
@@ -282,5 +282,11 @@ To get a list of functions in the library, just call one of these (after loading
 ```
 help(package=clanElectrons)
 library(help=clanElectrons)
-?clanElectrons
 ```
+You can also ask for help on any function, like so:'
+```
+?clanElectrons
+?demo.water
+```
+and then press on the index (at the bottom of the help page) to get the list of all functions. 
+You can also ask for help on any function, like so:The index 
