@@ -28,20 +28,20 @@ https://orbit.dtu.dk/en/persons/claus-e-andersen
 
 ## Main functions in package
 ```
-# "Exact" Sternheimer density-effect correction:
-# ICRU-90 equations 4.27, 4.28, and 4.29
+# "Exact" Sternheimer density-effect correction (delta):
+# See ICRU-90 equations 4.27, 4.28, and 4.29
 dat <- Sternheimer.delta.exact(MeV = 1, dat)  
 
-# Simple parametric model by Sternheimer for the density-effect correction:
+# Simple parametric model by Sternheimer for the density-effect correction (delta):
 # See Sternheimer et al. 1984 paper
 dat <- Sternheimer.delta.param(MeV = 1, dat) 
 
 # Electronic mass stopping power:
-# ICRU-90 equation 4.8
+# See ICRU-90 equation 4.8
 s <- electronic.MSP(MeV = 1, dat, delta = 0) 
 
-# Electronic mass stopping power, restricted at delta.keV: 
-# ICRU-90 equation 4.11
+# Electronic mass stopping power, restricted at delta.keV (i.e. the cut-off energy): 
+# See ICRU-90 equation 4.11
 s <- electronic.MSP.resticted(MeV = 1, delta.keV = 10, dat, delta = 0) 
 
 # How to use Sternheimer.delta.exact and electronic.MSP:
