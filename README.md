@@ -283,7 +283,7 @@ To get a list of functions in the library, just call one of these (after loading
 help(package=clanElectrons)
 library(help=clanElectrons)
 ```
-You can also ask for help on any function, like so:'
+You can also ask for help on any function, like so:
 ```
 ?clanElectrons
 ?demo.water
