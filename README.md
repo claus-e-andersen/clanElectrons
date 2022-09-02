@@ -289,4 +289,3 @@ You can also ask for help on any function, like so:
 ?demo.water
 ```
 and then press on the index (at the bottom of the help page) to get the list of all functions. 
-You can also ask for help on any function, like so:The index 
