@@ -28,6 +28,11 @@ https://orbit.dtu.dk/en/persons/claus-e-andersen
 
 ## Main functions in package
 ```
+# The material in question is described in the list dat as will be explained below.
+# Some of the function calls (like Sternheimer.delta.exact) are designed
+# to update dat with output such that dat both contains the material parameters
+# and the result of the computation. 
+
 # "Exact" Sternheimer density-effect correction (delta):
 # See ICRU-90 equations 4.27, 4.28, and 4.29
 dat <- Sternheimer.delta.exact(MeV = 1, dat)  
