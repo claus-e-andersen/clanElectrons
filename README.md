@@ -35,7 +35,7 @@ https://orbit.dtu.dk/en/persons/claus-e-andersen
 # See, below for an example (dat <- dat.H2O). 
 
 # --------------
-# Some of the functions  (like Sternheimer.delta.exact) 
+# Some of the functions (like Sternheimer.delta.exact) 
 # return a list with the same format and elements as the
 # input dat puls the result of the computation. So, the
 # function call will update "dat" with results, and after
