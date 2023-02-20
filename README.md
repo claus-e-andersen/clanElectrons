@@ -36,8 +36,10 @@ https://orbit.dtu.dk/en/persons/claus-e-andersen
 # --------------
 # Some of the functions  (like Sternheimer.delta.exact) 
 # return a list with the same format and elements as the
-# input dat puls the result of the computation. So, "dat" 
-# will just be updated with results.
+# input dat puls the result of the computation. So, the
+# function call will update "dat" with results, and after
+# the function call dat contains bout input and final
+# results.
 
 # "Exact" Sternheimer density-effect correction (delta):
 # See ICRU-90 equations 4.27, 4.28, and 4.29
