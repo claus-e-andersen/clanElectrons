@@ -31,6 +31,8 @@ https://orbit.dtu.dk/en/persons/claus-e-andersen
 # The material in question is described in the list called 
 #   dat 
 # as will be explained below (see dat.H2O as an example).
+
+# --------------
 # Some of the function calls (like Sternheimer.delta.exact) are designed
 # to update dat with output such that dat both contains the material parameters
 # and the result of the computation. 
@@ -44,7 +46,8 @@ dat <- Sternheimer.delta.exact(MeV = 1, dat)
 dat <- Sternheimer.delta.param(MeV = 1, dat) 
 
 
-# Some functions in the package just output the results directly (like electronic.MSP).
+# --------------
+# Other functions in the package just output the results directly (like electronic.MSP).
 # Here we do not update dat. 
 
 # Electronic mass stopping power:
@@ -55,6 +58,9 @@ s <- electronic.MSP(MeV = 1, dat, delta = 0)
 # See ICRU-90 equation 4.11
 s <- electronic.MSP.resticted(MeV = 1, delta.keV = 10, dat, delta = 0) 
 
+# --------------
+# The package contains some examples and demo functions.
+# Try to look in the body of these functions for details.
 
 # How to use Sternheimer.delta.exact and electronic.MSP:
 demo.water(MeV = 1, delta.keV = 10)      
