@@ -28,7 +28,9 @@ https://orbit.dtu.dk/en/persons/claus-e-andersen
 
 ## Main functions in package
 ```
-# The material in question is described in the list dat as will be explained below.
+# The material in question is described in the list called 
+#   dat 
+# as will be explained below (see dat.H2O as an example).
 # Some of the function calls (like Sternheimer.delta.exact) are designed
 # to update dat with output such that dat both contains the material parameters
 # and the result of the computation. 
