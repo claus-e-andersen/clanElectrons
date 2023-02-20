@@ -32,7 +32,17 @@ https://orbit.dtu.dk/en/persons/claus-e-andersen
 # computed is described in a list that is typically 
 # called: 
 #     dat. 
-# See, below for an example (dat <- dat.H2O). 
+# For water we could specify the following model parameters:
+
+dat <- list(
+  Z    = 10,           # Atomic number
+  A    = 18.0158,      # Atomic mass
+  I    = 78,           # Mean excitation energy of medium in eV       
+  exact.rho =  0.998,  # Density in g/cm3, needed for the "exact" density-effect correction
+  nc   = 0,            # Number of conducting electrons pr. atom. Always treat compounds as insulators (i.e. nc = 0)
+  fvec = c(2/10, 2/10, 2/10, 4/10),    # First 2 x H, then O
+  Evec = c(13.6, 538.0, 28.48, 13.62), # Binding energies in eV for the subshells as given by Carlson (1975), see ICRU-90
+  exact.plot = FALSE)
 
 # --------------
 # Some of the functions (like Sternheimer.delta.exact) 
