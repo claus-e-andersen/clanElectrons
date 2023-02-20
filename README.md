@@ -28,7 +28,7 @@ https://orbit.dtu.dk/en/persons/claus-e-andersen
 
 ## Main functions in package
 ```
-# The material in question is described in the list called 
+# The material in question is described in a list called 
 #   dat 
 # as will be explained below (see dat.H2O as an example).
 
