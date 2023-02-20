@@ -28,9 +28,10 @@ https://orbit.dtu.dk/en/persons/claus-e-andersen
 
 ## Main functions in package
 ```
-# The material in question is described in a list that 
-# is typically called: 
-#   dat 
+# The material for which the stopping power should be
+# computed is described in a list that is typically 
+# called: 
+#     dat. 
 # See, below for an example (dat <- dat.H2O). 
 
 # --------------
