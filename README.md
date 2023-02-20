@@ -28,14 +28,16 @@ https://orbit.dtu.dk/en/persons/claus-e-andersen
 
 ## Main functions in package
 ```
-# The material in question is described in a list called 
+# The material in question is described in a list that 
+# is typically called: 
 #   dat 
-# as will be explained below (see dat.H2O as an example).
+# See, below for an example (dat <- dat.H2O). 
 
 # --------------
-# Some of the function calls (like Sternheimer.delta.exact) are designed
-# to update dat with output such that dat both contains the material parameters
-# and the result of the computation. 
+# Some of the functions  (like Sternheimer.delta.exact) 
+# return a list with the same format and elements as the
+# input dat puls the result of the computation. So, "dat" 
+# will just be updated with results.
 
 # "Exact" Sternheimer density-effect correction (delta):
 # See ICRU-90 equations 4.27, 4.28, and 4.29
@@ -47,8 +49,9 @@ dat <- Sternheimer.delta.param(MeV = 1, dat)
 
 
 # --------------
-# Other functions in the package just output the results directly (like electronic.MSP).
-# Here we do not update dat. 
+# Other functions in the package just output a single numerical
+# value (like electronic.MSP). Here, we do not put the results 
+# back into dat. 
 
 # Electronic mass stopping power:
 # See ICRU-90 equation 4.8
