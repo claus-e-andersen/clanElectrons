@@ -43,6 +43,10 @@ dat <- Sternheimer.delta.exact(MeV = 1, dat)
 # See Sternheimer et al. 1984 paper
 dat <- Sternheimer.delta.param(MeV = 1, dat) 
 
+
+# Some functions in the package just output the results directly (like electronic.MSP).
+# Here we do not update dat. 
+
 # Electronic mass stopping power:
 # See ICRU-90 equation 4.8
 s <- electronic.MSP(MeV = 1, dat, delta = 0) 
@@ -50,6 +54,7 @@ s <- electronic.MSP(MeV = 1, dat, delta = 0)
 # Electronic mass stopping power, restricted at delta.keV (i.e. the cut-off energy): 
 # See ICRU-90 equation 4.11
 s <- electronic.MSP.resticted(MeV = 1, delta.keV = 10, dat, delta = 0) 
+
 
 # How to use Sternheimer.delta.exact and electronic.MSP:
 demo.water(MeV = 1, delta.keV = 10)      
