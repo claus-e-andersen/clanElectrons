@@ -32,7 +32,7 @@ https://orbit.dtu.dk/en/persons/claus-e-andersen
 # computed is described in a list that is typically 
 # called: 
 #     dat. 
-# For water we could specify the following model parameters:
+# For water, we could specify the following model parameters:
 
 dat <- list(
   Z    = 10,           # Atomic number
