@@ -38,7 +38,7 @@ https://orbit.dtu.dk/en/persons/claus-e-andersen
 # Some of the functions (like Sternheimer.delta.exact) 
 # return a list with the same format and elements as the
 # input dat puls the result of the computation. So, the
-# function call can be used to update "dat" with results, 
+# function can be used to update "dat" with results, 
 # such that updated dat contains both input and final
 # results.
 
