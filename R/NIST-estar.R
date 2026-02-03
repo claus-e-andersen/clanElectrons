@@ -30,17 +30,17 @@ get.NIST.estar <- function(MeV=c(0.1,1,10),what="MSP.el",id="water.liquid",data=
   df <- df[ok,]
   if(sum(ok)>0){
     # some data
-    df %>%
+    df |>
       dplyr::select(MeV) ->
       xx
     xx <- xx[,1]
 
-    df %>%
-      dplyr::select(all_of(what)) ->
+    df |>
+      dplyr::select(dplyr::all_of(what)) ->
       yy
 
     yy <- yy[,1]
-    zz <- approx(xx,yy,xout=MeV)$y
+    zz <- stats::approx(xx,yy,xout=MeV)$y
     zz
   }
 }
