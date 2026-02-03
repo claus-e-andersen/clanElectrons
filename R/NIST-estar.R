@@ -1,12 +1,28 @@
 #
 #
 #
+#' @title get.NIST.estar.data
+#' @description  How the df.NIST.estar.SP data was created.
+#'
+#' @export
 get.NIST.estar.data <- function(){
 
 df.NIST.estar.SP <- read.table("C:\\data\\projects\\R\\8900-Theoretical-Dosimetry\\stopping-powers2\\NIST-estar-stopping-power-data.txt",header=TRUE,sep=";")
 
 }
-
+#' @title get.NIST.estar
+#' @description  Extract data from the df.NIST.estar.SP data frame included
+#' with the package.
+#'
+#' @param MeV = vector of kinetic energies of the electron in MeV
+#' @param what ="MSP.el", MSP.rad", "MSP.tot", "CSDA", "rad.yield" or "density.effect"
+#' @param id = "water.liquid", "air.dry", "pmma", "alanine"
+#' @param data = date frame with data (df.NIST.estar.SP)
+#' @details Notes:
+#' The  MSP's are in units of MeV pr. g/cm2.
+#' The I is in eV
+#' The density (rho) is in g/cm3
+#' @export
 ############################
 get.NIST.estar <- function(MeV=c(0.1,1,10),what="MSP.el",id="water.liquid",data=df.NIST.estar.SP){
   df <- data
@@ -30,6 +46,10 @@ get.NIST.estar <- function(MeV=c(0.1,1,10),what="MSP.el",id="water.liquid",data=
 }
 
 ######################
+#' @title get.NIST.estar.demo
+#' @description  Demonstration  of how to use get.NIST.estar
+#'
+#' @export
 get.NIST.estar.demo <- function(){
 
 ff <- get.NIST.estar(id="pmma")
