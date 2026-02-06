@@ -291,15 +291,24 @@ NIST.estar.demo <- function(){
   ff <- get.estar.from.id(MeV=seq(0.2,2,length=100),what="MSP.el",id="air.dry")
   plot(seq(0.2,2,length=100),ff)
 
-  plt <- lattice::xyplot(log(MSP.el) ~ log(MeV) | clanLattice::reorder.for.trellis(paste("Z=",Z)),data=df.NIST.estar.SP,type="l")
+  plt <- lattice::xyplot(log(MSP.el) ~ log(MeV) | paste("Z=",Z),data=df.NIST.estar.SP,type="l")
   print(plt)
 
   print(tail(df.NIST.estar.SP))
 
-  tmp <- get.estar.from.Z(Z=c(82),what="MSP.rad")
+  print('\nget.estar.from.Z(MeV=c(0.1,1,10,20), Z=c(82), what="MSP.rad") : ')
+    tmp <- get.estar.from.Z(MeV=c(0.1,1,10,20), Z=c(82), what="MSP.rad")
   print(tmp)
 
-}
+  print('\nget.estar.from.id(MeV=c(0.1,1,10,20), id="water.liquid", what="MSP.el") : ')
+  tmp <- get.estar.from.id(MeV=c(0.1,1,10,20), id="water.liquid", what="MSP.el")
+  print(tmp)
+
+  print('\nget.estar.from.id(MeV=c(0.1,1,10,20), id="air.dry", what="MSP.el") : ')
+  tmp <- get.estar.from.id(MeV=c(0.1,1,10,20), id="air.dry", what="MSP.el")
+  print(tmp)
+
+} # demo end
 
 
 
