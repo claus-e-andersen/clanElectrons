@@ -178,9 +178,9 @@ get.NIST.estar.data <- function(){
   } # meta loop
 
 
-  df %>%
+  df |>
     filter(!id==id2)
-  df %>%
+  df |>
     arrange(Z,id,I) -> df
 
   head(df)
@@ -219,13 +219,13 @@ get.estar.from.id <- function(MeV=c(0.1,1,10),what="MSP.el",id="water.liquid",da
   df <- df[ok,]
   if(sum(ok)>0){
     # some data
-    df %>%
+    df |>
       dplyr::select(MeV) ->
       xx
 
     xx <- xx[,1]
 
-    df %>%
+    df |>
       dplyr::select(all_of(what)) ->
       yy
 
@@ -260,13 +260,13 @@ get.estar.from.Z<- function(MeV=c(0.1,1,10),what="MSP.el",Z=1,data=df.NIST.estar
   df <- df[ok,]
   if(sum(ok)>0){
     # some data
-    df %>%
+    df |>
       dplyr::select(MeV) ->
       xx
 
     xx <- xx[,1]
 
-    df %>%
+    df |>
       dplyr::select(all_of(what)) ->
       yy
 
