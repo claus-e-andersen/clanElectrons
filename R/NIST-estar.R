@@ -1,3 +1,17 @@
+
+#' @title df.NIST.estar.SP
+#' @description  Extract data from the df.NIST.estar.SP data for given id (=name of element or material).
+#' df.NIST.estar.SP is included in the package.
+#'
+#' @format A data frame with 100 rows and 3 variables:
+#' \describe{
+#'   \item{MeV}{Date of the sale (Date)}
+#'   \item{id}{Product name (character)}
+#'   \item{Z}{Number of units sold (integer)}
+#' }
+#' @source Generated for package examples
+"df.NIST.estar.SP"
+
 #
 #
 #
@@ -168,13 +182,14 @@ get.NIST.estar.data <- function(){
 
 
 #' @title get.estar.from.id
-#' @description  Extract data from the df.NIST.estar.SP data frame included
-#' with the package.
+#' @description  Extract data from the df.NIST.estar.SP data for given id (=name of element or material).
+#' df.NIST.estar.SP is included in the package.
 #'
 #' @param MeV = vector of kinetic energies of the electron in MeV
 #' @param what ="MSP.el", MSP.rad", "MSP.tot", "CSDA", "rad.yield" or "density.effect"
-#' @param id = "water.liquid", "air.dry", "pmma", "alanine"
+#' @param id = "hydrogen", "helium" .. "californium", "water.liquid", "air.dry", "pmma", "alanine"
 #' @param data = date frame with data (df.NIST.estar.SP)
+#' @param rule = rule for approx: 1=no extrapolation, 2=use nearest value for extrapolation
 #' @details Notes:
 #' The  MSP's are in units of MeV pr. g/cm2.
 #' The I is in eV
@@ -209,13 +224,14 @@ get.estar.from.id <- function(MeV=c(0.1,1,10),what="MSP.el",id="water.liquid",da
 
 
 #' @title get.estar.from.Z
-#' @description  Extract data from the df.NIST.estar.SP data frame included
-#' with the package.
+#' @description  Extract data from the df.NIST.estar.SP data for given Z.
+#' df.NIST.estar.SP is included in the package.
 #'
 #' @param MeV = vector of kinetic energies of the electron in MeV
 #' @param what ="MSP.el", MSP.rad", "MSP.tot", "CSDA", "rad.yield" or "density.effect"
-#' @param Z = element number
+#' @param Z = element number (1,2,3 .. 98) (composite materials have Z=0)
 #' @param data = date frame with data (df.NIST.estar.SP)
+#' @param rule = rule for approx: 1=no extrapolation, 2=use nearest value for extrapolation
 #' @details Notes:
 #' The  MSP's are in units of MeV pr. g/cm2.
 #' The I is in eV

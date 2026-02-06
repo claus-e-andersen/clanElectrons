@@ -17,13 +17,15 @@ get.estar.from.id(
 
 \item{what}{="MSP.el", MSP.rad", "MSP.tot", "CSDA", "rad.yield" or "density.effect"}
 
-\item{id}{= "water.liquid", "air.dry", "pmma", "alanine"}
+\item{id}{= "hydrogen", "helium" .. "californium", "water.liquid", "air.dry", "pmma", "alanine"}
 
 \item{data}{= date frame with data (df.NIST.estar.SP)}
+
+\item{rule}{= rule for approx: 1=no extrapolation, 2=use nearest value for extrapolation}
 }
 \description{
-Extract data from the df.NIST.estar.SP data frame included
-with the package.
+Extract data from the df.NIST.estar.SP data for given id (=name of element or material).
+df.NIST.estar.SP is included in the package.
 }
 \details{
 Notes:

@@ -5,6 +5,13 @@ The density-effect correction accounts for the polarization of the material. Ess
 
 Knowledge of the density effect can be of significant importance in composite materials like graphite or alanine dosimeters where the density controlling the "density effect" is the grain density rather than the bulk density of the material. Without proper accounting for these matters in Monte-Carlo modelling, one may wrongly introduce, for example, apparent changes in the intritic detector efficiency for high energies.   
 
+The package now (2026) also includes a simple look-up function that provides
+NIST Estar computed stopping powers for electrons. Elements from 1 to 98 are included
+and a few materials (water.liquid, air.dry, pmma, and alanine).
+
+The data are in the df.NIST.estar.SP, and the key functions are get.estar.from.id and get.estar.from.Z.
+These function performs linear interpolation, so one can acquire can acquire stopping powers for any energies.
+
 # How to run it?
 First, you will need R which can be downloaded from cran (https://cran.r-project.org/). Then you can download and run this R package (called clanElectrons) using the install_github("claus-e-andersen/clanElectrons") command from the devtools package. More details are given below. 
 
