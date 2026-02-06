@@ -7,9 +7,22 @@
 \format{
 A data frame with 100 rows and 3 variables:
 \describe{
-  \item{MeV}{Date of the sale (Date)}
-  \item{id}{Product name (character)}
-  \item{Z}{Number of units sold (integer)}
+  \item{MeV}{Vector of energies (in MeV) for which the function should estimate the stopping power.}
+  \item{MSP.el}{Electron (collision) mass stopping power (in MeV per g/cm2).}
+  \item{MSP.rad}{Radiative mass stopping power (in MeV per g/cm2).}
+  \item{MSP.tot}{Totalmass stopping power (in MeV per g/cm2).}
+  \item{range.CSDA}{SSDA range (in g/cm2).}
+  \item{rad.yield}{Radiation yield}
+  \item{density.effect}{Density effect parameter}
+  \item{type}{element (like "hydrogen") or material (like "water.liquid").}
+  \item{id}{Name of element or material from NIST}
+  \item{id2}{Name of elements from alternative source}
+  \item{symbol}{Element symbols like "H", "He", "Br".}
+  \item{rho}{Density (in g/cm3).}
+  \item{I}{Mean excitation energy (eV)}
+  \item{Z}{Element number (=0 for composite materials))}
+  \item{source}{Source of data ("NIST.estar)"}
+
 }
 }
 \source{
@@ -21,5 +34,6 @@ df.NIST.estar.SP
 \description{
 Extract data from the df.NIST.estar.SP data for given id (=name of element or material).
 df.NIST.estar.SP is included in the package.
+The data were downloaded from the NIST web site February 2-5, 2026.
 }
 \keyword{datasets}

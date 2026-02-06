@@ -7,5 +7,5 @@
 NIST.estar.demo()
 }
 \description{
-Demonstration  of how to use get.NIST.estar
+Demonstration  of how to use get.estar.from.Z and get.estar.from.id
 }
