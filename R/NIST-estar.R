@@ -40,7 +40,6 @@ get.NIST.estar.data <- function(){
   # Name: Claus E. Andersen
 
 
-  df.elements <- read.table("elementlist.txt",sep=",")
   names(df.elements) <- c("Z","symbol","id2")
   df.elements$id2 <- tolower(df.elements$id2)
 
@@ -282,7 +281,7 @@ get.estar.from.Z<- function(MeV=c(0.1,1,10),what="MSP.el",Z=1,data=df.NIST.estar
 
 ######################
 #' @title NIST.estar.demo
-#' @description  Demonstration  of how to use get.NIST.estar
+#' @description  Demonstration  of how to use get.estar.from.Z and get.estar.from.id
 #'
 #' @export
 NIST.estar.demo <- function(){
