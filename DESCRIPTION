@@ -4,12 +4,13 @@ Title: Stopping power computation for electrons (medical physics)
 Version: 0.2.0
 Author: Claus E. Andersen
 Maintainer: <clan@dtu.dk>
-Description: Steinheimer model and NIST estar look-up table.
+Description: Detailed Steinheimer model for density effect corrections and NIST estar stopping-power look-up table for electrons.
 License: MIT
 Encoding: UTF-8
 LazyData: true
 Imports:
     dplyr (>= 1.0.0),
+    clanTools,
     clanLattice,
     lattice
 RoxygenNote: 7.3.2

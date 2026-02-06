@@ -291,7 +291,7 @@ NIST.estar.demo <- function(){
   ff <- get.estar.from.id(MeV=seq(0.2,2,length=100),what="MSP.el",id="air.dry")
   plot(seq(0.2,2,length=100),ff)
 
-  plt <- lattice::xyplot(log(MSP.el) ~ log(MeV) | paste("Z=",Z),data=df.NIST.estar.SP,type="l")
+  plt <- lattice::xyplot(log(MSP.el) ~ log(MeV) | reorder.for.trellis(paste("Z=",Z)),data=df.NIST.estar.SP,type="l")
   print(plt)
 
   print(tail(df.NIST.estar.SP))
