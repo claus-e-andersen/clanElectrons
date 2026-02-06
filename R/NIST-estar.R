@@ -296,15 +296,15 @@ NIST.estar.demo <- function(){
 
   print(tail(df.NIST.estar.SP))
 
-  print('\nget.estar.from.Z(MeV=c(0.1,1,10,20), Z=c(82), what="MSP.rad") : ')
-    tmp <- get.estar.from.Z(MeV=c(0.1,1,10,20), Z=c(82), what="MSP.rad")
+  print('get.estar.from.Z(MeV=c(0.1,1,10,20), Z=82, what="MSP.rad") : ')
+    tmp <- get.estar.from.Z(MeV=c(0.1,1,10,20), Z=82, what="MSP.rad")
   print(tmp)
 
-  print('\nget.estar.from.id(MeV=c(0.1,1,10,20), id="water.liquid", what="MSP.el") : ')
+  print('get.estar.from.id(MeV=c(0.1,1,10,20), id="water.liquid", what="MSP.el") : ')
   tmp <- get.estar.from.id(MeV=c(0.1,1,10,20), id="water.liquid", what="MSP.el")
   print(tmp)
 
-  print('\nget.estar.from.id(MeV=c(0.1,1,10,20), id="air.dry", what="MSP.el") : ')
+  print('get.estar.from.id(MeV=c(0.1,1,10,20), id="air.dry", what="MSP.el") : ')
   tmp <- get.estar.from.id(MeV=c(0.1,1,10,20), id="air.dry", what="MSP.el")
   print(tmp)
 
