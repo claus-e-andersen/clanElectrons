@@ -3,8 +3,33 @@
 #' @description  Extract data from the df.NIST.estar.SP data for given id (=name of element or material).
 #' df.NIST.estar.SP is included in the package.
 #' The data were downloaded from the NIST web site February 2-5, 2026.
+#' # Each element has been downloaded from the NIST Estar data base and saves as an ASCII
+#' file format like:
+
+#'ESTAR: Stopping Powers and Range Tables for Electrons
 #'
-#' @format A data frame with 100 rows and 3 variables:
+#'CALIFORNIUM                                                                 #
+#'
+#'Kinetic   Collision Radiative Total     CSDA      Radiation D. Effect
+#'Energy    Stp. Pow. Stp. Pow. Stp. Pow. Range     Yield     Parameter
+#'MeV       MeV cm2/g MeV cm2/g MeV cm2/g g/cm2
+#'
+#'1.000E-02 7.806E+00 2.175E-02 7.828E+00 9.638E-04 1.384E-03 1.044E-03
+#'1.250E-02 6.848E+00 2.417E-02 6.872E+00 1.306E-03 1.737E-03 1.332E-03
+#'1.500E-02 6.129E+00 2.621E-02 6.155E+00 1.691E-03 2.096E-03 1.631E-03
+#'1.750E-02 5.568E+00 2.799E-02 5.596E+00 2.117E-03 2.458E-03 1.941E-03
+#'2.000E-02 5.118E+00 2.956E-02 5.147E+00 2.584E-03 2.822E-03 2.263E-03
+#'2.500E-02 4.437E+00 3.225E-02 4.469E+00 3.630E-03 3.554E-03 2.942E-03
+#'3.000E-02 3.945E+00 3.453E-02 3.979E+00 4.818E-03 4.286E-03 3.669E-03
+#'3.500E-02 3.571E+00 3.652E-02 3.608E+00 6.140E-03 5.017E-03 4.445E-03
+#'4.000E-02 3.277E+00 3.829E-02 3.315E+00 7.587E-03 5.744E-03 5.270E-03
+#'4.500E-02 3.039E+00 3.990E-02 3.079E+00 9.154E-03 6.468E-03 6.146E-03
+#' ...
+#'8.000E+02 1.554E+00 1.373E+02 1.389E+02 2.984E+01 9.504E-01 8.108E+00
+#'9.000E+02 1.562E+00 1.547E+02 1.563E+02 3.052E+01 9.547E-01 8.336E+00
+#'1.000E+03 1.568E+00 1.722E+02 1.737E+02 3.112E+01 9.583E-01 8.541E+00
+#'
+#' @format A data frame with 8240 rows and 15 variables:
 #' \describe{
 #'   \item{MeV}{Vector of energies (in MeV) for which the function should estimate the stopping power.}
 #'   \item{MSP.el}{Electron (collision) mass stopping power (in MeV per g/cm2).}
@@ -26,7 +51,35 @@
 #' @source Generated for package examples
 "df.NIST.estar.SP"
 
-#
+
+#' @title df.NIST.xray.materials
+#' @description NIST material data from X-Ray Mass Attenuation Coefficients database (not Estar)
+#' # From https://physics.nist.gov/PhysRefData/XrayMassCoef/tab1.html
+#' X-Ray Mass Attenuation Coefficients
+#' Table 1. Material constants assumed in the present evaluations for elemental media.
+#' Values are given for the ratio of atomic number-to-mass Z/A, the mean excitation energy I, and the density ρ.
+#' Some density values are only nominal; those for Z = 85 and 87 were arbitrarily set to 10 in order to complete the calculations.
+#' Variable 1: Z
+#' Variable 2: Element
+#' Variable 3: Name
+#' Variable 4:  Z/A = Z.A.ratio
+#' Variable 5: I	in eV
+#' Variable 6: Density in g/cm3
+#' Downloaded: February 7, 2026 by Claus E. Andersen
+#'
+#' @format A data frame with 8240 rows and 15 variables:
+#' \describe{
+#'   \item{Z}{Element number (=0 for composite materials))}
+#'   \item{symbol}{Element symbols like "H", "He", "Br".}
+#'   \item{id.xray}{Name of element or material from NIST}
+#'   \item{Z.A.ratio}{Z/A}
+#'   \item{I.xray}{Mean excitation energy (eV)}
+#'   \item{rho.xray}{Density (in g/cm3).}
+#' }
+#' @source Generated for package examples
+"df.NIST.xray.materials"
+
+
 #
 #
 #' @title get.NIST.estar.data
@@ -34,26 +87,66 @@
 #'
 #' @export
 get.NIST.estar.data <- function(){
-
+# This code is just to maintain a record of how the data was created.
+# Do not run!
+if(FALSE){ # FALSE BLOCK
+  require(dplyr)
+  require(dplyr)
+  require(lattice)
   # Created: Feb. 2, 2026
   # Revised: Feb. 5, 2026
+  # Revised: Feb. 7, 2026 I value for Z=93 + carbon (2 g/cm3) as a material (Z=0)
+  # Revised: Feb. 7, 2026 Get Z/A + sybb as data)ols from NIST x-ray table (also included
   # Name: Claus E. Andersen
 
+  # Each element has been downloaded from the NIST Estar data base and saves as an ASCII
+  # file format like:
 
-  names(df.elements) <- c("Z","symbol","id2")
-  df.elements$id2 <- tolower(df.elements$id2)
+  #ESTAR: Stopping Powers and Range Tables for Electrons
+  #
+  #CALIFORNIUM                                                                 #
+  #
+  #Kinetic   Collision Radiative Total     CSDA      Radiation D. Effect
+  #Energy    Stp. Pow. Stp. Pow. Stp. Pow. Range     Yield     Parameter
+  #MeV       MeV cm2/g MeV cm2/g MeV cm2/g g/cm2
+  #
+  #1.000E-02 7.806E+00 2.175E-02 7.828E+00 9.638E-04 1.384E-03 1.044E-03
+  #1.250E-02 6.848E+00 2.417E-02 6.872E+00 1.306E-03 1.737E-03 1.332E-03
+  #1.500E-02 6.129E+00 2.621E-02 6.155E+00 1.691E-03 2.096E-03 1.631E-03
+  #1.750E-02 5.568E+00 2.799E-02 5.596E+00 2.117E-03 2.458E-03 1.941E-03
+  #2.000E-02 5.118E+00 2.956E-02 5.147E+00 2.584E-03 2.822E-03 2.263E-03
+  #2.500E-02 4.437E+00 3.225E-02 4.469E+00 3.630E-03 3.554E-03 2.942E-03
+  #3.000E-02 3.945E+00 3.453E-02 3.979E+00 4.818E-03 4.286E-03 3.669E-03
+  #3.500E-02 3.571E+00 3.652E-02 3.608E+00 6.140E-03 5.017E-03 4.445E-03
+  #4.000E-02 3.277E+00 3.829E-02 3.315E+00 7.587E-03 5.744E-03 5.270E-03
+  #4.500E-02 3.039E+00 3.990E-02 3.079E+00 9.154E-03 6.468E-03 6.146E-03
+  # ...
+  #8.000E+02 1.554E+00 1.373E+02 1.389E+02 2.984E+01 9.504E-01 8.108E+00
+  #9.000E+02 1.562E+00 1.547E+02 1.563E+02 3.052E+01 9.547E-01 8.336E+00
+  #1.000E+03 1.568E+00 1.722E+02 1.737E+02 3.112E+01 9.583E-01 8.541E+00
+
+  # We do not need this anymore
+  #df.elements <- read.table("elementlist.txt",sep=",")
+  #names(df.elements) <- c("Z","symbol","id2")
+  #df.elements$id2 <- tolower(df.elements$id2)
+
+  # Data fron NIST X-ray table (see header of file)
+  df.xray.elements <- read.table("NIST-xray-materials.txt",skip=11)
+  names(df.xray.elements) <- c("Z","symbol","id.xray","Z.A.ratio","I.xray","rho.xray")
+  df.xray.elements$id2 <- tolower(df.xray.elements$id2)
+
 
   df.meta <- rbind(data.frame(id="air.dry"     ,fn="NIST-air-dry.txt",rho=1.20479E-03,I=85.7,Z=0),
                    data.frame(id="pmma"        ,fn="NIST-pmma.txt",rho=1.19,I=74.0,Z=0),
                    data.frame(id="alanine"     ,fn="NIST-alanine.txt",rho=1.41,I=71.9,Z=0),
                    data.frame(id="water.liquid",fn="NIST-water-liquid.txt",rho=1.0,I=75.0,Z=0),
+                   data.frame(id="carbon",fn="NIST-carbon.txt",rho=2.0,I=81.0,Z=0),
                    #
                    data.frame(id="hydrogen",fn="NIST-hydrogen.txt",rho=8.37480E-05,I=19.2,Z=1),
                    data.frame(id="helium",fn="NIST-helium.txt",rho=1.66322E-04,I=41.8,Z=2),
                    data.frame(id="lithium",fn="NIST-lithium.txt",rho=5.34000E-01,I=40.0,Z=3),
                    data.frame(id="beryllium",fn="NIST-beryllium.txt",rho=1.848,I=63.7,Z=4),
                    data.frame(id="boron",fn="NIST-boron.txt",rho=2.37,I=76,Z=5),
-                   data.frame(id="carbon",fn="NIST-carbon.txt",rho=2.0,I=81.0,Z=6),
                    data.frame(id="graphite",fn="NIST-graphite.txt",rho=1.7,I=78.0,Z=6),
                    data.frame(id="nitrogen",fn="NIST-nitrogen.txt",rho=1.16528E-03,I=82.0,Z=7),
                    data.frame(id="oxygen",fn="NIST-oxygen.txt",rho=1.33151E-03,I=95.0,Z=8),
@@ -116,7 +209,7 @@ get.NIST.estar.data <- function(){
                    data.frame(id="terbium",fn="NIST-terbium.txt",rho=8.229,I=614,Z=65),
                    data.frame(id="dysprosium",fn="NIST-dysprosium.txt",rho=8.55,I=628,Z=66),
                    data.frame(id="holmium",fn="NIST-holmium.txt",rho=8.795,I=650,Z=67),
-                   data.frame(id="erbium",fn="NIST-erbium.txt",rho=9.06600E+00,I=658,Z=68),
+                   data.frame(id="erbium", fn="NIST-erbium.txt", rho=9.066,I=658,Z=68),
                    data.frame(id="thulium",fn="NIST-thulium.txt",rho=9.321,I=674,Z=69),
                    data.frame(id="ytterbium",fn="NIST-ytterbium.txt",rho=6.73,I=684,Z=70),
                    data.frame(id="lutetium",fn="NIST-lutetium.txt",rho=9.84,I=694,Z=71),
@@ -141,7 +234,7 @@ get.NIST.estar.data <- function(){
                    data.frame(id="thorium",fn="NIST-thorium.txt",rho=1.17200E+01,I=847.0,Z=90),
                    data.frame(id="protactinium",fn="NIST-protactinium.txt",rho=	1.53700E+01,I=878.0,Z=91),
                    data.frame(id="uranium",fn="NIST-uranium.txt",rho=1.89500E+01,I=890.0,Z=92),
-                   data.frame(id="neptunium",fn="NIST-neptunium.txt",rho=2.02500E+01,I=823.0,Z=93),
+                   data.frame(id="neptunium",fn="NIST-neptunium.txt",rho=2.02500E+01,I=902.0,Z=93),
                    data.frame(id="plutonium",fn="NIST-plutonium.txt",rho=1.98400E+01,I=921.0,Z=94),
                    data.frame(id="americium",fn="NIST-americium.txt",rho=1.36700E+01,I=934.0,Z=95),
                    data.frame(id="curium",fn="NIST-curium.txt",rho=1.35100E+01,I=939.0,Z=96),
@@ -149,10 +242,22 @@ get.NIST.estar.data <- function(){
                    data.frame(id="californium",fn="NIST-californium.txt",rho=10,I=966.0,Z=98)
   )
 
+  # The I-value in estar (794 eV) for Z=86 (radon) seems to be wrong.
+  # We therefore will use the NIST xray data (see below).
+  # However, we keep rho and I from the NIST Estar data base as
+  # rho.estar and I.estar, respectively.
+  names(df.meta) <- c("id","fn","rho.estar","I.estar","Z")
+
+  #df.meta %>%
+  #left_join(df.elements) ->
+  #df.meta
+
 
   df.meta %>%
-    left_join(df.elements) ->
+    left_join(df.xray.elements) ->
     df.meta
+
+
 
   df <- NULL
   pn <- ".\\data"
@@ -166,11 +271,12 @@ get.NIST.estar.data <- function(){
     df0 %>%
       mutate(type = ifelse(df.meta$Z[i]==0,"material","element")) %>%
       mutate(id = df.meta$id[i]) %>%
-      mutate(id2 = df.meta$id2[i]) %>%
+      mutate(id2 = df.meta$id.xray[i]) %>%
       mutate(symbol = df.meta$symbol[i]) %>%
-      mutate(rho = df.meta$rho[i]) %>%
-      mutate(I = df.meta$I[i]) %>%
+      mutate(rho = df.meta$rho.estar[i]) %>%
+      mutate(I = df.meta$I.estar[i]) %>%
       mutate(Z = df.meta$Z[i]) %>%
+      mutate(Z.A.ratio = df.meta$Z.A.ratio[i]) %>%
       mutate(source="NIST.estar") ->
       df0
 
@@ -178,20 +284,45 @@ get.NIST.estar.data <- function(){
   } # meta loop
 
 
-  df |>
+  df %>%
     filter(!id==id2)
-  df |>
+
+  df %>%
     arrange(Z,id,I) -> df
 
   head(df)
 
   tail(df)
 
+  head(df %>% filter(Z %in% 1:92))
+
+  df %>%
+    filter(!is.na(Z.A.ratio)) %>%
+    tail(.)
+
+  #filter(!is.na(I.estar)) %>%
+  #filter(Z %in% 1:98)%>%
+  #filter(abs(rho.estar - rho) > 0.01) %>%
+  #filter(MeV==1)
+
+
   write.table(df,"export100.txt",row.names=FALSE,sep=";")
+  write.table(df.xray.elements,"xray-export200.txt",row.names=FALSE,sep=";")
+
+  #require(lattice)
+  #xyplot(log(MSP.el) ~ log(MeV),groups=rho<0.01,data=df,type="p")
+
+  str(df)
+
 
   # Or read the finished file
   df.NIST.estar.SP <- read.table("C:\\data\\projects\\R\\8900-Theoretical-Dosimetry\\stopping-powers2\\NIST-estar-stopping-power-data.txt",header=TRUE,sep=";")
-}
+  df.NIST.xray.materials <- read.table("C:\\data\\projects\\R\\8900-Theoretical-Dosimetry\\stopping-powers2\\NIST-xray-materials-data.txt",header=TRUE,sep=";")
+
+  # usethis::use_data(df.NIST.estar.SP,overwrite=TRUE)
+  # usethis::use_data(df.NIST.xray.materials,overwrite=TRUE)
+} # FALSE BLOCK
+  } # how to produce the data
 
 
 #' @title get.estar.from.id
@@ -200,7 +331,7 @@ get.NIST.estar.data <- function(){
 #'
 #' @param MeV = vector of kinetic energies of the electron in MeV
 #' @param what ="MSP.el", MSP.rad", "MSP.tot", "CSDA", "rad.yield" or "density.effect"
-#' @param id = "hydrogen", "helium" .. "californium", "water.liquid", "air.dry", "pmma", "alanine"
+#' @param id = "hydrogen", "helium" .. "californium", "water.liquid", "air.dry", "pmma", "alanine", "graphite"
 #' @param data = date frame with data (df.NIST.estar.SP)
 #' @param rule = rule for approx: 1=no extrapolation, 2=use nearest value for extrapolation
 #' @details Notes:
