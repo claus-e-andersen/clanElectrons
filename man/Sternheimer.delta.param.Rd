@@ -10,16 +10,9 @@ Sternheimer.delta.param(MeV = 1, dat = NA)
 \item{MeV}{= kinetic energy of the electron (in MeV)}
 
 \item{dat}{= list with parameters}
-
-\item{dat$param.C}{= Sternheimer parameter (see 1984 paper)}
-
-\item{dat$param.X0}{= Sternheimer parameter (see 1984 paper)}
-
-\item{dat$param.X1}{= Sternheimer parameter (see 1984 paper)}
-
-\item{dat$param.a}{= Sternheimer parameter (see 1984 paper)}
-
-\item{dat$param.m}{= Sternheimer parameter (see 1984 paper)}
+}
+\value{
+a list (dat)
 }
 \description{
 Compute the density-effect correction based on the fitting parameters
@@ -42,4 +35,10 @@ First create a material (i.e. make a dat-list) called dat or something like than
 Then call the function for the given energy MeV:
 
 dat <- Sternheimer.delta.param(MeV, dat)
+
+dat$param.C = Sternheimer parameter (see 1984 paper)
+dat$param.X0 = Sternheimer parameter (see 1984 paper)
+dat$param.X1 = Sternheimer parameter (see 1984 paper)
+dat$param.a = Sternheimer parameter (see 1984 paper)
+dat$param.m = Sternheimer parameter (see 1984 paper)
 }

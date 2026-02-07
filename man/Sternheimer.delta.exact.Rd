@@ -19,24 +19,6 @@ Sternheimer.delta.exact(
 \item{mu.solver.parm}{= search parameters for the mu.st solver}
 
 \item{L.solver.parm}{= search parameters for the L solver}
-
-\item{dat$Z}{= atomic number}
-
-\item{dat$A}{= atomic mass}
-
-\item{dat$I}{= mean excitation energy in eV}
-
-\item{dat$rho.density}{= density in g/cm3 (only used for the delta computation)}
-
-\item{dat$fvec}{= sub-shell occupancy level (used in computation)}
-
-\item{dat$Evec}{= sub-shell binding energy (used in computation)}
-
-\item{dat$plot.wanted}{= TRUE or FALSE,}
-
-\item{dat$nlev}{= number of sub-shells (output)}
-
-\item{dat$exact.delta}{= the computed delta (output)}
 }
 \value{
 a list (dat)
@@ -64,4 +46,13 @@ Main references:
     IN VARIOUS SUBSTANCES
     by R. M. STERNHEIMER (Brookhaven), M. J. BERGER (NBS) and S. M. SELTZER (NBS).
     ATOMIC DATA AND NUCLEAR DATA TABLES 30,26 l-27 1 ( 1984).
+dat$Z = atomic number
+dat$A = atomic mass
+dat$I = mean excitation energy in eV
+dat$rho.density = density in g/cm3 (only used for the delta computation)
+dat$fvec = sub-shell occupancy level (used in computation)
+dat$Evec = sub-shell binding energy (used in computation)
+dat$nlev = number of sub-shells (output)
+dat$exact.delta = the computed delta (output)
+dat$plot.wanted = TRUE or FALSE,
 }

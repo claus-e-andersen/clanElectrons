@@ -71,10 +71,10 @@
 #' \describe{
 #'   \item{Z}{Element number (=0 for composite materials))}
 #'   \item{symbol}{Element symbols like "H", "He", "Br".}
-#'   \item{id.xray}{Name of element or material from NIST}
+#'   \item{id}{Name of element or material from NIST}
 #'   \item{Z.A.ratio}{Z/A}
-#'   \item{I.xray}{Mean excitation energy (eV)}
-#'   \item{rho.xray}{Density (in g/cm3).}
+#'   \item{I}{Mean excitation energy (eV)}
+#'   \item{rho}{Density (in g/cm3).}
 #' }
 #' @source NIST x-ray database
 "df.NIST.xray.materials"
@@ -90,9 +90,9 @@ NIST.estar.data.creator <- function(){
 # This code is just to maintain a record of how the data was created.
 # Do not run!
 if(FALSE){ # FALSE BLOCK
-  require(dplyr)
-  require(dplyr)
-  require(lattice)
+  #require(dplyr)
+  #require(lattice)
+
   # Created: Feb. 2, 2026
   # Revised: Feb. 5, 2026
   # Revised: Feb. 7, 2026 I value for Z=93 + carbon (2 g/cm3) as a material (Z=0)
@@ -305,8 +305,9 @@ if(FALSE){ # FALSE BLOCK
   df.NIST.estar.SP <- read.table("C:\\data\\projects\\R\\8900-Theoretical-Dosimetry\\stopping-powers2\\NIST-estar-stopping-power-data.txt",header=TRUE,sep=";")
   df.NIST.xray.materials <- read.table("C:\\data\\projects\\R\\8900-Theoretical-Dosimetry\\stopping-powers2\\NIST-xray-materials-data.txt",header=TRUE,sep=";")
 
-  usethis::use_data(df.NIST.estar.SP,overwrite=TRUE)
-  usethis::use_data(df.NIST.xray.materials,overwrite=TRUE)
+  #usethis::use_data(df.NIST.estar.SP,overwrite=TRUE)
+  #usethis::use_data(df.NIST.xray.materials,overwrite=TRUE)
+
 } # FALSE BLOCK
   } # how to produce the data
 
@@ -343,11 +344,11 @@ get.estar.from.id <- function(MeV=c(0.1,1,10),what="MSP.el",id="water.liquid",da
     xx <- xx[,1]
 
     df |>
-      dplyr::select(all_of(what)) ->
+      dplyr::select(tidyselect::all_of(what)) ->
       yy
 
     yy <- yy[,1]
-    zz <- approx(xx,yy,xout=MeV,rule=rule)$y
+    zz <- stats::approx(xx,yy,xout=MeV,rule=rule)$y
     zz
   }
 } # end get.estar.from.id
@@ -384,11 +385,11 @@ get.estar.from.Z<- function(MeV=c(0.1,1,10),what="MSP.el",Z=1,data=df.NIST.estar
     xx <- xx[,1]
 
     df |>
-      dplyr::select(all_of(what)) ->
+      dplyr::select(tidyselect::all_of(what)) ->
       yy
 
     yy <- yy[,1]
-    zz <- approx(xx,yy,xout=MeV,rule=rule)$y
+    zz <- stats::approx(xx,yy,xout=MeV,rule=rule)$y
     zz
   }
 } # end get.estar.from.Z

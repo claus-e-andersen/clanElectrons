@@ -14,17 +14,19 @@ electronic.MSP.restricted(MeV = 1, delta.keV = 10, dat = NULL, delta = 0)
 \item{dat}{list with parameters}
 
 \item{delta}{= density-effect correction}
-
-\item{dat$Z}{= atomic number}
-
-\item{dat$A}{= atomic mass}
-
-\item{dat$I}{= mean excitation energy in eV}
+}
+\value{
+restricted electronic mass stopping power
 }
 \description{
 Computation of restricted mass electronic stopping power (MSP)
 according to ICRU-90 eq. 4.11 (page 22). The correction for the density
 effect (delta) has to be supplied by the user in a seperate argument.
+
+dat$Z = atomic number
+dat$A = atomic mass
+dat$I = mean excitation energy in eV
+#'
 }
 \details{
 Notes:

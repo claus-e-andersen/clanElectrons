@@ -9,10 +9,10 @@ A data frame with 8240 rows and 15 variables:
 \describe{
   \item{Z}{Element number (=0 for composite materials))}
   \item{symbol}{Element symbols like "H", "He", "Br".}
-  \item{id.xray}{Name of element or material from NIST}
+  \item{id}{Name of element or material from NIST}
   \item{Z.A.ratio}{Z/A}
-  \item{I.xray}{Mean excitation energy (eV)}
-  \item{rho.xray}{Density (in g/cm3).}
+  \item{I}{Mean excitation energy (eV)}
+  \item{rho}{Density (in g/cm3).}
 }
 }
 \source{

@@ -6,6 +6,11 @@
 \usage{
 Sternheimer.f.root.mu.st(mu.st, dat)
 }
+\arguments{
+\item{mu.st}{= mu.st-parameter}
+
+\item{dat}{= list with parameters}
+}
 \description{
 Helper function (mu.st) for exact Sternheimer density correction
 

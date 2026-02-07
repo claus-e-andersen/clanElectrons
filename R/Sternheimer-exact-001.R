@@ -23,22 +23,20 @@
 #'     IN VARIOUS SUBSTANCES
 #'     by R. M. STERNHEIMER (Brookhaven), M. J. BERGER (NBS) and S. M. SELTZER (NBS).
 #'     ATOMIC DATA AND NUCLEAR DATA TABLES 30,26 l-27 1 ( 1984).
-#'
+#' dat$Z = atomic number
+#' dat$A = atomic mass
+#' dat$I = mean excitation energy in eV
+#' dat$rho.density = density in g/cm3 (only used for the delta computation)
+#' dat$fvec = sub-shell occupancy level (used in computation)
+#' dat$Evec = sub-shell binding energy (used in computation)
+#' dat$nlev = number of sub-shells (output)
+#' dat$exact.delta = the computed delta (output)
+#' dat$plot.wanted = TRUE or FALSE,
 #'
 #' @param MeV = electron kinetic energy
 #' @param dat = list with parameters (both input and output)
-#' @param dat$Z = atomic number
-#' @param dat$A = atomic mass
-#' @param dat$I = mean excitation energy in eV
-#' @param dat$rho.density = density in g/cm3 (only used for the delta computation)
-#' @param dat$fvec = sub-shell occupancy level (used in computation)
-#' @param dat$Evec = sub-shell binding energy (used in computation)
-#
-#' @param dat$plot.wanted = TRUE or FALSE,
 #' @param mu.solver.parm = search parameters for the mu.st solver
 #' @param L.solver.parm = search parameters for the L solver
-#' @param dat$nlev = number of sub-shells (output)
-#' @param dat$exact.delta = the computed delta (output)
 #' @return a list (dat)
 #'
 #' @export
@@ -251,6 +249,9 @@ Sternheimer.delta.exact <- function(MeV=1, dat=NULL, mu.solver.parm = NULL,  L.s
 #'
 #' # Equation suitable for finding mu.st (eq. 4.29 in ICRU-90). We search a value of mu.st such that
 #' Sternheimer.f.root.mu.st(mu.st, dat) is approximately zero.
+#' @param mu.st = mu.st-parameter
+#' @param dat = list with parameters
+
 #' @export
 Sternheimer.f.root.mu.st <- function(mu.st, dat){
 # Helper function (mu.st) for exact Sternheimer density correction
@@ -286,6 +287,10 @@ ans
 #' @description Helper function (L) for exact Sternheimer density correction
 #' # Equation suitable for finding L (ell) (eq. 4.28 in ICRU-90). We search a value of L such that
 #' Sternheimer.f.root.L(L, dat) is approximately zero.
+#' @param L = L-parameter
+#' @param dat = list with parameters
+#' @return a list (dat)
+
 #' @export
 Sternheimer.f.root.L <- function(L,dat){
 # Helper function (L) for exact Sternheimer density correction
@@ -320,6 +325,9 @@ ans
 #' zero density-effect correction. Formulated both as a beta.threshold and MeV.threshold (i.e.
 #' kinitic energy expressed in MeV).
 #' Function returns an updated version of dat.
+#' @param dat = list with parameters (both input and output)
+#' @param L = L-parameter
+
 #' @export
 Sternheimer.beta.threshold <- function(L,dat){
   # Helper function (L) for exact Sternheimer density correction
@@ -1001,6 +1009,9 @@ df
 #' like water? Add the Z for all atoms involved.
 
 #' Arrange the fvec and the Evec atom by atom.
+#' @param MeV = kinetic energy of the electron (in MeV)
+#' @param delta.keV = delta parameter
+#' @return a list (dat)
 
 #' @export
 demo.water <- function(MeV=1, delta.keV = 10){
@@ -1045,6 +1056,8 @@ demo.water <- function(MeV=1, delta.keV = 10){
 #' @description Computation of electronic stopping power and density effect for graphite
 #'@details #' We use the "exact" Sternheimer model as described in ICRU-90.
 #' Graphite is treated as a conductor (nc=1). We compare against ICRU-90 computations.
+#' @param MeV = kinetic energy of the electron (in MeV)
+#' @param delta.keV = delta parameter
 #' @export
 demo.graphite <- function(MeV=1,  delta.keV = 10){
   # Created: August 28 2022

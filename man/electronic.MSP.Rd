@@ -11,18 +11,20 @@ electronic.MSP(MeV = 1, dat = NULL(), delta = 0)
 
 \item{dat}{list with parameters}
 
-\item{delta}{= density-effect correction}
-
-\item{dat$Z}{= atomic number}
-
-\item{dat$A}{= atomic mass}
-
-\item{dat$I}{= mean excitation energy in eV}
+\item{delta}{delta parameter}
+}
+\value{
+mass stopping power
 }
 \description{
 Computation of mass electronic stopping power (MSP) according to
 ICRU-90 eq. 4.8 (page 22). The correction for the density effect (delta)
 has to be supplied by the user in a separate argument.
+
+dat$Z = atomic number
+dat$A = atomic mass
+dat$I = mean excitation energy in eV
+delta = density-effect correction
 }
 \details{
 Notes:

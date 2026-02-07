@@ -6,6 +6,14 @@
 \usage{
 Sternheimer.f.root.L(L, dat)
 }
+\arguments{
+\item{L}{= L-parameter}
+
+\item{dat}{= list with parameters}
+}
+\value{
+a list (dat)
+}
 \description{
 Helper function (L) for exact Sternheimer density correction
 # Equation suitable for finding L (ell) (eq. 4.28 in ICRU-90). We search a value of L such that

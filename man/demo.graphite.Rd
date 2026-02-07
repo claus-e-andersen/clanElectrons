@@ -6,6 +6,11 @@
 \usage{
 demo.graphite(MeV = 1, delta.keV = 10)
 }
+\arguments{
+\item{MeV}{= kinetic energy of the electron (in MeV)}
+
+\item{delta.keV}{= delta parameter}
+}
 \description{
 Computation of electronic stopping power and density effect for graphite
 }

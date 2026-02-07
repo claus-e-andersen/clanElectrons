@@ -13,12 +13,15 @@
 #' ICRU-90 eq. 4.8 (page 22). The correction for the density effect (delta)
 #' has to be supplied by the user in a separate argument.
 #'
+#' dat$Z = atomic number
+#' dat$A = atomic mass
+#' dat$I = mean excitation energy in eV
+#' delta = density-effect correction
+#'
 #' @param MeV kinetic energy of the electron in MeV
 #' @param dat list with parameters
-#' @param dat$Z = atomic number
-#' @param dat$A = atomic mass
-#' @param dat$I = mean excitation energy in eV
-#' @param delta = density-effect correction
+#' @param delta delta parameter
+#' @return mass stopping power
 #' @details Notes:
 #' The computed MSP is in units of MeV pr. g/cm2.
 #' @export
@@ -67,13 +70,16 @@ MSP
 #' according to ICRU-90 eq. 4.11 (page 22). The correction for the density
 #' effect (delta) has to be supplied by the user in a seperate argument.
 #'
+#' dat$Z = atomic number
+#' dat$A = atomic mass
+#' dat$I = mean excitation energy in eV
+#' #'
 #' @param MeV kinetic energy of the electron in MeV
 #' @param delta.keV cut-off energy in keV
 #' @param dat list with parameters
-#' @param dat$Z = atomic number
-#' @param dat$A = atomic mass
-#' @param dat$I = mean excitation energy in eV
 #' @param delta = density-effect correction
+#' @return restricted electronic mass stopping power
+
 #' @details Notes:
 #' The computed restricted MSP is in units of MeV pr. g/cm2.
 #' @export
@@ -244,13 +250,16 @@ df
 #'
 #' dat <- Sternheimer.delta.param(MeV, dat)
 #'
+#' dat$param.C = Sternheimer parameter (see 1984 paper)
+#' dat$param.X0 = Sternheimer parameter (see 1984 paper)
+#' dat$param.X1 = Sternheimer parameter (see 1984 paper)
+#' dat$param.a = Sternheimer parameter (see 1984 paper)
+#' dat$param.m = Sternheimer parameter (see 1984 paper)
+
+#'
 #' @param MeV = kinetic energy of the electron (in MeV)
 #' @param dat = list with parameters
-#' @param dat$param.C = Sternheimer parameter (see 1984 paper)
-#' @param dat$param.X0 = Sternheimer parameter (see 1984 paper)
-#' @param dat$param.X1 = Sternheimer parameter (see 1984 paper)
-#' @param dat$param.a = Sternheimer parameter (see 1984 paper)
-#' @param dat$param.m = Sternheimer parameter (see 1984 paper)
+#' @return a list (dat)
 #' @export
 ############################################################################
 # Sternheimer model for density effect

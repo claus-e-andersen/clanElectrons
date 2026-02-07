@@ -6,6 +6,11 @@
 \usage{
 Sternheimer.beta.threshold(L, dat)
 }
+\arguments{
+\item{L}{= L-parameter}
+
+\item{dat}{= list with parameters (both input and output)}
+}
 \description{
 Helper function computing the threshold below which an insulator will have
 zero density-effect correction. Formulated both as a beta.threshold and MeV.threshold (i.e.
