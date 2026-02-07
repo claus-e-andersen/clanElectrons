@@ -15,9 +15,9 @@ get.estar.from.id(
 \arguments{
 \item{MeV}{= vector of kinetic energies of the electron in MeV}
 
-\item{what}{="MSP.el", MSP.rad", "MSP.tot", "CSDA", "rad.yield" or "density.effect"}
+\item{what}{="MSP.el", MSP.rad", "MSP.tot", "range.CSDA", "rad.yield", "density.effect", "I", "rho", "Z.A.ratio"}
 
-\item{id}{= "hydrogen", "helium" .. "californium", "water.liquid", "air.dry", "pmma", "alanine", "graphite"}
+\item{id}{= "hydrogen", "helium" .. "californium", "water.liquid", "air.dry", "pmma", "alanine", "carbon"}
 
 \item{data}{= date frame with data (df.NIST.estar.SP)}
 

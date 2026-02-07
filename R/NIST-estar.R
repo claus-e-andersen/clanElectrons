@@ -331,8 +331,8 @@ if(FALSE){ # FALSE BLOCK
 #' df.NIST.estar.SP is included in the package.
 #'
 #' @param MeV = vector of kinetic energies of the electron in MeV
-#' @param what ="MSP.el", MSP.rad", "MSP.tot", "CSDA", "rad.yield" or "density.effect"
-#' @param id = "hydrogen", "helium" .. "californium", "water.liquid", "air.dry", "pmma", "alanine", "graphite"
+#' @param what ="MSP.el", MSP.rad", "MSP.tot", "range.CSDA", "rad.yield", "density.effect", "I", "rho", "Z.A.ratio"
+#' @param id = "hydrogen", "helium" .. "californium", "water.liquid", "air.dry", "pmma", "alanine", "carbon"
 #' @param data = date frame with data (df.NIST.estar.SP)
 #' @param rule = rule for approx: 1=no extrapolation, 2=use nearest value for extrapolation
 #' @details Notes:
@@ -373,7 +373,7 @@ get.estar.from.id <- function(MeV=c(0.1,1,10),what="MSP.el",id="water.liquid",da
 #' df.NIST.estar.SP is included in the package.
 #'
 #' @param MeV = vector of kinetic energies of the electron in MeV
-#' @param what ="MSP.el", MSP.rad", "MSP.tot", "CSDA", "rad.yield" or "density.effect"
+#' @param what ="MSP.el", MSP.rad", "MSP.tot", "range.CSDA", "rad.yield", "density.effect", "I", "rho", "Z.A.ratio"
 #' @param Z = element number (1,2,3 .. 98) (composite materials have Z=0)
 #' @param data = date frame with data (df.NIST.estar.SP)
 #' @param rule = rule for approx: 1=no extrapolation, 2=use nearest value for extrapolation

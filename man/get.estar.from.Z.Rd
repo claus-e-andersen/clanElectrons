@@ -15,7 +15,7 @@ get.estar.from.Z(
 \arguments{
 \item{MeV}{= vector of kinetic energies of the electron in MeV}
 
-\item{what}{="MSP.el", MSP.rad", "MSP.tot", "CSDA", "rad.yield" or "density.effect"}
+\item{what}{="MSP.el", MSP.rad", "MSP.tot", "range.CSDA", "rad.yield", "density.effect", "I", "rho", "Z.A.ratio"}
 
 \item{Z}{= element number (1,2,3 .. 98) (composite materials have Z=0)}
 
