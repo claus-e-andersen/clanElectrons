@@ -16,7 +16,7 @@ A data frame with 8240 rows and 15 variables:
 }
 }
 \source{
-Generated for package examples
+NIST x-ray database
 }
 \usage{
 df.NIST.xray.materials
@@ -24,6 +24,7 @@ df.NIST.xray.materials
 \description{
 NIST material data from X-Ray Mass Attenuation Coefficients database (not Estar)
 # From https://physics.nist.gov/PhysRefData/XrayMassCoef/tab1.html
+
 X-Ray Mass Attenuation Coefficients
 Table 1. Material constants assumed in the present evaluations for elemental media.
 Values are given for the ratio of atomic number-to-mass Z/A, the mean excitation energy I, and the density ρ.

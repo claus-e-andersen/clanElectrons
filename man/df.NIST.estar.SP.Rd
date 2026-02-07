@@ -5,7 +5,7 @@
 \alias{df.NIST.estar.SP}
 \title{df.NIST.estar.SP}
 \format{
-A data frame with 8240 rows and 16 variables:
+A data frame with 8240 rows and 15 variables:
 \describe{
   \item{MeV}{Vector of energies (in MeV) for which the function should estimate the stopping power.}
   \item{MSP.el}{Electron (collision) mass stopping power (in MeV per g/cm2).}
@@ -16,49 +16,47 @@ A data frame with 8240 rows and 16 variables:
   \item{density.effect}{Density effect parameter}
   \item{type}{element (like "hydrogen") or material (like "water.liquid").}
   \item{id}{Name of element or material from NIST}
-  \item{id2}{Name of elements from alternative source}
   \item{symbol}{Element symbols like "H", "He", "Br".}
   \item{rho}{Density (in g/cm3).}
   \item{I}{Mean excitation energy (eV)}
   \item{Z}{Element number (=0 for composite materials))}
   \item{Z.A.ratio}{Z/A}
-  \item{source}{Source of data ("NIST.estar)"}
+  \item{source}{Source of data"}
 
 }
 }
 \source{
-Generated for package examples
+These data were obtained from the NIST Estar database.
 }
 \usage{
 df.NIST.estar.SP
 }
 \description{
-Extract data from the df.NIST.estar.SP data for given id (=name of element or material).
+Electron stopping power data extracted from NIST Estar
+for elements and (composite) materials.
+
 df.NIST.estar.SP is included in the package.
-The data were downloaded from the NIST web site February 2-5, 2026.
-# Each element has been downloaded from the NIST Estar data base and saves as an ASCII
+
+The data was downloaded from the NIST web site February 2-6, 2026.
+# Each element has been downloaded from the NIST Estar data base and saved as an ASCII
 file format like:
-ESTAR: Stopping Powers and Range Tables for Electrons
-
-CALIFORNIUM                                                                 #
-
-Kinetic   Collision Radiative Total     CSDA      Radiation D. Effect
-Energy    Stp. Pow. Stp. Pow. Stp. Pow. Range     Yield     Parameter
-MeV       MeV cm2/g MeV cm2/g MeV cm2/g g/cm2
-
-1.000E-02 7.806E+00 2.175E-02 7.828E+00 9.638E-04 1.384E-03 1.044E-03
-1.250E-02 6.848E+00 2.417E-02 6.872E+00 1.306E-03 1.737E-03 1.332E-03
-1.500E-02 6.129E+00 2.621E-02 6.155E+00 1.691E-03 2.096E-03 1.631E-03
-1.750E-02 5.568E+00 2.799E-02 5.596E+00 2.117E-03 2.458E-03 1.941E-03
-2.000E-02 5.118E+00 2.956E-02 5.147E+00 2.584E-03 2.822E-03 2.263E-03
-2.500E-02 4.437E+00 3.225E-02 4.469E+00 3.630E-03 3.554E-03 2.942E-03
-3.000E-02 3.945E+00 3.453E-02 3.979E+00 4.818E-03 4.286E-03 3.669E-03
-3.500E-02 3.571E+00 3.652E-02 3.608E+00 6.140E-03 5.017E-03 4.445E-03
-4.000E-02 3.277E+00 3.829E-02 3.315E+00 7.587E-03 5.744E-03 5.270E-03
-4.500E-02 3.039E+00 3.990E-02 3.079E+00 9.154E-03 6.468E-03 6.146E-03
-...
-8.000E+02 1.554E+00 1.373E+02 1.389E+02 2.984E+01 9.504E-01 8.108E+00
-9.000E+02 1.562E+00 1.547E+02 1.563E+02 3.052E+01 9.547E-01 8.336E+00
-1.000E+03 1.568E+00 1.722E+02 1.737E+02 3.112E+01 9.583E-01 8.541E+00
+\code{ESTAR: Stopping Powers and Range Tables for Electrons}
+\code{}
+\code{CALIFORNIUM}
+\code{}
+\code{Kinetic   Collision Radiative Total     CSDA      Radiation D. Effect}
+\code{Energy    Stp. Pow. Stp. Pow. Stp. Pow. Range     Yield     Parameter}
+\code{MeV       MeV cm2/g MeV cm2/g MeV cm2/g g/cm2}
+\code{}
+\code{1.000E-02 7.806E+00 2.175E-02 7.828E+00 9.638E-04 1.384E-03 1.044E-03}
+\code{1.250E-02 6.848E+00 2.417E-02 6.872E+00 1.306E-03 1.737E-03 1.332E-03}
+\code{1.500E-02 6.129E+00 2.621E-02 6.155E+00 1.691E-03 2.096E-03 1.631E-03}
+\code{1.750E-02 5.568E+00 2.799E-02 5.596E+00 2.117E-03 2.458E-03 1.941E-03}
+\code{2.000E-02 5.118E+00 2.956E-02 5.147E+00 2.584E-03 2.822E-03 2.263E-03}
+\code{2.500E-02 4.437E+00 3.225E-02 4.469E+00 3.630E-03 3.554E-03 2.942E-03}
+\code{ ...}
+\code{8.000E+02 1.554E+00 1.373E+02 1.389E+02 2.984E+01 9.504E-01 8.108E+00}
+\code{9.000E+02 1.562E+00 1.547E+02 1.563E+02 3.052E+01 9.547E-01 8.336E+00}
+\code{1.000E+03 1.568E+00 1.722E+02 1.737E+02 3.112E+01 9.583E-01 8.541E+00}
 }
 \keyword{datasets}
