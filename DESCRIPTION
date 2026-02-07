@@ -1,7 +1,7 @@
 Package: clanElectrons
 Type: Package
 Title: Stopping power computation for electrons (medical physics)
-Version: 0.3.0
+Version: 0.4.0
 Author: Claus E. Andersen
 Maintainer: <clan@dtu.dk>
 Description: Detailed Steinheimer model for density effect corrections and NIST estar stopping-power look-up table for electrons.

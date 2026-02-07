@@ -1,35 +1,34 @@
 
 #' @title df.NIST.estar.SP
-#' @description  Extract data from the df.NIST.estar.SP data for given id (=name of element or material).
+#' @description  Electron stopping power data extracted from NIST Estar
+#' for elements and (composite) materials.
+#'
 #' df.NIST.estar.SP is included in the package.
-#' The data were downloaded from the NIST web site February 2-5, 2026.
-#' # Each element has been downloaded from the NIST Estar data base and saves as an ASCII
+#'
+#' The data was downloaded from the NIST web site February 2-6, 2026.
+#' # Each element has been downloaded from the NIST Estar data base and saved as an ASCII
 #' file format like:
 
-#'ESTAR: Stopping Powers and Range Tables for Electrons
+#'\code{ESTAR: Stopping Powers and Range Tables for Electrons}
+#'\code{}
+#'\code{CALIFORNIUM}
+#'\code{}
+#'\code{Kinetic   Collision Radiative Total     CSDA      Radiation D. Effect}
+#'\code{Energy    Stp. Pow. Stp. Pow. Stp. Pow. Range     Yield     Parameter}
+#'\code{MeV       MeV cm2/g MeV cm2/g MeV cm2/g g/cm2}
+#'\code{}
+#'\code{1.000E-02 7.806E+00 2.175E-02 7.828E+00 9.638E-04 1.384E-03 1.044E-03}
+#'\code{1.250E-02 6.848E+00 2.417E-02 6.872E+00 1.306E-03 1.737E-03 1.332E-03}
+#'\code{1.500E-02 6.129E+00 2.621E-02 6.155E+00 1.691E-03 2.096E-03 1.631E-03}
+#'\code{1.750E-02 5.568E+00 2.799E-02 5.596E+00 2.117E-03 2.458E-03 1.941E-03}
+#'\code{2.000E-02 5.118E+00 2.956E-02 5.147E+00 2.584E-03 2.822E-03 2.263E-03}
+#'\code{2.500E-02 4.437E+00 3.225E-02 4.469E+00 3.630E-03 3.554E-03 2.942E-03}
+#'\code{ ...}
+#'\code{8.000E+02 1.554E+00 1.373E+02 1.389E+02 2.984E+01 9.504E-01 8.108E+00}
+#'\code{9.000E+02 1.562E+00 1.547E+02 1.563E+02 3.052E+01 9.547E-01 8.336E+00}
+#'\code{1.000E+03 1.568E+00 1.722E+02 1.737E+02 3.112E+01 9.583E-01 8.541E+00}
 #'
-#'CALIFORNIUM                                                                 #
-#'
-#'Kinetic   Collision Radiative Total     CSDA      Radiation D. Effect
-#'Energy    Stp. Pow. Stp. Pow. Stp. Pow. Range     Yield     Parameter
-#'MeV       MeV cm2/g MeV cm2/g MeV cm2/g g/cm2
-#'
-#'1.000E-02 7.806E+00 2.175E-02 7.828E+00 9.638E-04 1.384E-03 1.044E-03
-#'1.250E-02 6.848E+00 2.417E-02 6.872E+00 1.306E-03 1.737E-03 1.332E-03
-#'1.500E-02 6.129E+00 2.621E-02 6.155E+00 1.691E-03 2.096E-03 1.631E-03
-#'1.750E-02 5.568E+00 2.799E-02 5.596E+00 2.117E-03 2.458E-03 1.941E-03
-#'2.000E-02 5.118E+00 2.956E-02 5.147E+00 2.584E-03 2.822E-03 2.263E-03
-#'2.500E-02 4.437E+00 3.225E-02 4.469E+00 3.630E-03 3.554E-03 2.942E-03
-#'3.000E-02 3.945E+00 3.453E-02 3.979E+00 4.818E-03 4.286E-03 3.669E-03
-#'3.500E-02 3.571E+00 3.652E-02 3.608E+00 6.140E-03 5.017E-03 4.445E-03
-#'4.000E-02 3.277E+00 3.829E-02 3.315E+00 7.587E-03 5.744E-03 5.270E-03
-#'4.500E-02 3.039E+00 3.990E-02 3.079E+00 9.154E-03 6.468E-03 6.146E-03
-#' ...
-#'8.000E+02 1.554E+00 1.373E+02 1.389E+02 2.984E+01 9.504E-01 8.108E+00
-#'9.000E+02 1.562E+00 1.547E+02 1.563E+02 3.052E+01 9.547E-01 8.336E+00
-#'1.000E+03 1.568E+00 1.722E+02 1.737E+02 3.112E+01 9.583E-01 8.541E+00
-#'
-#' @format A data frame with 8240 rows and 16 variables:
+#' @format A data frame with 8240 rows and 15 variables:
 #' \describe{
 #'   \item{MeV}{Vector of energies (in MeV) for which the function should estimate the stopping power.}
 #'   \item{MSP.el}{Electron (collision) mass stopping power (in MeV per g/cm2).}
@@ -40,22 +39,22 @@
 #'   \item{density.effect}{Density effect parameter}
 #'   \item{type}{element (like "hydrogen") or material (like "water.liquid").}
 #'   \item{id}{Name of element or material from NIST}
-#'   \item{id2}{Name of elements from alternative source}
 #'   \item{symbol}{Element symbols like "H", "He", "Br".}
 #'   \item{rho}{Density (in g/cm3).}
 #'   \item{I}{Mean excitation energy (eV)}
 #'   \item{Z}{Element number (=0 for composite materials))}
 #'   \item{Z.A.ratio}{Z/A}
-#'   \item{source}{Source of data ("NIST.estar)"}
+#'   \item{source}{Source of data"}
 #'
 #' }
-#' @source Generated for package examples
+#' @source These data were obtained from the NIST Estar database.
 "df.NIST.estar.SP"
 
 
 #' @title df.NIST.xray.materials
 #' @description NIST material data from X-Ray Mass Attenuation Coefficients database (not Estar)
 #' # From https://physics.nist.gov/PhysRefData/XrayMassCoef/tab1.html
+#'
 #' X-Ray Mass Attenuation Coefficients
 #' Table 1. Material constants assumed in the present evaluations for elemental media.
 #' Values are given for the ratio of atomic number-to-mass Z/A, the mean excitation energy I, and the density ρ.
@@ -77,17 +76,17 @@
 #'   \item{I.xray}{Mean excitation energy (eV)}
 #'   \item{rho.xray}{Density (in g/cm3).}
 #' }
-#' @source Generated for package examples
+#' @source NIST x-ray database
 "df.NIST.xray.materials"
 
 
 #
 #
-#' @title get.NIST.estar.data
-#' @description  How the df.NIST.estar.SP data was created.
+#' @title NIST.estar.data.creator
+#' @description  How to create the df.NIST.estar.SP data.
 #'
 #' @export
-get.NIST.estar.data <- function(){
+NIST.estar.data.creator <- function(){
 # This code is just to maintain a record of how the data was created.
 # Do not run!
 if(FALSE){ # FALSE BLOCK
@@ -126,16 +125,14 @@ if(FALSE){ # FALSE BLOCK
   #9.000E+02 1.562E+00 1.547E+02 1.563E+02 3.052E+01 9.547E-01 8.336E+00
   #1.000E+03 1.568E+00 1.722E+02 1.737E+02 3.112E+01 9.583E-01 8.541E+00
 
-  # We do not need this anymore
-  #df.elements <- read.table("elementlist.txt",sep=",")
-  #names(df.elements) <- c("Z","symbol","id2")
-  #df.elements$id2 <- tolower(df.elements$id2)
-
   # Data fron NIST X-ray table (see header of file)
   df.xray.elements <- read.table("NIST-xray-materials.txt",skip=11)
-  names(df.xray.elements) <- c("Z","symbol","id.xray","Z.A.ratio","I.xray","rho.xray")
-  df.xray.elements$id2 <- tolower(df.xray.elements$id2)
+  names(df.xray.elements) <- c("Z","symbol","id","Z.A.ratio","I","rho")
+  df.xray.elements$id <- tolower(df.xray.elements$id)
 
+  df.xray.elements %>%
+    select(Z,symbol,Z.A.ratio) ->
+    df.xray.elements.to.be.joined
 
   df.meta <- rbind(data.frame(id="air.dry"     ,fn="NIST-air-dry.txt",rho=1.20479E-03,I=85.7,Z=0),
                    data.frame(id="pmma"        ,fn="NIST-pmma.txt",rho=1.19,I=74.0,Z=0),
@@ -243,22 +240,12 @@ if(FALSE){ # FALSE BLOCK
                    data.frame(id="californium",fn="NIST-californium.txt",rho=10,I=966.0,Z=98)
   )
 
-  # The I-value in estar (794 eV) for Z=86 (radon) seems to be wrong.
-  # We therefore will use the NIST xray data (see below).
-  # However, we keep rho and I from the NIST Estar data base as
-  # rho.estar and I.estar, respectively.
-  names(df.meta) <- c("id","fn","rho.estar","I.estar","Z")
-
-  #df.meta %>%
-  #left_join(df.elements) ->
-  #df.meta
-
 
   df.meta %>%
-    left_join(df.xray.elements) ->
+    left_join(df.xray.elements.to.be.joined) ->
     df.meta
 
-
+  head(df.meta)
 
   df <- NULL
   pn <- ".\\data"
@@ -272,10 +259,9 @@ if(FALSE){ # FALSE BLOCK
     df0 %>%
       mutate(type = ifelse(df.meta$Z[i]==0,"material","element")) %>%
       mutate(id = df.meta$id[i]) %>%
-      mutate(id2 = df.meta$id.xray[i]) %>%
       mutate(symbol = df.meta$symbol[i]) %>%
-      mutate(rho = df.meta$rho.estar[i]) %>%
-      mutate(I = df.meta$I.estar[i]) %>%
+      mutate(rho = df.meta$rho[i]) %>%
+      mutate(I = df.meta$I[i]) %>%
       mutate(Z = df.meta$Z[i]) %>%
       mutate(Z.A.ratio = df.meta$Z.A.ratio[i]) %>%
       mutate(source="NIST.estar") ->
@@ -286,9 +272,6 @@ if(FALSE){ # FALSE BLOCK
 
 
   df %>%
-    filter(!id==id2)
-
-  df %>%
     arrange(Z,id,I) -> df
 
   head(df)
@@ -296,6 +279,8 @@ if(FALSE){ # FALSE BLOCK
   tail(df)
 
   head(df %>% filter(Z %in% 1:92))
+  tail(df %>% filter(Z %in% 1:92))
+
 
   df %>%
     filter(!is.na(Z.A.ratio)) %>%
@@ -314,14 +299,14 @@ if(FALSE){ # FALSE BLOCK
   #xyplot(log(MSP.el) ~ log(MeV),groups=rho<0.01,data=df,type="p")
 
   str(df)
-
+  str(df.xray.elements)
 
   # Or read the finished file
   df.NIST.estar.SP <- read.table("C:\\data\\projects\\R\\8900-Theoretical-Dosimetry\\stopping-powers2\\NIST-estar-stopping-power-data.txt",header=TRUE,sep=";")
   df.NIST.xray.materials <- read.table("C:\\data\\projects\\R\\8900-Theoretical-Dosimetry\\stopping-powers2\\NIST-xray-materials-data.txt",header=TRUE,sep=";")
 
-  # usethis::use_data(df.NIST.estar.SP,overwrite=TRUE)
-  # usethis::use_data(df.NIST.xray.materials,overwrite=TRUE)
+  usethis::use_data(df.NIST.estar.SP,overwrite=TRUE)
+  usethis::use_data(df.NIST.xray.materials,overwrite=TRUE)
 } # FALSE BLOCK
   } # how to produce the data
 
