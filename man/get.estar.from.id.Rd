@@ -17,7 +17,7 @@ get.estar.from.id(
 
 \item{what}{="MSP.el", MSP.rad", "MSP.tot", "CSDA", "rad.yield" or "density.effect"}
 
-\item{id}{= "hydrogen", "helium" .. "californium", "water.liquid", "air.dry", "pmma", "alanine"}
+\item{id}{= "hydrogen", "helium" .. "californium", "water.liquid", "air.dry", "pmma", "alanine", "graphite"}
 
 \item{data}{= date frame with data (df.NIST.estar.SP)}
 
