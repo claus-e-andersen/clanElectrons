@@ -29,7 +29,7 @@
 #'9.000E+02 1.562E+00 1.547E+02 1.563E+02 3.052E+01 9.547E-01 8.336E+00
 #'1.000E+03 1.568E+00 1.722E+02 1.737E+02 3.112E+01 9.583E-01 8.541E+00
 #'
-#' @format A data frame with 8240 rows and 15 variables:
+#' @format A data frame with 8240 rows and 16 variables:
 #' \describe{
 #'   \item{MeV}{Vector of energies (in MeV) for which the function should estimate the stopping power.}
 #'   \item{MSP.el}{Electron (collision) mass stopping power (in MeV per g/cm2).}
@@ -45,6 +45,7 @@
 #'   \item{rho}{Density (in g/cm3).}
 #'   \item{I}{Mean excitation energy (eV)}
 #'   \item{Z}{Element number (=0 for composite materials))}
+#'   \item{Z.A.ratio}{Z/A}
 #'   \item{source}{Source of data ("NIST.estar)"}
 #'
 #' }
